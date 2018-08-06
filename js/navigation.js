@@ -33,7 +33,7 @@ function currentPage () {
 }
 
 function navigation () {
-	LI('navbar', 'index.html', 'Home');
+	LI('navbar', '5etools.html', 'Home');
 
 	LIDropdown('navbar', 'rules', 'dropdown');
 	A('rules', 'ruleOption', 'dropdown-toggle', 'dropdown', '#', 'button', 'true', 'false', "Rules <span class='caret'></span>");
