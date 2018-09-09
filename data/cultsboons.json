@@ -87,7 +87,7 @@
 			},
 			"entries": [
 				"Fierna is a master manipulator. Mortals who desire success in love or who seek to become beloved leaders at the head of a band of fanatics are drawn to striking bargains with her.",
-				"Fierna grants gifts that allow her cultists to manipulate emotions; they gain increases to Charisma, as well as proficiency with skills such as Persuasion and Intimidation. In addition, cultists can gain the Infernal Loyalty trait. Cult leaders can also gain the Loyalty beyond Death trait.",
+				"Fierna grants gifts that allow her cultists to manipulate emotions; they gain increases to Charisma, as well as proficiency with skills such as {@skill Persuasion} and {@skill Intimidation}. In addition, cultists can gain the Infernal Loyalty trait. Cult leaders can also gain the Loyalty beyond Death trait.",
 				{
 					"type": "entries",
 					"name": "Infernal Loyalty",
@@ -130,7 +130,7 @@
 				},
 				{
 					"type": "entries",
-					"name": "Indomitable Strength (Recharge 5\u20136)",
+					"name": "Indomitable Strength {@recharge 5}",
 					"entries": [
 						"As a reaction when this creature takes damage, it can roll a {@dice d10} and subtract the number rolled from the damage."
 					]
@@ -428,7 +428,7 @@
 				},
 				{
 					"type": "entries",
-					"name": "Indomitable Strength (Recharge 5\u20136)",
+					"name": "Indomitable Strength {@recharge 5}",
 					"entries": [
 						"As a reaction when this creature takes damage, it can roll a {@dice d10} and subtract the number rolled from the damage."
 					]
@@ -725,7 +725,7 @@
 					"type": "entries",
 					"name": "Liar's Eye",
 					"entries": [
-						"This creature has advantage on Wisdom (Insight or Perception) checks.",
+						"This creature has advantage on Wisdom ({@skill Insight} or {@skill Perception}) checks.",
 						"As a bonus action, it automatically detects the location of all illusions and hidden creatures within 15 feet of it."
 					]
 				}
@@ -946,7 +946,7 @@
 					"type": "entries",
 					"name": "Liar's Eye",
 					"entries": [
-						"This creature has advantage on Wisdom (Insight or Perception) checks.",
+						"This creature has advantage on Wisdom ({@skill Insight} or {@skill Perception}) checks.",
 						"As a bonus action, it automatically detects the location of all illusions and hidden creatures within 15 feet of it."
 					]
 				}
@@ -1023,7 +1023,7 @@
 				"entry": "{@spell False life} (1st level), {@spell ray of enfeeblement} (2nd level), {@spell animate dead} (3rd level)"
 			},
 			"entries": [
-				"In most cases, Orcus transforms his followers into undead creatures such as ghouls and wights. Sometimes he needs his followers to retain their mortal forms, to more easily infiltrate a kingdom or city. He grants rankand-file cultists the Undying Soul trait, and his cult leaders gain the Aura of Death trait.",
+				"In most cases, Orcus transforms his followers into undead creatures such as ghouls and wights. Sometimes he needs his followers to retain their mortal forms, to more easily infiltrate a kingdom or city. He grants rank-and-file cultists the Undying Soul trait, and his cult leaders gain the Aura of Death trait.",
 				{
 					"type": "entries",
 					"name": "Undying Soul (Recharges after a Short or Long Rest)",

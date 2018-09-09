@@ -71,7 +71,7 @@ function addBackgrounds (data) {
 			`<li class="row" ${FLTR_ID}="${bgI}" onclick="ListUtil.toggleSelected(event, this)" oncontextmenu="ListUtil.openContextMenu(event, this)">
 				<a id='${bgI}' href="#${UrlUtil.autoEncodeHash(bg)}" title="${bg.name}">
 					<span class='name col-xs-10'>${bg.name.replace("Variant ", "")}</span>
-					<span class='source col-xs-2 source${bg.source}' title="${Parser.sourceJsonToFull(bg.source)}">${Parser.sourceJsonToAbv(bg.source)}</span>
+					<span class='source col-xs-2 ${Parser.sourceJsonToColor(bg.source)}' title="${Parser.sourceJsonToFull(bg.source)}">${Parser.sourceJsonToAbv(bg.source)}</span>
 				</a>
 			</li>`;
 
@@ -130,13 +130,13 @@ function loadhash (id) {
 	function buildStatsTab () {
 		const renderStack = [];
 		const entryList = {type: "entries", entries: bg.entries};
-		renderer.recursiveEntryRender(entryList, renderStack, 1);
+		renderer.recursiveEntryRender(entryList, renderStack);
 
 		$pgContent.append(`
 			${EntryRenderer.utils.getBorderTr()}
 			${EntryRenderer.utils.getNameTr(bg)}
 			<tr><td class="divider" colspan="6"><div></div></td></tr>
-			<tr class='trait'><td colspan='6'>${renderStack.join("")}</td></tr>
+			<tr class="text"><td colspan='6'>${renderStack.join("")}</td></tr>
 			${EntryRenderer.utils.getPageTr(bg)}
 			${EntryRenderer.utils.getBorderTr()}
 		`);

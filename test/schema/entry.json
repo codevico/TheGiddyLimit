@@ -5,7 +5,7 @@
 	"id": "/Entry",
 	"description": "A recursively renderable object.",
 	"type": ["string", "integer", "object"],
-	"version": "1.1.1",
+	"version": "1.2.1",
 
 	"definitions" : {
 		"entry": {
@@ -37,6 +37,12 @@
 						"name": {
 							"type": "string"
 						},
+						"alias": {
+							"type": "array",
+							"items": {
+								"type": "string"
+							}
+						},
 						"entries": {
 							"type": "array",
 							"items": {
@@ -60,6 +66,12 @@
 						"type": {"const": "entries"},
 						"name": {
 							"type": "string"
+						},
+						"alias": {
+							"type": "array",
+							"items": {
+								"type": "string"
+							}
 						},
 						"entries": {
 							"type": "array",
@@ -196,6 +208,7 @@
 					"properties": {
 						"type": {"const": "table"},
 						"caption": {"type" : "string"},
+						"style": {"type" : "string"},
 						"colLabels": {
 							"type": "array",
 							"items": {"type" : "string"}
@@ -222,7 +235,9 @@
 											"$ref": "/Entry"
 										}
 									},
-									"#/definitions/entryTableRow"
+									{
+										"$ref": "#/definitions/entryTableRow"
+									}
 								]
 							}
 						},
@@ -380,9 +395,11 @@
 										"type": "integer"
 									},
 									"modifier": {
+										"description": "(Warning: unused)",
 										"type": "integer"
 									},
 									"hideModifier": {
+										"description": "(Warning: unused)",
 										"type": "boolean"
 									}
 								},
@@ -560,7 +577,8 @@
 				}
 			]
 		},
-		"entryInvocation": {
+		"entryOptFeature": {
+			"description": "For e.g. Eldritch Invocations which require prerequisite text",
 			"allOf" : [
 				{"$ref" : "#/definitions/entry"},
 				{
@@ -568,7 +586,7 @@
 						"name": {
 							"type": "string"
 						},
-						"type": {"const": "invocation"},
+						"type": {"const": "optfeature"},
 						"prerequisite": {
 							"type": "string"
 						}
@@ -885,7 +903,7 @@
 		{"$ref": "#/definitions/entryAbilityAttackMod"},
 		{"$ref": "#/definitions/abilityGeneric"},
 		{"$ref": "#/definitions/entryLink"},
-		{"$ref": "#/definitions/entryInvocation"},
+		{"$ref": "#/definitions/entryOptFeature"},
 		{"$ref": "#/definitions/entryPatron"},
 		{"$ref": "#/definitions/entryInset"},
 		{"$ref": "#/definitions/entryInsetReadaloud"},
