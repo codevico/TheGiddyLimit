@@ -83,9 +83,13 @@ const VALID_ACTIONS = new Set([
 	"Use an Object"
 ]);
 
+function isIgnored (directory) {
+	return directory === "./data/roll20-module";
+}
+
 function fileRecurse (file, fileHandler) {
 	if (file.endsWith(".json")) fileHandler(file);
-	else if (fs.lstatSync(file).isDirectory()) fs.readdirSync(file).forEach(nxt => fileRecurse(`${file}/${nxt}`, fileHandler))
+	else if (fs.lstatSync(file).isDirectory() && !isIgnored(file)) fs.readdirSync(file).forEach(nxt => fileRecurse(`${file}/${nxt}`, fileHandler))
 }
 
 function dataRecurse (file, obj, primitiveHandlers) {
@@ -144,7 +148,8 @@ function checkFile (file) {
 			toEncode.push(match[4] || TAG_TO_DEFAULT_SOURCE[tag]);
 		}
 
-		const url = `${TAG_TO_PAGE[tag]}#${UrlUtil.encodeForHash(toEncode)}`.toLowerCase().trim();
+		const url = `${TAG_TO_PAGE[tag]}#${UrlUtil.encodeForHash(toEncode)}`.toLowerCase().trim()
+			.replace(/%5c/gi, ""); // replace slashes
 		if (!ALL_URLS.has(url)) msg += `Missing link: ${match[0]} in file ${file} (evaluates to "${url}")\nSimilar URLs were:\n${getSimilar(url)}\n`;
 	}
 

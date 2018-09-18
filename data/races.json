@@ -4033,7 +4033,8 @@
 				}
 			],
 			"traitTags": [
-				"Powerful Build"
+				"Powerful Build",
+				"Monstrous Race"
 			],
 			"languageTags": [
 				"Common",
@@ -4312,6 +4313,9 @@
 					"type": "entries"
 				}
 			],
+			"traitTags": [
+				"Monstrous Race"
+			],
 			"languageTags": [
 				"Common",
 				"Goblin"
@@ -4378,6 +4382,9 @@
 					],
 					"type": "entries"
 				}
+			],
+			"traitTags": [
+				"Monstrous Race"
 			],
 			"languageTags": [
 				"Common",
@@ -4519,6 +4526,9 @@
 					],
 					"type": "entries"
 				}
+			],
+			"traitTags": [
+				"Monstrous Race"
 			],
 			"languageTags": [
 				"Common",
@@ -4691,7 +4701,8 @@
 				}
 			],
 			"traitTags": [
-				"Powerful Build"
+				"Powerful Build",
+				"Monstrous Race"
 			],
 			"languageTags": [
 				"Common",
@@ -4940,7 +4951,8 @@
 				}
 			],
 			"traitTags": [
-				"Spellcasting"
+				"Spellcasting",
+				"Monstrous Race"
 			],
 			"languageTags": [
 				"Common",
@@ -7882,7 +7894,7 @@
 				{
 					"type": "entries",
 					"entries": [
-						"{@i In 2015, minotaurs appeared as a playtest option in Unearthed Arcana. Here is a revised set of traits for minotaur player characters. These traits are suitable for minotaurs on Krynn and in other D&D worlds where these people have avoided the demonic influence of Baphomet.}"
+						"{@note In 2015, minotaurs appeared as a playtest option in Unearthed Arcana. Here is a revised set of traits for minotaur player characters. These traits are suitable for minotaurs on Krynn and in other D&D worlds where these people have avoided the demonic influence of Baphomet.}"
 					]
 				},
 				{

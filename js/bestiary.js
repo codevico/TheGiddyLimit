@@ -344,7 +344,7 @@ function pPageInit (loadedSources) {
 			if (lastRendered.isScaled) {
 				if (evt.shiftKey) ListUtil.doSublistSubtract(History.lastLoadedId, 20, getScaledData());
 				else ListUtil.doSublistSubtract(History.lastLoadedId, 1, getScaledData());
-			} else ListUtil._genericAddButtonHandler(evt);
+			} else ListUtil._genericSubtractButtonHandler(evt);
 		};
 	}
 	ListUtil.bindAddButton(addHandlerGenerator);
@@ -429,7 +429,7 @@ function handleFilterChange () {
 		const m = monsters[$(item.elm).attr(FLTR_ID)];
 		return filterBox.toDisplay(
 			f,
-			m.source,
+			m._fSources,
 			m._pCr,
 			m._pTypes.type,
 			m._pTypes.tags,
@@ -505,6 +505,7 @@ function addMonsters (data) {
 		mon._fCondImm = mon.conditionImmune ? getAllImmRest(mon.conditionImmune, "conditionImmune") : [];
 		mon._fSave = mon.save ? Object.keys(mon.save) : [];
 		mon._fSkill = mon.skill ? Object.keys(mon.skill) : [];
+		mon._fSources = ListUtil.getCompleteSources(mon);
 
 		const abvSource = Parser.sourceJsonToAbv(mon.source);
 
@@ -520,7 +521,7 @@ function addMonsters (data) {
 			</li>`;
 
 		// populate filters
-		sourceFilter.addIfAbsent(new FilterItem({item: mon.source, changeFn: () => {}}));
+		sourceFilter.addIfAbsent(mon._fSources);
 		crFilter.addIfAbsent(mon._pCr);
 		strengthFilter.addIfAbsent(mon.str);
 		dexterityFilter.addIfAbsent(mon.dex);
@@ -673,7 +674,7 @@ function renderStatblock (mon, isScaled) {
 		$content.append(`
 		${EntryRenderer.utils.getBorderTr()}
 		<tr><th class="name" colspan="6">Name <span class="source" title="Source book">SRC</span></th></tr>
-		<tr><td id="sizetypealignment" colspan="6"><span id="size">Size</span> <span id="type">type</span>, <span id="alignment">alignment</span></td></tr>
+		<tr><td id="sizetypealignment" colspan="6"><span id="size">${Parser.sizeAbvToFull(mon.size)}</span> <span id="type">type</span>, <span id="alignment">alignment</span></td></tr>
 		<tr><td class="divider" colspan="6"><div></div></td></tr>
 		<tr><td colspan="6"><strong>Armor Class</strong> <span id="ac">## (source)</span></td></tr>
 		<tr><td colspan="6"><strong>Hit Points</strong> <span id="hp">hp</span></td></tr>
@@ -750,8 +751,6 @@ function renderStatblock (mon, isScaled) {
 		);
 
 		// TODO most of this could be rolled into the string template above
-		$content.find("td span#size").html(Parser.sizeAbvToFull(mon.size));
-
 		$content.find("td span#type").html(type);
 
 		$content.find("td span#alignment").html(Parser.alignmentListToFull(mon.alignment).toLowerCase());
@@ -877,7 +876,8 @@ function renderStatblock (mon, isScaled) {
 		const srcCpy = {
 			source: mon.source,
 			sourceSub: mon.sourceSub,
-			page: mon.page
+			page: mon.page,
+			otherSources: mon.otherSources
 		};
 		const additional = mon.additionalSources ? JSON.parse(JSON.stringify(mon.additionalSources)) : [];
 		if (mon.variant && mon.variant.length > 1) {
@@ -891,7 +891,13 @@ function renderStatblock (mon, isScaled) {
 			})
 		}
 		srcCpy.additionalSources = additional;
-		$content.find(`#source`).append(EntryRenderer.utils.getPageTr(srcCpy));
+		const $trSource = $content.find(`#source`);
+		const $tdSource = $(EntryRenderer.utils.getPageTr(srcCpy));
+		$trSource.append($tdSource);
+		if (mon.environment && mon.environment.length) {
+			$tdSource.attr("colspan", 4);
+			$trSource.append(`<td colspan="2" class="text-align-right mr-2"><i>Environment: ${mon.environment.map(it => it.toTitleCase()).join(",")}</i></td>`)
+		}
 
 		const legendary = mon.legendary;
 		$content.find("tr#legendaries").hide();
@@ -908,8 +914,8 @@ function renderStatblock (mon, isScaled) {
 		$content.find("tr#regionaleffects").hide();
 		if (legendaryGroup) {
 			const thisGroup = meta[legendaryGroup];
-			if (thisGroup.lairActions) renderSection("lairaction", "legendary", thisGroup.lairActions, 0);
-			if (thisGroup.regionalEffects) renderSection("regionaleffect", "legendary", thisGroup.regionalEffects, 0);
+			if (thisGroup.lairActions) renderSection("lairaction", "legendary", thisGroup.lairActions, -1);
+			if (thisGroup.regionalEffects) renderSection("regionaleffect", "legendary", thisGroup.regionalEffects, -1);
 		}
 
 		function renderSection (sectionTrClass, sectionTdClass, sectionEntries, sectionLevel) {
@@ -1140,6 +1146,7 @@ function renderStatblock (mon, isScaled) {
 			} else {
 				if (fluff.entries) {
 					const depth = fluff.type === "section" ? -1 : 2;
+					if (fluff.type !== "section") renderer.setFirstSection(false);
 					$td.append(renderer.renderEntry({type: fluff.type, entries: fluff.entries}, depth));
 				} else {
 					$td.append(HTML_NO_INFO);
@@ -1205,8 +1212,9 @@ function loadsub (sub) {
 	if (scaledHash) {
 		const scaleTo = Number(UrlUtil.unpackSubHash(scaledHash)[SUB_SCALED][0]);
 		const scaleToStr = Parser.numberToCr(scaleTo);
+		const mon = monsters[History.lastLoadedId];
 		if (Parser.isValidCr(scaleToStr) && scaleTo !== Parser.crToNumber(lastRendered.mon.cr)) {
-			ScaleCreature.scale(lastRendered.mon, scaleTo).then(scaled => renderStatblock(scaled, true));
+			ScaleCreature.scale(mon, scaleTo).then(scaled => renderStatblock(scaled, true));
 		}
 	}
 }
