@@ -4,6 +4,7 @@ const JSON_URL = "data/rewards.json";
 
 window.onload = function load () {
 	ExcludeUtil.initialise();
+	SortUtil.initHandleFilterButtonClicks();
 	DataUtil.loadJSON(JSON_URL).then(onJsonLoad);
 };
 
@@ -53,6 +54,7 @@ function onJsonLoad (data) {
 			RollerUtil.addListRollButton();
 
 			History.init(true);
+			ExcludeUtil.checkShowAllExcluded(rewardList, $(`#pagecontent`));
 		});
 }
 
@@ -127,8 +129,8 @@ function getSublistItem (reward, pinId) {
 	return `
 		<li class="row" ${FLTR_ID}="${pinId}" oncontextmenu="ListUtil.openSubContextMenu(event, this)">
 			<a href="#${UrlUtil.autoEncodeHash(reward)}" title="${reward.name}">
-				<span class="name col-xs-12">${reward.name}</span>		
-				<span class="id hidden">${pinId}</span>				
+				<span class="name col-xs-12">${reward.name}</span>
+				<span class="id hidden">${pinId}</span>
 			</a>
 		</li>
 	`;
@@ -144,6 +146,7 @@ function loadhash (id) {
 		${EntryRenderer.utils.getNameTr(reward)}
 		<tr id="text"><td class="divider" colspan="6"><div></div></td></tr>
 		${EntryRenderer.reward.getRenderedString(reward)}
+		${EntryRenderer.utils.getPageTr(reward)}
 		${EntryRenderer.utils.getBorderTr()}
 	`);
 

@@ -237,6 +237,11 @@ String.prototype.isNumeric = String.prototype.isNumeric ||
 		return !isNaN(parseFloat(this)) && isFinite(this);
 	};
 
+String.prototype.last = String.prototype.last ||
+	function () {
+		return this[this.length - 1];
+	};
+
 Array.prototype.joinConjunct = Array.prototype.joinConjunct ||
 	function (joiner, lastJoiner, nonOxford) {
 		if (this.length === 0) return "";
@@ -309,32 +314,38 @@ class AbilityData {
 function utils_getAbilityData (abObj) {
 	const ABILITIES = ["Str", "Dex", "Con", "Int", "Wis", "Cha"];
 	const mainAbs = [];
-	const allAbs = [];
-	const negMods = [];
-	const abs = [];
-	const shortAbs = [];
+	const asCollection = [];
+	const areNegative = [];
+	const toConvertToText = [];
+	const toConvertToShortText = [];
 	if (abObj !== undefined) {
 		handleAllAbilities(abObj);
 		handleAbilitiesChoose();
-		return new AbilityData(abs.join("; "), shortAbs.join("; "), allAbs, negMods);
+		return new AbilityData(toConvertToText.join("; "), toConvertToShortText.join("; "), asCollection, areNegative);
 	}
 	return new AbilityData("", "", [], []);
 
-	function handleAllAbilities (abilityList) {
+	function handleAllAbilities (abilityList, targetList) {
 		for (let a = 0; a < ABILITIES.length; ++a) {
-			handleAbility(abilityList, ABILITIES[a])
+			handleAbility(abilityList, ABILITIES[a], targetList)
 		}
 	}
 
-	function handleAbility (parent, ab) {
+	function handleAbility (parent, ab, optToConvertToTextStorage) {
 		if (parent[ab.toLowerCase()] !== undefined) {
 			const isNegMod = parent[ab.toLowerCase()] < 0;
 			const toAdd = `${ab} ${(isNegMod ? "" : "+")}${parent[ab.toLowerCase()]}`;
-			abs.push(toAdd);
-			shortAbs.push(toAdd);
+
+			if (optToConvertToTextStorage) {
+				optToConvertToTextStorage.push(toAdd);
+			} else {
+				toConvertToText.push(toAdd);
+				toConvertToShortText.push(toAdd);
+			}
+
 			mainAbs.push(ab);
-			allAbs.push(ab.toLowerCase());
-			if (isNegMod) negMods.push(ab.toLowerCase());
+			asCollection.push(ab.toLowerCase());
+			if (isNegMod) areNegative.push(ab.toLowerCase());
 		}
 	}
 
@@ -346,7 +357,7 @@ function utils_getAbilityData (abObj) {
 				if (item.predefined !== undefined) {
 					for (let j = 0; j < item.predefined.length; ++j) {
 						const subAbs = [];
-						handleAllAbilities(subAbs, item.predefined[j]);
+						handleAllAbilities(item.predefined[j], subAbs);
 						outStack += subAbs.join(", ") + (j === item.predefined.length - 1 ? "" : " or ");
 					}
 				} else {
@@ -384,8 +395,8 @@ function utils_getAbilityData (abObj) {
 						}
 					}
 				}
-				abs.push("Choose " + outStack);
-				shortAbs.push(outStack.uppercaseFirst());
+				toConvertToText.push("Choose " + outStack);
+				toConvertToShortText.push(outStack.uppercaseFirst());
 			}
 		}
 	}
@@ -398,7 +409,7 @@ function utils_getAbilityData (abObj) {
 		for (let i = 0; i < chooseAbs.from.length; ++i) {
 			const ab = chooseAbs.from[i].toLowerCase();
 			if (!tempAbilities.includes(ab)) tempAbilities.push(ab);
-			if (!allAbs.includes(ab.toLowerCase)) allAbs.push(ab.toLowerCase());
+			if (!asCollection.includes(ab.toLowerCase)) asCollection.push(ab.toLowerCase());
 		}
 		return tempAbilities.length === 6;
 	}
@@ -531,7 +542,7 @@ Parser.getSpeedString = (it) => {
 		}
 		return stack.join(joiner);
 	} else {
-		return it.speed + (it.speed === "Varies" ? "" : "ft. ");
+		return it.speed + (it.speed === "Varies" ? "" : " ft. ");
 	}
 };
 
@@ -922,6 +933,7 @@ Parser.getSingletonUnit = function (unit) {
 };
 
 Parser.spComponentsToFull = function (comp) {
+	if (!comp) return "None";
 	const out = [];
 	if (comp.v) out.push("V");
 	if (comp.s) out.push("S");
@@ -1136,11 +1148,21 @@ Parser.OPT_FEATURE_TYPE_TO_FULL = {
 	EI: "Eldritch Invocation",
 	MM: "Metamagic",
 	"MV:B": "Maneuver, Battlemaster",
-	OTH: "Other"
+	"MV:C2-UA": "Maneuver, Cavalier V2 (UA)",
+	"AS:V1-UA": "Arcane Shot, V1 (UA)",
+	"AS:V2-UA": "Arcane Shot, V2 (UA)",
+	"AS": "Arcane Shot",
+	OTH: "Other",
+	"FS:F": "Fighting Style; Fighter",
+	"FS:B": "Fighting Style; Bard",
+	"FS:P": "Fighting Style; Paladin",
+	"FS:R": "Fighting Style; Ranger"
 };
 
 Parser.optFeatureTypeToFull = function (type) {
-	return Parser._parse_aToB(Parser.OPT_FEATURE_TYPE_TO_FULL, type);
+	if (Parser.OPT_FEATURE_TYPE_TO_FULL[type]) return Parser.OPT_FEATURE_TYPE_TO_FULL[type];
+	if (BrewUtil.homebrewMeta && BrewUtil.homebrewMeta.optionalFeatureTypes && BrewUtil.homebrewMeta.optionalFeatureTypes[type]) return BrewUtil.homebrewMeta.optionalFeatureTypes[type];
+	return type
 };
 
 Parser.alignmentAbvToFull = function (alignment) {
@@ -1230,6 +1252,8 @@ Parser.CAT_ID_BOON = 20;
 Parser.CAT_ID_DISEASE = 21;
 Parser.CAT_ID_METAMAGIC = 22;
 Parser.CAT_ID_MANEUVER_BATTLEMASTER = 23;
+Parser.CAT_ID_TABLE = 24;
+Parser.CAT_ID_TABLE_GROUP = 25;
 
 Parser.CAT_ID_TO_FULL = {};
 Parser.CAT_ID_TO_FULL[Parser.CAT_ID_CREATURE] = "Bestiary";
@@ -1255,6 +1279,8 @@ Parser.CAT_ID_TO_FULL[Parser.CAT_ID_BOON] = "Boon";
 Parser.CAT_ID_TO_FULL[Parser.CAT_ID_DISEASE] = "Disease";
 Parser.CAT_ID_TO_FULL[Parser.CAT_ID_METAMAGIC] = "Metamagic";
 Parser.CAT_ID_TO_FULL[Parser.CAT_ID_MANEUVER_BATTLEMASTER] = "Maneuver; Battlemaster";
+Parser.CAT_ID_TO_FULL[Parser.CAT_ID_TABLE] = "Table";
+Parser.CAT_ID_TO_FULL[Parser.CAT_ID_TABLE_GROUP] = "Table";
 
 Parser.pageCategoryToFull = function (catId) {
 	return Parser._parse_aToB(Parser.CAT_ID_TO_FULL, catId);
@@ -1332,7 +1358,8 @@ Parser.TRAP_HAZARD_TYPE_TO_FULL = {
 	HAZ: "Hazard",
 	WTH: "Weather",
 	ENV: "Environmental Hazard",
-	WLD: "Wilderness Hazard"
+	WLD: "Wilderness Hazard",
+	GEN: "Generic"
 };
 
 Parser.tierToFullLevel = function (tier) {
@@ -1367,6 +1394,17 @@ Parser.ATK_TYPE_TO_FULL = {};
 Parser.ATK_TYPE_TO_FULL["MW"] = "Melee Weapon Attack";
 Parser.ATK_TYPE_TO_FULL["RW"] = "Ranged Weapon Attack";
 
+Parser.bookOrdinalToAbv = (ordinal, preNoSuff) => {
+	if (ordinal === undefined) return "";
+	switch (ordinal.type) {
+		case "part": return `${preNoSuff ? " " : ""}Part ${ordinal.identifier}${preNoSuff ? "" : " \u2014 "}`;
+		case "chapter": return `${preNoSuff ? " " : ""}Ch. ${ordinal.identifier}${preNoSuff ? "" : ": "}`;
+		case "episode": return `${preNoSuff ? " " : ""}Ep. ${ordinal.identifier}${preNoSuff ? "" : ": "}`;
+		case "appendix": return `${preNoSuff ? " " : ""}App. ${ordinal.identifier}${preNoSuff ? "" : ": "}`;
+		default: throw new Error(`Unhandled ordinal type "${ordinal.type}"`);
+	}
+};
+
 SKL_ABV_ABJ = "A";
 SKL_ABV_EVO = "V";
 SKL_ABV_ENC = "E";
@@ -1375,6 +1413,7 @@ SKL_ABV_DIV = "D";
 SKL_ABV_NEC = "N";
 SKL_ABV_TRA = "T";
 SKL_ABV_CON = "C";
+SKL_ABV_PSI = "P";
 
 SKL_ABJ = "Abjuration";
 SKL_EVO = "Evocation";
@@ -1384,6 +1423,7 @@ SKL_DIV = "Divination";
 SKL_NEC = "Necromancy";
 SKL_TRA = "Transmutation";
 SKL_CON = "Conjuration";
+SKL_PSI = "Psionic";
 
 Parser.SP_SCHOOL_ABV_TO_FULL = {};
 Parser.SP_SCHOOL_ABV_TO_FULL[SKL_ABV_ABJ] = SKL_ABJ;
@@ -1394,6 +1434,7 @@ Parser.SP_SCHOOL_ABV_TO_FULL[SKL_ABV_DIV] = SKL_DIV;
 Parser.SP_SCHOOL_ABV_TO_FULL[SKL_ABV_NEC] = SKL_NEC;
 Parser.SP_SCHOOL_ABV_TO_FULL[SKL_ABV_TRA] = SKL_TRA;
 Parser.SP_SCHOOL_ABV_TO_FULL[SKL_ABV_CON] = SKL_CON;
+Parser.SP_SCHOOL_ABV_TO_FULL[SKL_ABV_PSI] = SKL_PSI;
 
 Parser.SP_SCHOOL_ABV_TO_SHORT = {};
 Parser.SP_SCHOOL_ABV_TO_SHORT[SKL_ABV_ABJ] = "Abj.";
@@ -1404,6 +1445,7 @@ Parser.SP_SCHOOL_ABV_TO_SHORT[SKL_ABV_DIV] = "Divin.";
 Parser.SP_SCHOOL_ABV_TO_SHORT[SKL_ABV_NEC] = "Necro.";
 Parser.SP_SCHOOL_ABV_TO_SHORT[SKL_ABV_TRA] = "Trans.";
 Parser.SP_SCHOOL_ABV_TO_SHORT[SKL_ABV_CON] = "Conj.";
+Parser.SP_SCHOOL_ABV_TO_SHORT[SKL_ABV_PSI] = "Psi.";
 
 Parser.ATB_ABV_TO_FULL = {
 	"str": "Strength",
@@ -1505,6 +1547,8 @@ SRC_XGE = "XGE";
 SRC_OGA = "OGA";
 SRC_MTF = "MTF";
 SRC_WDH = "WDH";
+SRC_AL = "AL";
+SRC_SCREEN = "Screen";
 
 SRC_ALCoS = "ALCurseOfStrahd";
 SRC_ALEE = "ALElementalEvil";
@@ -1610,6 +1654,8 @@ Parser.SOURCE_JSON_TO_FULL[SRC_XGE] = "Xanathar's Guide to Everything";
 Parser.SOURCE_JSON_TO_FULL[SRC_OGA] = "One Grung Above";
 Parser.SOURCE_JSON_TO_FULL[SRC_MTF] = "Mordenkainen's Tome of Foes";
 Parser.SOURCE_JSON_TO_FULL[SRC_WDH] = "Waterdeep: Dragon Heist";
+Parser.SOURCE_JSON_TO_FULL[SRC_AL] = "Adventurers' League";
+Parser.SOURCE_JSON_TO_FULL[SRC_SCREEN] = "Dungeon Master's Screen";
 Parser.SOURCE_JSON_TO_FULL[SRC_ALCoS] = AL_PREFIX + "Curse of Strahd";
 Parser.SOURCE_JSON_TO_FULL[SRC_ALEE] = AL_PREFIX + "Elemental Evil";
 Parser.SOURCE_JSON_TO_FULL[SRC_ALRoD] = AL_PREFIX + "Rage of Demons";
@@ -1698,6 +1744,8 @@ Parser.SOURCE_JSON_TO_ABV[SRC_XGE] = "XGE";
 Parser.SOURCE_JSON_TO_ABV[SRC_OGA] = "OGA";
 Parser.SOURCE_JSON_TO_ABV[SRC_MTF] = "MTF";
 Parser.SOURCE_JSON_TO_ABV[SRC_WDH] = "WDH";
+Parser.SOURCE_JSON_TO_ABV[SRC_AL] = "AL";
+Parser.SOURCE_JSON_TO_ABV[SRC_SCREEN] = "Screen";
 Parser.SOURCE_JSON_TO_ABV[SRC_ALCoS] = "ALCoS";
 Parser.SOURCE_JSON_TO_ABV[SRC_ALEE] = "ALEE";
 Parser.SOURCE_JSON_TO_ABV[SRC_ALRoD] = "ALRoD";
@@ -1859,6 +1907,11 @@ Parser.SKILL_JSON_TO_FULL = {
 };
 
 Parser.ACTION_JSON_TO_FULL = {
+	"Attack": [
+		"The most common action to take in combat is the Attack action, whether you are swinging a sword, firing an arrow from a bow, or brawling with your fists.",
+		"With this action, you make one melee or ranged attack. See the \"{@book Making an Attack|phb|9|making an attack}\" section for the rules that govern attacks.",
+		"Certain features, such as the Extra Attack feature of the fighter, allow you to make more than one attack with this action."
+	],
 	"Dash": [
 		"When you take the Dash action, you gain extra movement for the current turn. The increase equals your speed, after applying any modifiers. With a speed of 30 feet, for example, you can move up to 60 feet on your turn if you dash.",
 		"Any increase or decrease to your speed changes this additional movement by the same amount. If your speed of 30 feet is reduced to 15 feet, for instance, you can move up to 30 feet this turn if you dash."
@@ -1882,6 +1935,9 @@ Parser.ACTION_JSON_TO_FULL = {
 		"When the trigger occurs, you can either take your reaction right after the trigger finishes or ignore the trigger. Remember that you can take only one reaction per round.",
 		"When you ready a spell, you cast it as normal but hold its energy, which you release with your reaction when the trigger occurs. To be readied, a spell must have a casting time of 1 action, and holding onto the spell's magic requires concentration (explained in chapter 10). If your concentration is broken, the spell dissipates without taking effect. For example, if you are concentrating on the web spell and ready magic missile, your web spell ends, and if you take damage before you release magic missile with your reaction, your concentration might be broken.",
 		"You have until the start of your next turn to use a readied action."
+	],
+	"Search": [
+		"When you take the Search action, you devote your attention to finding something. Depending on the nature of your search, the DM might have you make a Wisdom ({@skill Perception}) check or an Intelligence ({@skill Investigation}) check."
 	],
 	"Use an Object": [
 		"You normally interact with an object while doing something else, such as when you draw a sword as part of an attack. When an object requires your action for its use, you take the Use an Object action. This action is also useful when you want to interact with more than one object on your turn."
@@ -2003,8 +2059,8 @@ function isEmpty (obj) {
 	return Object.keys(obj).length === 0;
 }
 
-if (typeof window !== "undefined") {
-	window.addEventListener("load", () => {
+JqueryUtil = {
+	addSelectors () {
 		// Add a selector to match exact text (case insensitive) to jQuery's arsenal
 		$.expr[':'].textEquals = (el, i, m) => {
 			const searchText = m[3];
@@ -2022,8 +2078,10 @@ if (typeof window !== "undefined") {
 			const match = textNode.nodeValue.toLowerCase().trim().match(`${RegExp.escape(searchText.toLowerCase())}`);
 			return match && match.length > 0;
 		};
-	});
-}
+	}
+};
+
+if (typeof window !== "undefined") window.addEventListener("load", JqueryUtil.addSelectors);
 
 function copyText (text) {
 	const $temp = $(`<textarea id="copy-temp" style="position: fixed; top: -1000px; left: -1000px; width: 1px; height: 1px;">${text}</textarea>`);
@@ -2106,6 +2164,178 @@ MiscUtil = {
 	expEval (str) {
 		// eslint-disable-next-line no-new-func
 		return new Function(`return ${str.replace(/[^-()\d/*+.]/g, "")}`)();
+	},
+
+	parseNumberRange (input, min = Number.MIN_SAFE_INTEGER, max = Number.MAX_SAFE_INTEGER) {
+		function errInvalid (input) {
+			throw new Error(`Could not parse range input "${input}"`);
+		}
+
+		function errOutOfRange () {
+			throw new Error(`Number was out of range! Range was ${min}-${max} (inclusive).`);
+		}
+
+		function isOutOfRange (num) {
+			return num < min || num > max;
+		}
+
+		function addToRangeVal (range, num) {
+			range.add(num);
+		}
+
+		function addToRangeLoHi (range, lo, hi) {
+			for (let i = lo; i <= hi; ++i) range.add(i);
+		}
+
+		while (true) {
+			if (input && input.trim()) {
+				const clean = input.replace(/\s*/g, "");
+				if (/^((\d+-\d+|\d+),)*(\d+-\d+|\d+)$/.exec(clean)) {
+					const parts = clean.split(",");
+					const out = new Set();
+
+					for (const part of parts) {
+						if (part.includes("-")) {
+							const spl = part.split("-");
+							const numLo = Number(spl[0]);
+							const numHi = Number(spl[1]);
+
+							if (isNaN(numLo) || isNaN(numHi) || numLo === 0 || numHi === 0 || numLo > numHi) errInvalid();
+
+							if (isOutOfRange(numLo) || isOutOfRange(numHi)) errOutOfRange();
+
+							if (numLo === numHi) addToRangeVal(out, numLo);
+							else addToRangeLoHi(out, numLo, numHi);
+						} else {
+							const num = Number(part);
+							if (isNaN(num) || num === 0) errInvalid();
+							else {
+								if (isOutOfRange(num)) errOutOfRange();
+								addToRangeVal(out, num);
+							}
+						}
+					}
+
+					return out;
+				} else errInvalid();
+			} else return null;
+		}
+	},
+
+	MONTH_NAMES: [
+		"January", "February", "March", "April", "May", "June",
+		"July", "August", "September", "October", "November", "December"
+	],
+	dateToStr (date, short) {
+		const month = MiscUtil.MONTH_NAMES[date.getMonth()];
+		return `${short ? month.substring(0, 3) : month} ${date.getDate()}, ${date.getFullYear()}`
+	},
+
+	findCommonPrefix (strArr) {
+		let prefix = null;
+		strArr.forEach(s => {
+			if (prefix == null) {
+				prefix = s;
+			} else {
+				const minLen = Math.min(s.length, prefix.length);
+				for (let i = 0; i < minLen; ++i) {
+					const cp = prefix[i];
+					const cs = s[i];
+					if (cp !== cs) {
+						prefix = prefix.substring(0, i);
+						break;
+					}
+				}
+			}
+		});
+		return prefix;
+	},
+
+	/**
+	 * @param fgHexTarget Target/resultant color for the foreground item
+	 * @param fgOpacity Desired foreground transparency (0-1 inclusive)
+	 * @param bgHex Background color
+	 */
+	calculateBlendedColor (fgHexTarget, fgOpacity, bgHex) {
+		const fgDcTarget = CryptUtil.hex2Dec(fgHexTarget);
+		const bgDc = CryptUtil.hex2Dec(bgHex);
+		return ((fgDcTarget - ((1 - fgOpacity) * bgDc)) / fgOpacity).toString(16);
+	}
+};
+
+// CONTEXT MENUS =======================================================================================================
+ContextUtil = {
+	_ctxInit: {},
+	_ctxClick: {},
+	_ctxOpenRefsNextId: 1,
+	_ctxOpenRefs: {},
+	_handlePreInitContextMenu: (menuId) => {
+		if (ContextUtil._ctxInit[menuId]) return;
+		ContextUtil._ctxInit[menuId] = true;
+		const clickId = `click.${menuId}`
+		$("body").off(clickId).on(clickId, (evt) => {
+			if ($(evt.target).data("ctx-id") != null) return; // ignore clicks on context menus
+
+			Object.entries(ContextUtil._ctxOpenRefs[menuId] || {}).forEach(([k, v]) => {
+				v(false);
+				delete ContextUtil._ctxOpenRefs[menuId][k];
+			})
+			$(`#${menuId}`).hide();
+		});
+	},
+
+	_getMenuPosition: (menuId, mouse, direction, scrollDir) => {
+		const win = $(window)[direction]();
+		const scroll = $(window)[scrollDir]();
+		const menu = $(`#${menuId}`)[direction]();
+		let position = mouse + scroll;
+		// opening menu would pass the side of the page
+		if (mouse + menu > win && menu < mouse) position -= menu;
+		return position;
+	},
+
+	doInitContextMenu: (menuId, clickFn, labels) => {
+		ContextUtil._ctxClick[menuId] = clickFn;
+		ContextUtil._handlePreInitContextMenu(menuId);
+		let tempString = `<ul id="${menuId}" class="dropdown-menu" role="menu">`;
+		let i = 0;
+		labels.forEach(it => {
+			if (it === null) tempString += `<li class="divider"/>`;
+			else if (it.disabled) {
+				tempString += `<li class="disabled"><a href="${STR_VOID_LINK}">${it.text}</a></li>`;
+			} else {
+				tempString += `<li><a data-ctx-id="${i}" href="${STR_VOID_LINK}">${it}</a></li>`;
+				i++;
+			}
+		});
+		tempString += `</ul>`;
+		$(`#${menuId}`).remove();
+		$("body").append(tempString);
+	},
+
+	handleOpenContextMenu: (evt, ele, menuId, closeHandler) => {
+		if (evt.ctrlKey) return;
+		evt.preventDefault();
+		evt.stopPropagation();
+		const thisId = ContextUtil._ctxOpenRefsNextId++;
+		(ContextUtil._ctxOpenRefs[menuId] = ContextUtil._ctxOpenRefs[menuId] || {})[thisId] = closeHandler || (() => {});
+		const $menu = $(`#${menuId}`)
+			.show()
+			.css({
+				position: "absolute",
+				left: ContextUtil._getMenuPosition(menuId, evt.clientX, "width", "scrollLeft"),
+				top: ContextUtil._getMenuPosition(menuId, evt.clientY, "height", "scrollTop")
+			})
+			.off("click")
+			.on("click", "a", function (e) {
+				$menu.hide();
+				if (ContextUtil._ctxOpenRefs[menuId][thisId]) ContextUtil._ctxOpenRefs[menuId][thisId](true);
+				delete ContextUtil._ctxOpenRefs[menuId][thisId];
+				const $invokedOn = $(evt.target).closest(`li.row`);
+				const $selectedMenu = $(e.target);
+				const invokedOnId = Number($selectedMenu.data("ctx-id"));
+				ContextUtil._ctxClick[menuId](e, ele, $invokedOn, $selectedMenu, isNaN(invokedOnId) ? null : invokedOnId);
+			});
 	}
 };
 
@@ -2248,13 +2478,63 @@ ListUtil = {
 		return list
 	},
 
+	_lastSelected: null,
 	toggleSelected: (evt, ele) => {
-		if (evt.shiftKey) {
-			evt.preventDefault();
-			$(ele).toggleClass("list-multi-selected");
-		} else {
+		function doSingle () {
 			ListUtil._primaryLists.forEach(l => ListUtil.deslectAll(l));
 			$(ele).addClass("list-multi-selected");
+		}
+
+		function getListPos (selected) {
+			let i, j, list, listItem;
+			outer: for (i = 0; i < ListUtil._primaryLists.length; ++i) {
+				const l = ListUtil._primaryLists[i];
+				for (j = 0; j < l.visibleItems.length; ++j) {
+					const it = l.visibleItems[j];
+					if (selected === it.elm.getAttribute("filterid")) {
+						list = l;
+						listItem = it;
+						break outer;
+					}
+				}
+			}
+			return list && listItem ? {ixList: i, list, ixItem: j, listItem} : null;
+		}
+
+		const nextSelected = $(ele).attr("filterid");
+
+		if (evt.shiftKey && ListUtil._lastSelected) {
+			evt.preventDefault();
+			const lastItem = getListPos(ListUtil._lastSelected);
+			if (!lastItem) {
+				doSingle();
+				ListUtil._lastSelected = nextSelected;
+			} else {
+				ListUtil._primaryLists.forEach(l => ListUtil.deslectAll(l));
+
+				const nextItem = getListPos(nextSelected);
+
+				const [min, max] = [lastItem, nextItem].sort((a, b) => {
+					if (a.ixList < b.ixList) return 1;
+					else if (a.ixList > b.ixList) return -1;
+					else if (a.ixItem > b.ixItem) return 1;
+					else if (a.ixItem < b.ixItem) return -1;
+					else return 0;
+				});
+
+				for (let i = min.ixList; i <= max.ixList; ++i) {
+					const l = ListUtil._primaryLists[i];
+					const rangeStart = i < max.ixList ? 0 : min.ixItem;
+					const rangeEnd = max.ixList > i ? l.visibleItems.length : max.ixItem;
+
+					for (let j = rangeStart; j <= rangeEnd; ++j) {
+						$(l.visibleItems[j].elm).addClass("list-multi-selected");
+					}
+				}
+			}
+		} else {
+			doSingle();
+			ListUtil._lastSelected = nextSelected;
 		}
 	},
 
@@ -2262,75 +2542,23 @@ ListUtil = {
 		ListUtil.toggleSelected({}, History.getSelectedListElement().parent());
 	},
 
-	_ctxInit: {},
-	_ctxClick: {},
-	_handlePreInitContextMenu: (menuId) => {
-		if (ListUtil._ctxInit[menuId]) return;
-		ListUtil._ctxInit[menuId] = true;
-		$("body").click(() => {
-			$(`#${menuId}`).hide();
-		});
-	},
-
-	_getMenuPosition: (menuId, mouse, direction, scrollDir) => {
-		const win = $(window)[direction]();
-		const scroll = $(window)[scrollDir]();
-		const menu = $(`#${menuId}`)[direction]();
-		let position = mouse + scroll;
-		// opening menu would pass the side of the page
-		if (mouse + menu > win && menu < mouse) position -= menu;
-		return position;
-	},
-
 	initContextMenu: (clickFn, ...labels) => {
-		ListUtil._handleInitContextMenu("contextMenu", clickFn, labels);
+		ContextUtil.doInitContextMenu("list", clickFn, labels);
+	},
+
+	initSubContextMenu: (clickFn, ...labels) => {
+		ContextUtil.doInitContextMenu("listSub", clickFn, labels)
 	},
 
 	openContextMenu: (evt, ele) => {
 		const selCount = ListUtil._primaryLists.map(l => ListUtil.getSelectedCount(l)).reduce((a, b) => a + b, 0);
 		if (selCount === 1) ListUtil._primaryLists.forEach(l => ListUtil.deslectAll(l));
 		if (selCount === 0 || selCount === 1) $(ele).addClass("list-multi-selected");
-		ListUtil._handleOpenContextMenu(evt, ele, "contextMenu");
-	},
-
-	initSubContextMenu: (clickFn, ...labels) => {
-		ListUtil._handleInitContextMenu("contextSubMenu", clickFn, labels.filter(it => it))
+		ContextUtil.handleOpenContextMenu(evt, ele, "list");
 	},
 
 	openSubContextMenu: (evt, ele) => {
-		ListUtil._handleOpenContextMenu(evt, ele, "contextSubMenu");
-	},
-
-	_handleInitContextMenu: (menuId, clickFn, labels) => {
-		ListUtil._ctxClick[menuId] = clickFn;
-		ListUtil._handlePreInitContextMenu(menuId);
-		let tempString = `<ul id="${menuId}" class="dropdown-menu" role="menu">`;
-		labels.forEach((it, i) => {
-			if (it === null) tempString += `<li class="divider"/>`;
-			else tempString += `<li><a data-ctx-id="${i}" href="${STR_VOID_LINK}">${it}</a></li>`;
-		});
-		tempString += `</ul>`;
-		$("body").append(tempString);
-	},
-
-	_handleOpenContextMenu: (evt, ele, menuId) => {
-		if (evt.ctrlKey) return;
-		evt.preventDefault();
-		const $menu = $(`#${menuId}`)
-			.data("invokedOn", $(evt.target).closest(`li.row`))
-			.show()
-			.css({
-				position: "absolute",
-				left: ListUtil._getMenuPosition(menuId, evt.clientX, "width", "scrollLeft"),
-				top: ListUtil._getMenuPosition(menuId, evt.clientY, "height", "scrollTop")
-			})
-			.off("click")
-			.on("click", "a", function (e) {
-				$menu.hide();
-				const $invokedOn = $menu.data("invokedOn");
-				const $selectedMenu = $(e.target);
-				ListUtil._ctxClick[menuId](evt, ele, $invokedOn, $selectedMenu);
-			});
+		ContextUtil.handleOpenContextMenu(evt, ele, "listSub");
 	},
 
 	$sublistContainer: null,
@@ -2623,6 +2851,16 @@ ListUtil = {
 			.forEach(it => forEachFunc(it));
 	},
 
+	mapSelected (list, mapFunc) {
+		return list.items
+			.filter(it => it.elm.className.includes("list-multi-selected"))
+			.map(it => {
+				it.elm.className = it.elm.className.replace(/list-multi-selected/g, "");
+				return it.elm.getAttribute(FLTR_ID);
+			})
+			.map(it => mapFunc(it));
+	},
+
 	getSelectedCount: (list) => {
 		return list.items.filter(it => it.elm.className.includes("list-multi-selected")).length;
 	},
@@ -2681,7 +2919,7 @@ ListUtil = {
 
 	initGenericPinnable: () => {
 		ListUtil.initContextMenu(ListUtil.handleGenericContextMenuClick, "Popout", "Pin");
-		ListUtil.initSubContextMenu(ListUtil.handleGenericSubContextMenuClick, "Popout", "Unpin", "Clear Pins", null, "Download JSON");
+		ListUtil.initSubContextMenu(ListUtil.handleGenericSubContextMenuClick, "Popout", "Unpin", "Clear Pins", null, "Feeling Lucky?", null, "Download JSON");
 	},
 
 	handleGenericContextMenuClick: (evt, ele, $invokedOn, $selectedMenu) => {
@@ -2691,13 +2929,55 @@ ListUtil = {
 				EntryRenderer.hover.doPopout($invokedOn, ListUtil._allItems, itId, evt.clientX);
 				break;
 			case 1:
-				ListUtil._primaryLists.forEach(l => {
-					ListUtil.forEachSelected(l, (it) => {
-						if (!ListUtil.isSublisted(it)) ListUtil.doSublistAdd(it);
-					});
-				});
-				ListUtil._finaliseSublist();
+				Promise.all(ListUtil._primaryLists.map(l => Promise.all(ListUtil.mapSelected(l, (it) => ListUtil.isSublisted(it) ? Promise.resolve() : ListUtil.doSublistAdd(it)))))
+					.then(() => ListUtil._finaliseSublist());
 				break;
+		}
+	},
+
+	_isRolling: false,
+	_rollSubListed () {
+		const timerMult = RollerUtil.randomise(125, 75);
+		const timers = [0, 1, 1, 1, 1, 1, 1.5, 1.5, 1.5, 2, 2, 2, 2.5, 3, 4, -1] // last element is always sliced off
+			.map(it => it * timerMult)
+			.slice(0, -RollerUtil.randomise(4, 1));
+
+		function generateSequence (array, length) {
+			function rollOnArray () {
+				return array[RollerUtil.randomise(array.length) - 1];
+			}
+
+			const out = [rollOnArray()];
+			for (let i = 0; i < length; ++i) {
+				let next = rollOnArray();
+				while (next === out.last()) {
+					next = rollOnArray();
+				}
+				out.push(next);
+			}
+			return out;
+		}
+
+		if (!ListUtil._isRolling) {
+			ListUtil._isRolling = true;
+			const $eles = ListUtil.sublist.items
+				.map(it => $(it.elm).find(`a`));
+
+			if ($eles.length <= 1) {
+				alert("Not enough entries to roll!");
+				return ListUtil._isRolling = false;
+			}
+
+			const $sequence = generateSequence($eles, timers.length);
+
+			let total = 0;
+			timers.map((it, i) => {
+				total += it;
+				setTimeout(() => {
+					$sequence[i][0].click();
+					if (i === timers.length - 1) ListUtil._isRolling = false;
+				}, total);
+			})
 		}
 	},
 
@@ -2714,6 +2994,9 @@ ListUtil = {
 				ListUtil.doSublistRemoveAll();
 				break;
 			case 3:
+				ListUtil._rollSubListed();
+				break;
+			case 4:
 				ListUtil._handleJsonDownload();
 				break;
 		}
@@ -2721,7 +3004,7 @@ ListUtil = {
 
 	initGenericAddable: () => {
 		ListUtil.initContextMenu(ListUtil.handleGenericMultiContextMenuClick, "Popout", "Add");
-		ListUtil.initSubContextMenu(ListUtil.handleGenericMultiSubContextMenuClick, "Popout", "Remove", "Clear List", null, "Download JSON");
+		ListUtil.initSubContextMenu(ListUtil.handleGenericMultiSubContextMenuClick, "Popout", "Remove", "Clear List", null, "Feeling Lucky?", null, "Download JSON");
 	},
 
 	handleGenericMultiContextMenuClick: (evt, ele, $invokedOn, $selectedMenu) => {
@@ -2731,10 +3014,11 @@ ListUtil = {
 				EntryRenderer.hover.doPopout($invokedOn, ListUtil._allItems, itId, evt.clientX);
 				break;
 			case 1:
-				ListUtil._primaryLists.forEach(l => {
-					ListUtil.forEachSelected(l, (it) => ListUtil.doSublistAdd(it));
-				});
-				ListUtil._finaliseSublist();
+				Promise.all(ListUtil._primaryLists.map(l => Promise.all(ListUtil.mapSelected(l, (it) => ListUtil.doSublistAdd(it)))))
+					.then(() => {
+						ListUtil._finaliseSublist();
+						ListUtil.updateSelected();
+					});
 				break;
 		}
 	},
@@ -2744,7 +3028,7 @@ ListUtil = {
 		const uid = $invokedOn.find(`.uid`).text();
 		switch (Number($selectedMenu.data("ctx-id"))) {
 			case 0:
-				EntryRenderer.hover.doPopout($invokedOn, itemList, itId, evt.clientX);
+				EntryRenderer.hover.doPopout($invokedOn, ListUtil._allItems, itId, evt.clientX);
 				break;
 			case 1:
 				if (uid) ListUtil.doSublistRemove(itId, {uid: uid});
@@ -2754,6 +3038,9 @@ ListUtil = {
 				ListUtil.doSublistRemoveAll();
 				break;
 			case 3:
+				ListUtil._rollSubListed();
+				break;
+			case 4:
 				ListUtil._handleJsonDownload();
 				break;
 		}
@@ -2879,7 +3166,9 @@ ListUtil = {
 		if (typeof filter === "object" && filter.generator) filter = filter.generator();
 
 		let temp = `<table class="table-striped stats stats-book" style="width: 100%;"><thead><tr>${Object.values(colTransforms).map((c, i) => `<th class="col_${i} px-2" colspan="${c.flex || 1}">${c.name}</th>`).join("")}</tr></thead><tbody>`;
-		(sorter ? JSON.parse(JSON.stringify(dataList)).sort(sorter) : dataList).filter((it, i) => filter ? filter(i) : it).forEach(it => {
+		const listCopy = JSON.parse(JSON.stringify(dataList)).filter((it, i) => filter ? filter(i) : it);
+		if (sorter) listCopy.sort(sorter);
+		listCopy.forEach(it => {
 			temp += `<tr class="data-row">`;
 			temp += Object.keys(colTransforms).map((k, i) => {
 				const c = colTransforms[k];
@@ -3028,6 +3317,8 @@ UrlUtil.PG_REWARDS = "rewards.html";
 UrlUtil.PG_VARIATNRULES = "variantrules.html";
 UrlUtil.PG_ADVENTURE = "adventure.html";
 UrlUtil.PG_ADVENTURES = "adventures.html";
+UrlUtil.PG_BOOK = "book.html";
+UrlUtil.PG_BOOKS = "books.html";
 UrlUtil.PG_DEITIES = "deities.html";
 UrlUtil.PG_CULTS_BOONS = "cultsboons.html";
 UrlUtil.PG_OBJECTS = "objects.html";
@@ -3035,6 +3326,7 @@ UrlUtil.PG_TRAPS_HAZARDS = "trapshazards.html";
 UrlUtil.PG_QUICKREF = "quickreference.html";
 UrlUtil.PG_MAKE_SHAPED = "makeshaped.html";
 UrlUtil.PG_MANAGE_BREW = "managebrew.html";
+UrlUtil.PG_TABLES = "tables.html";
 
 UrlUtil.URL_TO_HASH_BUILDER = {};
 UrlUtil.URL_TO_HASH_BUILDER[UrlUtil.PG_BESTIARY] = (it) => UrlUtil.encodeForHash([it.name, it.source]);
@@ -3050,10 +3342,12 @@ UrlUtil.URL_TO_HASH_BUILDER[UrlUtil.PG_RACES] = (it) => UrlUtil.encodeForHash([i
 UrlUtil.URL_TO_HASH_BUILDER[UrlUtil.PG_REWARDS] = (it) => UrlUtil.encodeForHash([it.name, it.source]);
 UrlUtil.URL_TO_HASH_BUILDER[UrlUtil.PG_VARIATNRULES] = (it) => UrlUtil.encodeForHash([it.name, it.source]);
 UrlUtil.URL_TO_HASH_BUILDER[UrlUtil.PG_ADVENTURE] = (it) => UrlUtil.encodeForHash(it.id);
+UrlUtil.URL_TO_HASH_BUILDER[UrlUtil.PG_BOOK] = (it) => UrlUtil.encodeForHash(it.id);
 UrlUtil.URL_TO_HASH_BUILDER[UrlUtil.PG_DEITIES] = (it) => UrlUtil.encodeForHash([it.name, it.pantheon, it.source]);
 UrlUtil.URL_TO_HASH_BUILDER[UrlUtil.PG_CULTS_BOONS] = (it) => UrlUtil.encodeForHash([it.name, it.source]);
 UrlUtil.URL_TO_HASH_BUILDER[UrlUtil.PG_OBJECTS] = (it) => UrlUtil.encodeForHash([it.name, it.source]);
 UrlUtil.URL_TO_HASH_BUILDER[UrlUtil.PG_TRAPS_HAZARDS] = (it) => UrlUtil.encodeForHash([it.name, it.source]);
+UrlUtil.URL_TO_HASH_BUILDER[UrlUtil.PG_TABLES] = (it) => UrlUtil.encodeForHash([it.name, it.source]);
 
 UrlUtil.CAT_TO_PAGE = {};
 UrlUtil.CAT_TO_PAGE[Parser.CAT_ID_CREATURE] = UrlUtil.PG_BESTIARY;
@@ -3079,6 +3373,8 @@ UrlUtil.CAT_TO_PAGE[Parser.CAT_ID_QUICKREF] = UrlUtil.PG_QUICKREF;
 UrlUtil.CAT_TO_PAGE[Parser.CAT_ID_CULT] = UrlUtil.PG_CULTS_BOONS;
 UrlUtil.CAT_TO_PAGE[Parser.CAT_ID_BOON] = UrlUtil.PG_CULTS_BOONS;
 UrlUtil.CAT_TO_PAGE[Parser.CAT_ID_DISEASE] = UrlUtil.PG_CONDITIONS_DISEASES;
+UrlUtil.CAT_TO_PAGE[Parser.CAT_ID_TABLE] = UrlUtil.PG_TABLES;
+UrlUtil.CAT_TO_PAGE[Parser.CAT_ID_TABLE_GROUP] = UrlUtil.PG_TABLES;
 
 UrlUtil.bindLinkExportButton = (filterBox) => {
 	const $btn = ListUtil.getOrTabRightButton(`btn-link-export`, `magnet`);
@@ -3129,6 +3425,20 @@ SortUtil = {
 
 	ascSortLower: (a, b) => {
 		return SortUtil._ascSort(a.toLowerCase(), b.toLowerCase());
+	},
+
+	// warning: slow
+	ascSortNumericalSuffix (a, b) {
+		function popEndNumber (str) {
+			const spl = str.split(" ");
+			return spl.last().isNumeric() ? [spl.slice(0, -1).join(" "), Number(spl.last().replace(Parser._numberCleanRegexp, ""))] : [spl.join(" "), 0];
+		}
+
+		const [aStr, aNum] = popEndNumber(a.item || a);
+		const [bStr, bNum] = popEndNumber(b.item || b);
+		const initialSort = SortUtil.ascSort(aStr, bStr);
+		if (initialSort) return initialSort;
+		return SortUtil.ascSort(aNum, bNum);
 	},
 
 	_ascSort: (a, b) => {
@@ -3187,6 +3497,21 @@ SortUtil = {
 		if (a === "Unknown" || a === undefined) a = "999";
 		if (b === "Unknown" || b === undefined) b = "999";
 		return SortUtil.ascSort(Parser.crToNumber(a), Parser.crToNumber(b));
+	},
+
+	initHandleFilterButtonClicks (target = "#filtertools") {
+		$("#filtertools").find("button.sort").click(function () {
+			setTimeout(() => { // defer to allow button to update
+				SortUtil.handleFilterButtonClick.call(this, target);
+			}, 1);
+		});
+	},
+
+	handleFilterButtonClick (target, $this = $(this), direction) {
+		if (!direction) direction = $this.hasClass("asc") || $this.attr("data-sortby") === "asc" ? "asc" : "desc";
+
+		$(target).find(".caret").removeClass("caret");
+		$this.find(".caret_wrp").addClass("caret").toggleClass("caret--reverse", direction === "asc");
 	}
 };
 
@@ -3194,7 +3519,7 @@ SortUtil = {
 DataUtil = {
 	_loaded: {},
 
-	loadJSON: function (url, ...otherData) {
+	loadJSON: function (url, ...otherData) { // FIXME otherData doesn't get returned, as resolve() can only return a single value
 		return new Promise((resolve, reject) => {
 			function handleAlreadyLoaded (url) {
 				resolve(DataUtil._loaded[url], otherData);
@@ -3239,13 +3564,27 @@ DataUtil = {
 		});
 	},
 
-	multiLoadJSON: function (toLoads, onEachLoadFunction, onFinalLoadFunction) {
+	multiLoadJSON: function (toLoads, onEachLoadFunction, onFinalLoadFunction, getDependencyLoadable) {
 		if (!toLoads.length) onFinalLoadFunction([]);
 		return Promise.all(toLoads.map(tl => this.loadJSON(tl.url))).then(datas => {
+			let dependencies = [];
 			datas.forEach((data, i) => {
+				const deps = MiscUtil.getProperty(data, "_meta", "dependencies");
+				if (deps) deps.forEach(d => dependencies.push(getDependencyLoadable(d)));
 				if (onEachLoadFunction) onEachLoadFunction(toLoads[i], data);
 			});
-			return onFinalLoadFunction(datas);
+			// avoid double-loading dependencies
+			if (dependencies.length) dependencies = dependencies.filter(it => !toLoads.find(({url}) => url === it.url));
+			if (dependencies.length) {
+				// does this need to handle arbitrary dependency nesting? Because it doesn't
+				return Promise.all(dependencies.map(tl => this.loadJSON(tl.url, tl.url))).then(depDatas => {
+					depDatas.forEach((data, i) => {
+						if (onEachLoadFunction) onEachLoadFunction(dependencies[i], data);
+					});
+					datas = datas.concat(depDatas);
+					return Promise.resolve(onFinalLoadFunction(datas));
+				});
+			} else return Promise.resolve(onFinalLoadFunction(datas));
 		});
 	},
 
@@ -3294,6 +3633,8 @@ DataUtil = {
 		}).appendTo($(`body`));
 		$iptAdd.click();
 	},
+
+	dependencyMergers: {},
 
 	class: {
 		loadJSON: function (baseUrl = "") {
@@ -3361,7 +3702,7 @@ function addListShowHide () {
 		<div class="col-xs-12" id="showsearch">
 			<button class="btn btn-block btn-default btn-xs" type="button">Show Search</button>
 			<br>
-		</div>	
+		</div>
 	`;
 
 	const toInjectHide = `
@@ -3459,7 +3800,7 @@ RollerUtil = {
 
 	isRollCol (string) {
 		if (typeof string !== "string") return false;
-		return !!/^({@dice )?(\d+)?d\d+([+-](\d+)?d\d+)*([-+]\d+)?(})?$/.exec(string.trim());
+		return !!/^({@dice )?(\d+)?d\d+(\s*[+-]\s*(\d+)?d\d+)*(\s*[-+]\s*\d+)?(})?$/.exec(string.trim());
 	},
 
 	_DICE_REGEX_STR: "([1-9]\\d*)?d([1-9]\\d*)(\\s?[+-]\\s?\\d+)?"
@@ -3609,6 +3950,8 @@ BrewUtil = {
 		if (cat === "optionalfeature") return "Optional Feature";
 		if (cat === "adventure") return isManager ? "Adventure Contents/Info" : "Adventure";
 		if (cat === "adventureData") return "Adventure Text";
+		if (cat === "book") return isManager ? "Book Contents/Info" : "Book";
+		if (cat === "bookData") return "Book Text";
 		return cat.uppercaseFirst();
 	},
 	_renderBrewScreen ($appendTo, $overlay, $window, isModal, getBrewOnClose) {
@@ -3664,18 +4007,22 @@ BrewUtil = {
 			const $lst = $(`
 				<div id="brewlistcontainer" class="listcontainer homebrew-window dropdown-menu">
 					<h4><span>Get Homebrew 2.0</span></h4>
-					<p><i>A list of homebrew available in the public repository. Click a name to load the homebrew, or view the source directly.<br> 
+					<p><i>A list of homebrew available in the public repository. Click a name to load the homebrew, or view the source directly.<br>
 					Contributions are welcome; see the <a href="https://github.com/TheGiddyLimit/homebrew/blob/master/README.md" target="_blank">README</a>, or stop by our <a href="https://discord.gg/WH6kdUn" target="_blank">Discord</a>.</i></p>
 					<hr class="manbrew__hr">
 					<input type="search" class="search manbrew__search form-control" placeholder="Find homebrew..." style="width: 100%">
 					<div class="filtertools manbrew__filtertools sortlabel btn-group">
 						<button class="col-xs-4 sort btn btn-default btn-xs" data-sort="name">Name</button>
 						<button class="col-xs-1 col-xs-1-5 sort btn btn-default btn-xs" data-sort="category">Category</button>
-						<button class="col-xs-6 col-xs-6-5 sort btn btn-default btn-xs" disabled>Source</button>
+						<button class="col-xs-1 col-xs-1-2 sort btn btn-default btn-xs" data-sort="timestamp">Added</button>
+						<button class="col-xs-5 col-xs-5-3 sort btn btn-default btn-xs" disabled>Source</button>
 					</div>
 					<ul class="list brew-list">
 						<li><section><span style="font-style: italic;">Loading...</span></section></li>
 					</ul>
+					<div class="manbrew__load_all_wrp">
+						<button class="btn btn-default btn-xs manbrew__load_all" disabled>Add All</button>
+					</div>
 				</div>
 			`);
 			const $nxt = makeNextOverlay(getBrewOnClose);
@@ -3683,6 +4030,8 @@ BrewUtil = {
 			$lst.on("click", (evt) => {
 				evt.stopPropagation();
 			});
+
+			const $btnAll = $lst.find(`.manbrew__load_all`);
 
 			// populate list
 			const $ul = $lst.find(`ul`);
@@ -3720,6 +4069,10 @@ BrewUtil = {
 						return ["condition", "disease"];
 					case UrlUtil.PG_ADVENTURES:
 						return ["adventure"];
+					case UrlUtil.PG_BOOKS:
+						return ["book"];
+					case UrlUtil.PG_TABLES:
+						return ["table"];
 					case UrlUtil.PG_MAKE_SHAPED:
 						return ["spell", "creature"];
 					case UrlUtil.PG_MANAGE_BREW:
@@ -3728,7 +4081,30 @@ BrewUtil = {
 						throw new Error(`No homebrew properties defined for category ${page}`);
 				}
 			}
-			DataUtil.loadJSON(`https://raw.githubusercontent.com/TheGiddyLimit/homebrew/master/collection/index.json`)
+
+			let dataList;
+			function sortFunction (a, b, o) {
+				a = dataList[a.elm.getAttribute(FLTR_ID)];
+				b = dataList[b.elm.getAttribute(FLTR_ID)];
+
+				if (o.valueName === "name") return byName();
+				if (o.valueName === "category") return orFallback(SortUtil.ascSortLower, "_brewCat");
+				if (o.valueName === "timestamp") return orFallback(SortUtil.ascSort, "_brewAdded");
+
+				function byName () {
+					return SortUtil.ascSortLower(a._brewName, b._brewName);
+				}
+
+				function orFallback (func, prop) {
+					const initial = func(a[prop], b[prop]);
+					return initial || byName();
+				}
+			}
+
+			let timestamps = {};
+			DataUtil.loadJSON(`https://raw.githubusercontent.com/TheGiddyLimit/homebrew/master/_generated/index-timestamps.json`)
+				.then(data => timestamps = data)
+				.then(() => DataUtil.loadJSON(`https://raw.githubusercontent.com/TheGiddyLimit/homebrew/master/collection/index.json`))
 				.then((data) => {
 					const dirs = new Set(getBrewDirs());
 					return Object.keys(data).filter(k => data[k].find(it => dirs.has(it)));
@@ -3749,13 +4125,17 @@ BrewUtil = {
 							const all = [].concat.apply([], json);
 							all.forEach(it => it._brewName = it.name.trim().replace(/\.json$/, ""));
 							all.sort((a, b) => SortUtil.ascSortLower(a._brewName, b._brewName));
-							all.filter(it => !it._brewSkip).forEach(it => {
+							dataList = all.filter(it => !it._brewSkip);
+							dataList.forEach((it, i) => {
+								it._brewAdded = timestamps[it.path] || 0;
+								it._brewCat = BrewUtil._getDisplayCat(BrewUtil._dirToCat(it._cat));
 								stack += `
-									<li>
+									<li ${FLTR_ID}="${i}">
 										<section>
-											<span class="col-xs-4 name" onclick="BrewUtil.addBrewRemote(this, '${(it.download_url || "").escapeQuotes()}', true)">${it._brewName}</span>
-											<span class="col-xs-1 col-xs-1-5 category">${BrewUtil._getDisplayCat(BrewUtil._dirToCat(it._cat))}</span>
-											<span class="col-xs-6 col-xs-6-5 source manbrew__source"><a href="${it.download_url}" target="_blank">${StrUtil.elipsisTruncate(it.download_url, 34, 55)}</a></span>
+											<span class="col-xs-4 name manbrew__load_from_url" onclick="BrewUtil.addBrewRemote(this, '${(it.download_url || "").escapeQuotes()}', true)">${it._brewName}</span>
+											<span class="col-xs-1 col-xs-1-5 category text-align-center">${it._brewCat}</span>
+											<span class="col-xs-1 col-xs-1-2 timestamp text-align-center">${it._brewAdded ? MiscUtil.dateToStr(new Date(it._brewAdded * 1000), true) : ""}</span>
+											<span class="col-xs-5 col-xs-5-3 source manbrew__source"><a href="${it.download_url}" target="_blank">${StrUtil.elipsisTruncate(it.download_url, 24, 55)}</a></span>
 										</section>
 									</li>`;
 							});
@@ -3764,11 +4144,13 @@ BrewUtil = {
 							$ul.append(stack);
 
 							const list = new List("brewlistcontainer", {
-								valueNames: ["name", "category"],
+								valueNames: ["name", "category", "timestamp"],
 								listClass: "brew-list",
-								sortFunction: SortUtil.listSort
+								sortFunction
 							});
 							ListUtil.bindEscapeKey(list, $lst.find(`.search`), true);
+
+							$btnAll.prop("disabled", false).click(() => $lst.find(`.manbrew__load_from_url`).click());
 						}
 					);
 				});
@@ -3789,7 +4171,7 @@ BrewUtil = {
 		$appendTo.append($overlay);
 
 		function refreshBrewList () {
-			function showSourceManager (source, $overlay2) {
+			function showSourceManager (source, $overlay2, showAll) {
 				const $wrpBtnDel = $(`<h4 class="split"><span>View/Manage ${source ? `Source Contents: ${Parser.sourceJsonToFull(source)}` : `Entries with No Source`}</span></h4>`);
 				const $lst = $(`
 					<div id="brewlistcontainer" class="listcontainer homebrew-window dropdown-menu">
@@ -3824,13 +4206,18 @@ BrewUtil = {
 					}
 
 					function getDisplayName (category, it) {
-						return category === "adventureData" ? (((BrewUtil.homebrew["adventure"] || []).find(a => a.id === it.id) || {}).name || it.id) : it.name;
+						const assocData = {
+							"adventureData": "adventure",
+							"bookData": "book"
+						};
+						return assocData[category] ? (((BrewUtil.homebrew[assocData[category]] || []).find(a => a.id === it.id) || {}).name || it.id) : it.name;
 					}
 
 					const $ul = $lst.find(`ul`);
 					let stack = "";
+					const isMatchingSource = (itSrc) => showAll || (itSrc === source || (source === undefined && !BrewUtil.hasSourceJson(itSrc)));
 					BrewUtil._getBrewCategories().forEach(cat => {
-						BrewUtil.homebrew[cat].filter(it => it.source === source).sort((a, b) => SortUtil.ascSort(a.name, b.name)).forEach(it => {
+						BrewUtil.homebrew[cat].filter(it => isMatchingSource(it.source)).sort((a, b) => SortUtil.ascSort(a.name, b.name)).forEach(it => {
 							stack += `
 								<li><section onclick="ListUtil.toggleCheckbox(event, this)">
 									<span class="col-xs-6 name">${getDisplayName(cat, it)}</span>
@@ -3892,44 +4279,58 @@ BrewUtil = {
 							<button class="col-xs-1 btn btn-default btn-xs" disabled>Source</button>
 							<button class="col-xs-2 btn btn-default btn-xs" disabled>&nbsp;</button>
 						</div>
-						<ul class="list-display-only brew-list"></ul>
+						<ul class="list-display-only brew-list brew-list--target"></ul>
+						<ul class="list-display-only brew-list brew-list--groups"></ul>
 					</div>
-				`);
-				$brewList.append($lst);
+				`).appendTo($brewList);
 
 				// populate list
-				const $ul = $lst.find(`ul`);
-				$ul.empty();
+				const $ul = $lst.find(`ul.brew-list--target`).empty();
+				const $ulGroup = $lst.find(`ul.brew-list--groups`).empty();
 
-				const allSources = MiscUtil.copy(BrewUtil.getJsonSources());
-				allSources.sort((a, b) => SortUtil.ascSort(a.full, b.full));
-				allSources.push({full: "No Source", json: undefined, _unknown: true});
-				allSources.forEach(src => {
-					const $row = $(`<li class="row manbrew__row no-click">
-						<span class="col-xs-5 manbrew__col--tall source manbrew__source">${src._unknown ? "<i>" : ""}${src.full}${src._unknown ? "</i>" : ""}</span>
-						<span class="col-xs-4 manbrew__col--tall authors">${(src.authors || []).join(", ")}</span>
-						<${src.url ? "a" : "span"} class="col-xs-1 manbrew__col--tall text-align-center" ${src.url ? `href="${src.url}" target="_blank"` : ""}>${src.url ? "View Source" : ""}</${src.url ? "a" : "span"}>
-					</li>`);
+				const createButtons = (src, $row) => {
 					const $btns = $(`<span class="col-xs-2 text-align-right"/>`).appendTo($row);
 					$(`<button class="btn btn-sm btn-default">View/Manage</button>`)
 						.on("click", () => {
 							const $nxt = makeNextOverlay();
-							showSourceManager(src.json, $nxt);
+							showSourceManager(src.json, $nxt, src._all);
 						})
 						.appendTo($btns);
 					$btns.append(" ");
 					$(`<button class="btn btn-danger btn-sm"><span class="glyphicon glyphicon-trash"></span></button>`)
 						.on("click", () => deleteSource(src.json, true))
 						.appendTo($btns);
+				};
 
+				const allSources = MiscUtil.copy(BrewUtil.getJsonSources());
+				allSources.sort((a, b) => SortUtil.ascSort(a.full, b.full));
+
+				allSources.forEach(src => {
+					const isGroup = src._unknown || src._all;
+					const $row = $(`<li class="row manbrew__row">
+						<span class="col-xs-5 manbrew__col--tall source manbrew__source">${isGroup ? "<i>" : ""}${src.full}${isGroup ? "</i>" : ""}</span>
+						<span class="col-xs-4 manbrew__col--tall authors">${(src.authors || []).join(", ")}</span>
+						<${src.url ? "a" : "span"} class="col-xs-1 manbrew__col--tall text-align-center" ${src.url ? `href="${src.url}" target="_blank"` : ""}>${src.url ? "View Source" : ""}</${src.url ? "a" : "span"}>
+					</li>`);
+					createButtons(src, $row);
 					$ul.append($row);
 				});
+
+				const createGroupRow = (fullText, modeProp) => {
+					const $row = $(`<li class="row manbrew__row" style="border-bottom: 0">
+						<span class="col-xs-10 manbrew__col--tall source manbrew__source text-align-right"><i>${fullText}</i></span>
+					</li>`);
+					createButtons({[modeProp]: true}, $row);
+					$ulGroup.append($row);
+				};
+				createGroupRow("Entries From All Sources", "_all");
+				createGroupRow("Entries Without Sources", "_unknown");
 
 				// hack to delay list indexing, otherwise it seems to fail
 				setTimeout(() => {
 					const list = new List("outerbrewlistcontainer", {
 						valueNames: ["source", "authors"],
-						listClass: "brew-list"
+						listClass: "brew-list--target"
 					});
 					ListUtil.bindEscapeKey(list, $lst.find(`.search`), true);
 				}, 5);
@@ -4046,14 +4447,18 @@ BrewUtil = {
 				case "legendaryGroup":
 				case "condition":
 				case "disease":
+				case "table":
+				case "tableGroup":
 					return deleteGenericBrew(category);
 				case "subclass":
 					return deleteSubclassBrew;
 				case "class":
 					return deleteClassBrew;
 				case "adventure":
-					return deleteAdventureBrew;
+				case "book":
+					return deleteGenericBookBrew(category);
 				case "adventureData":
+				case "bookData":
 					// Do nothing, handled by deleting the associated adventure
 					return () => {};
 				default:
@@ -4098,9 +4503,11 @@ BrewUtil = {
 			}
 		}
 
-		function deleteAdventureBrew (uniqueId, doRefresh) {
-			doRemove("adventure", uniqueId, false);
-			doRemove("adventureData", uniqueId, doRefresh, true);
+		function deleteGenericBookBrew (type) {
+			return (uniqueId, doRefresh) => {
+				doRemove(category, uniqueId, false);
+				doRemove(`${category}Data`, uniqueId, doRefresh, true);
+			};
 		}
 	},
 
@@ -4119,8 +4526,8 @@ BrewUtil = {
 		BrewUtil._renderBrewScreen($body, $overlay, $window, true);
 	},
 
-	_DIRS: ["spell", "class", "subclass", "creature", "background", "feat", "optionalfeature", "race", "object", "trap", "hazard", "deity", "item", "reward", "psionic", "variantrule", "condition", "disease", "adventure"],
-	_STORABLE: ["class", "subclass", "spell", "monster", "background", "feat", "optionalfeature", "race", "deity", "item", "itemProperty", "itemType", "psionic", "reward", "object", "trap", "hazard", "variantrule", "legendaryGroup", "condition", "disease", "adventure", "adventureData"],
+	_DIRS: ["spell", "class", "subclass", "creature", "background", "feat", "optionalfeature", "race", "object", "trap", "hazard", "deity", "item", "reward", "psionic", "variantrule", "condition", "disease", "adventure", "book"],
+	_STORABLE: ["class", "subclass", "spell", "monster", "background", "feat", "optionalfeature", "race", "deity", "item", "itemProperty", "itemType", "psionic", "reward", "object", "trap", "hazard", "variantrule", "legendaryGroup", "condition", "disease", "adventure", "adventureData", "book", "bookData", "table", "tableGroup"],
 	doHandleBrewJson: function (json, page, funcRefresh) {
 		function storePrep (arrName) {
 			if (json[arrName]) {
@@ -4134,14 +4541,20 @@ BrewUtil = {
 		if (json.race && json.race.length) json.race = EntryRenderer.race.mergeSubraces(json.race);
 		BrewUtil._STORABLE.forEach(storePrep);
 
-		if (json["adventure"] && json["adventureData"]) {
-			json["adventure"].forEach(adv => {
-				const data = json["adventureData"].find(it => it.id === adv.id);
-				if (data) {
-					data.parentUniqueId = adv.uniqueId;
-				}
-			})
-		}
+		const bookPairs = [
+			["adventure", "adventureData"],
+			["book", "bookData"]
+		];
+		bookPairs.forEach(bp => {
+			if (json[bp[0]] && json[bp[1]]) {
+				json[bp[0]].forEach(adv => {
+					const data = json[bp[1]].find(it => it.id === adv.id);
+					if (data) {
+						data.parentUniqueId = adv.uniqueId;
+					}
+				})
+			}
+		});
 
 		// store
 		function checkAndAdd (prop) {
@@ -4201,8 +4614,6 @@ BrewUtil = {
 		BrewUtil._resetSourceCache();
 
 		// display on page
-		// FIXME this requires changing the pAddBrewData in the page JS, as well as here
-		// TODO complete refactoring so this always call `handleBrew` which can be defined per-page
 		switch (page) {
 			case UrlUtil.PG_SPELLS:
 			case UrlUtil.PG_CLASSES:
@@ -4219,9 +4630,12 @@ BrewUtil = {
 			case UrlUtil.PG_PSIONICS:
 			case UrlUtil.PG_VARIATNRULES:
 			case UrlUtil.PG_CONDITIONS_DISEASES:
-			case UrlUtil.PG_ADVENTURES:
 			case UrlUtil.PG_ADVENTURE:
+			case UrlUtil.PG_ADVENTURES:
+			case UrlUtil.PG_BOOK:
+			case UrlUtil.PG_BOOKS:
 			case UrlUtil.PG_MAKE_SHAPED:
+			case UrlUtil.PG_TABLES:
 				handleBrew(toAdd);
 				break;
 			case UrlUtil.PG_MANAGE_BREW:
@@ -4477,6 +4891,10 @@ CryptUtil = {
 		return x.join('');
 	},
 
+	hex2Dec (hex) {
+		return parseInt(`0x${hex}`);
+	},
+
 	md5: (s) => {
 		return CryptUtil.hex(CryptUtil._md51(s));
 	},
@@ -4560,6 +4978,15 @@ Array.prototype.last = Array.prototype.last ||
 		return this[this.length - 1];
 	};
 
+Array.prototype.filterIndex = Array.prototype.filterIndex ||
+	function (fnCheck) {
+		const out = [];
+		this.forEach((it, i) => {
+			if (fnCheck(it)) out.push(i);
+		});
+		return out;
+	};
+
 // OVERLAY VIEW ========================================================================================================
 /**
  * Relies on:
@@ -4598,7 +5025,10 @@ function BookModeView (hashKey, $openBtn, noneVisibleMsg, popTblGetNumShown, doS
 		self.active = true;
 
 		const $body = $(`body`);
-		const $wrpBook = $(`<div class="book-mode"/>`);
+		const $wrpBook = $(`<div class="book-mode"/>`).click((evt) => {
+			if ($wrpBook[0] !== evt.target) return;
+			hashTeardown();
+		});
 		self._$body = $body;
 		self._$wrpBook = $wrpBook;
 		$body.css("overflow", "hidden");
@@ -4684,10 +5114,23 @@ ExcludeUtil = {
 		ExcludeUtil._save();
 	},
 
+	_excludeCount: 0,
 	isExcluded (name, category, source) {
 		if (!ExcludeUtil._excludes) return false;
 		source = source.source || source;
-		return !!ExcludeUtil._excludes.find(row => (row.source === "*" || row.source === source) && (row.category === "*" || row.category === category) && (row.name === "*" || row.name === name));
+		const out = !!ExcludeUtil._excludes.find(row => (row.source === "*" || row.source === source) && (row.category === "*" || row.category === category) && (row.name === "*" || row.name === name));
+		if (out) ++ExcludeUtil._excludeCount;
+		return out;
+	},
+
+	checkShowAllExcluded (list, $pagecontent) {
+		if ((!list.length && ExcludeUtil._excludeCount) || (list.length > 0 && list.length === ExcludeUtil._excludeCount)) {
+			$pagecontent.html(`
+				<tr><th class="border" colspan="6"></th></tr>
+				<tr><td colspan="6" class="initial-message">(Content <a href="blacklist.html">blacklisted</a>)</td></tr>
+				<tr><th class="border" colspan="6"></th></tr>
+			`);
+		}
 	},
 
 	addExclude (name, category, source) {
@@ -4734,4 +5177,29 @@ if (!IS_ROLL20 && typeof window !== "undefined") {
 		$(`body`).append($wrpBanner);
 		/* eslint-enable */
 	});
+}
+
+_Donate = {
+	init () {
+		if (IS_DEPLOYED) {
+			DataUtil.loadJSON(`https://get.5etools.com/money.php`).then(dosh => {
+				const pct = Number(dosh.donated) / Number(dosh.Goal);
+				$(`#don-total`).text(`€${dosh.Goal}`);
+				if (isNaN(pct)) {
+					throw new Error(`Was not a number! Values were ${dosh.donated} and ${dosh.Goal}`);
+				} else {
+					const $bar = $(`.don__bar_inner`);
+					$bar.css("width", `${Math.min(Math.ceil(100 * pct), 100)}%`).html(pct !== 0 ? `€${dosh.donated}&nbsp;` : "");
+					if (pct >= 1) $bar.css("background-color", "lightgreen");
+				}
+			}).catch(noDosh => {
+				$(`#don-wrapper`).remove();
+				throw noDosh;
+			})
+		}
+	},
+
+	notDonating () {
+		return StorageUtil.isFake() || StorageUtil.get("notDonating");
+	}
 }

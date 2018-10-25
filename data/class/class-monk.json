@@ -389,7 +389,7 @@
 								"items": [
 									"You can use Dexterity instead of Strength for the attack and damage rolls of your unarmed strikes and monk weapons.",
 									"You can roll a {@dice d4} in place of the normal damage of your unarmed strike or monk weapon. This die changes as you gain monk levels, as shown in the Martial Arts column of the Monk table.",
-									"When you use the Attack action with an unarmed strike or a monk weapon on your turn, you can make one unarmed strike as a bonus action. For example, if you take the Attack action and attack with a quarterstaff, you can also make an unarmed strike as a bonus action, assuming you haven't already taken a bonus action this turn."
+									"When you use the {@action Attack} action with an unarmed strike or a monk weapon on your turn, you can make one unarmed strike as a bonus action. For example, if you take the {@action Attack} action and attack with a quarterstaff, you can also make an unarmed strike as a bonus action, assuming you haven't already taken a bonus action this turn."
 								]
 							},
 							"Certain monasteries use specialized forms of the monk weapons. For example, you might use a club that is two lengths of wood connected by a short chain (called a nunchaku) or a sickle with a shorter, straighter blade (called a kama)."
@@ -415,21 +415,21 @@
 								"type": "entries",
 								"name": "Flurry of Blows",
 								"entries": [
-									"Immediately after you take the Attack action on your turn, you can spend 1 ki point to make two unarmed strikes as a bonus action."
+									"Immediately after you take the {@action Attack} action on your turn, you can spend 1 ki point to make two unarmed strikes as a bonus action."
 								]
 							},
 							{
 								"type": "entries",
 								"name": "Patient Defense",
 								"entries": [
-									"You can spend 1 ki point to take the Dodge action as a bonus action on your turn."
+									"You can spend 1 ki point to take the {@action Dodge} action as a bonus action on your turn."
 								]
 							},
 							{
 								"type": "entries",
 								"name": "Step of the Wind",
 								"entries": [
-									"You can spend 1 ki point to take the Disengage or Dash action as a bonus action on your turn, and your jump distance is doubled for the turn."
+									"You can spend 1 ki point to take the {@action Disengage} or {@action Dash} action as a bonus action on your turn, and your jump distance is doubled for the turn."
 								]
 							}
 						]
@@ -477,7 +477,7 @@
 					{
 						"name": "Extra Attack",
 						"entries": [
-							"Beginning at 5th level, you can attack twice, instead of once, whenever you take the Attack action on your turn."
+							"Beginning at 5th level, you can attack twice, instead of once, whenever you take the {@action Attack} action on your turn."
 						]
 					},
 					{
@@ -870,7 +870,7 @@
 														"type": "entries",
 														"name": "Fangs of the Fire Snake",
 														"entries": [
-															"When you use the Attack action on your turn, you can spend 1 ki point to cause tendrils of flame to stretch out from your fists and feet. Your reach with your unarmed strikes increases by 10 feet for that action, as well as the rest of the turn. A hit with such an attack deals fire damage instead of bludgeoning damage, and if you spend 1 ki point when the attack hits, it also deals an extra {@dice 1d10} fire damage."
+															"When you use the {@action Attack} action on your turn, you can spend 1 ki point to cause tendrils of flame to stretch out from your fists and feet. Your reach with your unarmed strikes increases by 10 feet for that action, as well as the rest of the turn. A hit with such an attack deals fire damage instead of bludgeoning damage, and if you spend 1 ki point when the attack hits, it also deals an extra {@dice 1d10} fire damage."
 														]
 													},
 													{
@@ -1084,8 +1084,8 @@
 										"name": "Radiant Sun Bolt",
 										"entries": [
 											"Starting when you choose this tradition at 3rd level, you can hurl searing bolts of magical radiance.",
-											"You gain a ranged spell attack that you can use with the Attack action. The attack has a range of 30 feet. You are proficient with it, and you add your Dexterity modifier to its attack and damage rolls. Its damage is radiant, and its damage die is a {@dice d4}. This die changes as you gain monk levels\u2014to a {@dice d6} at 5th level, a {@dice d8} at 11th level, and a {@dice d10} at 17th level.",
-											"When you use the Attack action on your turn to use this special attack, you can spend 1 ki point to make two additional attacks with it as a bonus action."
+											"You gain a ranged spell attack that you can use with the {@action Attack} action. The attack has a range of 30 feet. You are proficient with it, and you add your Dexterity modifier to its attack and damage rolls. Its damage is radiant, and its damage die is a {@dice d4}. This die changes as you gain monk levels\u2014to a {@dice d6} at 5th level, a {@dice d8} at 11th level, and a {@dice d10} at 17th level.",
+											"When you use the {@action Attack} action on your turn to use this special attack, you can spend 1 ki point to make two additional attacks with it as a bonus action."
 										]
 									}
 								]
@@ -1098,7 +1098,7 @@
 										"type": "entries",
 										"name": "Searing Arc Strike",
 										"entries": [
-											"At 6th level, you gain the ability to channel your ki into searing waves of energy. Immediately after you take the Attack action on your turn, you can spend 2 ki points to cast the 1st-level spell {@spell burning hands} as a bonus action.",
+											"At 6th level, you gain the ability to channel your ki into searing waves of energy. Immediately after you take the {@action Attack} action on your turn, you can spend 2 ki points to cast the 1st-level spell {@spell burning hands} as a bonus action.",
 											"You can spend additional ki points to cast {@spell burning hands} as a higher level spell. Each additional ki point you spend increases the spell's level by 1. The maximum number of ki points (2 plus any additional points) that you can spend on the spell equals half your monk level (round down)."
 										]
 									}
@@ -1157,8 +1157,8 @@
 												"items": [
 													"You gain proficiency with three martial weapons of your choice. A martial weapon is considered a kensei weapon for you if you're proficient with it.",
 													"Whenever you wield a kensei weapon, you choose whether to use Dexterity or Strength for the attack and damage rolls of the weapon, and you choose whether to use your Martial Arts damage die in place of the weapon's damage die.",
-													"When you take the Attack action on your turn and hit a target with a kensei weapon, you can use a bonus action to pummel the target, dealing an additional {@dice 1d4} bludgeoning damage to that target and to any other target you hit with the weapon as part of the Attack.",
-													"If you make an unarmed strike as part of the Attack action on your turn and are holding a kensei weapon, you can use that weapon to defend yourself. You gain a +2 bonus to AC until the start of your next turn while you are not {@condition incapacitated} and the weapon is in your hand."
+													"When you take the {@action Attack} action on your turn and hit a target with a kensei weapon, you can use a bonus action to pummel the target, dealing an additional {@dice 1d4} bludgeoning damage to that target and to any other target you hit with the weapon as part of the Attack.",
+													"If you make an unarmed strike as part of the {@action Attack} action on your turn and are holding a kensei weapon, you can use that weapon to defend yourself. You gain a +2 bonus to AC until the start of your next turn while you are not {@condition incapacitated} and the weapon is in your hand."
 												]
 											}
 										]
@@ -1251,7 +1251,7 @@
 												"type": "list",
 												"items": [
 													"Choose two types of weapons to be your kensei weapons: one melee weapon and one ranged weapon. Each of these weapons can be any simple or martial weapon that lacks the heavy and special properties. The longbow is also a valid choice. You gain proficiency with these weapons if you don't already have it. Weapons of the chosen types are monk weapons for you. Many of this tradition's features work only with your kensei weapons. When you reach 6th, 11th, and 17th level in this class, you can choose another type of weapon\u2014melee or ranged\u2014to be a kensei weapon for you, following the criteria above.",
-													"If you make an unarmed strike as part of the Attack action on your turn and are holding a kensei weapon, you can use it to defend yourself if it is a melee weapon. You gain a +2 bonus to AC until the start of your next turn, while the weapon is in your hand and you aren't {@condition incapacitated}.",
+													"If you make an unarmed strike as part of the {@action Attack} action on your turn and are holding a kensei weapon, you can use it to defend yourself if it is a melee weapon. You gain a +2 bonus to AC until the start of your next turn, while the weapon is in your hand and you aren't {@condition incapacitated}.",
 													"You can use a bonus action on your turn to make your ranged attacks with a kensei weapon more deadly. When you do so, any target you hit with a ranged attack using a kensei weapon takes an extra {@dice 1d4} damage of the weapon's type. You retain this benefit until the end of the current turn."
 												]
 											}
@@ -1416,7 +1416,7 @@
 										"name": "Drunken Technique",
 										"entries": [
 											"When you choose this tradition at 3rd level, you gain proficiency in the {@skill Performance} skill if you don't already have it; your martial arts technique mixes martial training with the precision of a dancer and the antics of a jester.",
-											"You also learn how to twist and turn quickly as part of your Flurry of Blows. Whenever you use Flurry of Blows, you gain the benefit of the Disengage action, and your walking speed increases by 10 feet until the end of the current turn."
+											"You also learn how to twist and turn quickly as part of your Flurry of Blows. Whenever you use Flurry of Blows, you gain the benefit of the {@action Disengage} action, and your walking speed increases by 10 feet until the end of the current turn."
 										]
 									}
 								]
@@ -1485,7 +1485,7 @@
 										"type": "entries",
 										"name": "Drunken Technique",
 										"entries": [
-											"At 3rd level, you learn how to twist and turn quickly as part of your Flurry of Blows. Whenever you use Flurry of Blows, you gain the benefit of the Disengage action, and your walking speed increases by 10 feet until the end of the current turn."
+											"At 3rd level, you learn how to twist and turn quickly as part of your Flurry of Blows. Whenever you use Flurry of Blows, you gain the benefit of the {@action Disengage} action, and your walking speed increases by 10 feet until the end of the current turn."
 										]
 									}
 								]
@@ -1573,7 +1573,7 @@
 												"type": "entries",
 												"name": "Agile Parry",
 												"entries": [
-													"If you make an unarmed strike as part of the Attack action on your turn and are holding a kensei weapon, you can use it to defend yourself if it is a melee weapon. You gain a +2 bonus to AC until the start of your next turn, while the weapon is in your hand and you aren't {@condition incapacitated}."
+													"If you make an unarmed strike as part of the {@action Attack} action on your turn and are holding a kensei weapon, you can use it to defend yourself if it is a melee weapon. You gain a +2 bonus to AC until the start of your next turn, while the weapon is in your hand and you aren't {@condition incapacitated}."
 												]
 											},
 											{
@@ -1665,9 +1665,9 @@
 										"name": "Radiant Sun Bolt",
 										"entries": [
 											"Starting when you choose this tradition at 3rd level, you can hurl searing bolts of magical radiance.",
-											"You gain a new attack option that you can use with the Attack action. This special attack is a ranged spell attack with a range of 30 feet. You are proficient with it, and you add your Dexterity modifier to its attack and damage rolls. Its damage is radiant, and its damage die is a {@dice d4}. This die changes as you gain monk levels, as shown in the Martial Arts column of the Monk table.",
-											"When you take the Attack action on your turn and use this special attack as part of it, you can spend 1 ki point to make the special attack twice as a bonus action.",
-											"When you gain the Extra Attack feature, this special attack can be used for any of the attacks you make as part of the Attack action."
+											"You gain a new attack option that you can use with the {@action Attack} action. This special attack is a ranged spell attack with a range of 30 feet. You are proficient with it, and you add your Dexterity modifier to its attack and damage rolls. Its damage is radiant, and its damage die is a {@dice d4}. This die changes as you gain monk levels, as shown in the Martial Arts column of the Monk table.",
+											"When you take the {@action Attack} action on your turn and use this special attack as part of it, you can spend 1 ki point to make the special attack twice as a bonus action.",
+											"When you gain the Extra Attack feature, this special attack can be used for any of the attacks you make as part of the {@action Attack} action."
 										]
 									}
 								]
@@ -1680,7 +1680,7 @@
 										"type": "entries",
 										"name": "Searing Arc Strike",
 										"entries": [
-											"At 6th level, you gain the ability to channel your ki into searing waves of energy. Immediately after you take the Attack action on your turn, you can spend 2 ki points to cast the {@spell burning hands} spell as a bonus action.",
+											"At 6th level, you gain the ability to channel your ki into searing waves of energy. Immediately after you take the {@action Attack} action on your turn, you can spend 2 ki points to cast the {@spell burning hands} spell as a bonus action.",
 											"You can spend additional ki points to cast {@spell burning hands} as a higher-level spell. Each additional ki point you spend increases the spell's level by 1. The maximum number of ki points (2 plus any additional points) that you can spend on the spell equals half your monk level."
 										]
 									}
@@ -1719,6 +1719,116 @@
 					],
 					"source": "XGE",
 					"shortName": "Sun Soul"
+				},
+				{
+					"name": "Way of the Soul Knife (Livestream)",
+					"subclassFeatures": [
+						[
+							{
+								"name": "Way of the Soul Knife (Livestream)",
+								"entries": [
+									"{@i Transcribed on 2018-10-13. [Square bracketed text] denotes transcriber's annotations.}",
+									"Monks of the Way of the Soul Knife are deadly assassins and bounty hunters. They use their psionic talents to manifest psionic blades that tear through their enemies' bodies and psychic auras. Their talents extend beyond combat, as their ability to perceive auras allows them to track down foes and see through their deceptions.",
+									{
+										"type": "entries",
+										"name": "Soul Knife",
+										"entries": [
+											"Starting when you choose this tradition at 3rd level, you can use your psionic energy to manifest blades that disrupt your foes' minds.",
+											"Your unarmed strikes deal your choice of psychic, piercing, slashing, or bludgeoning damage each time you hit.",
+											"In addition, you can use a bonus action to increase the reach of your unarmed strikes by 30 feet until the end of your turn."
+										]
+									},
+									{
+										"type": "entries",
+										"name": "Psychic Slash",
+										"entries": [
+											"At 3rd level, when you channel ki into your attacks you augment your soul knives to inflict devastating psionic attacks.",
+											"Whenever you hit a creature with one of the attacks granted by your Flurry of Blows and that attack inflicts psychic damage, you can impose one of the following effects on the target:",
+											{
+												"type": "entries",
+												"name": "Life Drain",
+												"entries": [
+													"You gain temporary hit points equal to half the damage your attack deals."
+												]
+											},
+											{
+												"type": "entries",
+												"name": "Invoke Terror",
+												"entries": [
+													"The target must succeed on a Wisdom saving throw or become frightened of you until the end of your next turn."
+												]
+											},
+											{
+												"type": "entries",
+												"name": "Invoke Wrath",
+												"entries": [
+													"The target suffers disadvantage on all attack rolls against targets other than you until the end of your next turn."
+												]
+											},
+											{
+												"type": "entries",
+												"name": "Astral Slide",
+												"entries": [
+													"You teleport the target up to 10 feet to a destination you can see."
+												]
+											},
+											{
+												"type": "entries",
+												"name": "Synaptic Overload",
+												"entries": [
+													"The target gains vulnerability to psychic damage until the end of your next turn."
+												]
+											}
+										]
+									}
+								]
+							}
+						],
+						[
+							{
+								"entries": [
+									{
+										"type": "entries",
+										"name": "Aura Sight",
+										"entries": [
+											"At 6th level, you gain the ability to perceive the auras of other creatures.",
+											"As an action, select a creature that you can see. That creature makes a Wisdom saving throw, though it has no knowledge that you forced it to attempt this saving throw. On a failed save, you learn if the creature shares and aspects of its alignment with you, its current hit points, and its current attitude and intentions toward you or one other creature, object, or location of your choice. In addition, for the next 24 hours or until you use this ability again, you can use an action to determine the creature's distance and direction from you.",
+											"If a creature succeeds on its saving throw against this ability, you cannot use this ability against that creature again until you complete a long rest."
+										]
+									}
+								]
+							}
+						],
+						[
+							{
+								"entries": [
+									{
+										"type": "entries",
+										"name": "Spectral Blades",
+										"entries": [
+											"At 11th level, you can cause your blades to phase through physical objects and defenses.",
+											"Once during your turn, you can choose to forego one unarmed strike in place of forcing a creature within the reach of that attack to make a Dexterity saving throw. On a failed saving throw, it takes your unarmed strike's damage, or half that damage if it succeeds."
+										]
+									}
+								]
+							}
+						],
+						[
+							{
+								"entries": [
+									{
+										"type": "entries",
+										"name": "Psychic Form",
+										"entries": [
+											"At 17th level, you can transform your physical body into the same psychic energy that comprises your soul knives. As a bonus action, you gain resistance to all types of damage, a fly speed of 30 feet, and the ability to pass through solid objects but not end your movement within them. This benefit lasts for 1 minute. You cannot use it again until you complete a long rest."
+										]
+									}
+								]
+							}
+						]
+					],
+					"source": "Stream",
+					"shortName": "Soul Knife (Stream)"
 				}
 			],
 			"fluff": [

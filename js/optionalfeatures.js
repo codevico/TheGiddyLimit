@@ -5,13 +5,18 @@ const CLS_NONE = "list-entry-none";
 
 window.onload = function load () {
 	ExcludeUtil.initialise();
+	SortUtil.initHandleFilterButtonClicks();
 	DataUtil.loadJSON(JSON_URL).then(onJsonLoad);
 };
 
+const SORT_VALUES = {
+	"-1": 0,
+	"-2": Number.MIN_SAFE_INTEGER
+};
 function listSortOptFeatures (a, b, o) {
 	function sortByLevel (a, b) {
-		if (a === "-1") a = 0;
-		if (b === "-1") b = 0;
+		a = SORT_VALUES[a] || a;
+		b = SORT_VALUES[b] || b;
 		return Number(b) - Number(a);
 	}
 
@@ -22,11 +27,19 @@ function listSortOptFeatures (a, b, o) {
 	return SortUtil.listSort(a, b, o);
 }
 
+function getLevelFilterNestedItem (prereqLevel) {
+	return new FilterItem({
+		item: `${prereqLevel.class.name} Level ${prereqLevel.level}`,
+		nest: prereqLevel.class.name,
+		nestHidden: true
+	})
+}
+
 let list;
 const sourceFilter = getSourceFilter();
 const typeFilter = new Filter({
 	header: "Feature Type",
-	items: ["EI", "MM", "MV:B"],
+	items: ["EI", "MM", "MV:B", "OTH", "FS:F", "FS:B", "FS:P", "FS:R"],
 	displayFn: Parser.optFeatureTypeToFull
 });
 const pactFilter = new Filter({
@@ -40,16 +53,18 @@ const patronFilter = new Filter({
 	displayFn: Parser.prereqPatronToShort
 });
 const spellFilter = new Filter({
-	header: "Spell or Feature",
+	header: "Spell",
 	items: ["eldritch blast", "hex/curse"],
 	displayFn: StrUtil.toTitleCase
 });
-const levelFilter = new Filter({
-	header: "Warlock Level",
-	items: [5, 7, 9, 12, 15, 18],
-	displayFn: (it) => `Level ${it}`
+const featureFilter = new Filter({
+	header: "Feature",
+	displayFn: StrUtil.toTitleCase
 });
-const prerequisiteFilter = new MultiFilter({name: "Prerequisite"}, pactFilter, patronFilter, spellFilter, levelFilter);
+const levelFilter = new Filter({
+	header: "Level"
+});
+const prerequisiteFilter = new MultiFilter({name: "Prerequisite"}, pactFilter, patronFilter, spellFilter, levelFilter, featureFilter);
 let filterBox;
 function onJsonLoad (data) {
 	filterBox = initFilterBox(sourceFilter, typeFilter, prerequisiteFilter);
@@ -89,6 +104,7 @@ function onJsonLoad (data) {
 			RollerUtil.addListRollButton();
 
 			History.init(true);
+			ExcludeUtil.checkShowAllExcluded(optfList, $(`#pagecontent`));
 		});
 }
 
@@ -111,6 +127,7 @@ function addOptionalfeatures (data) {
 
 		it.featureType = it.featureType || "OTH";
 		if (it.prerequisite) {
+			it._sPrereq = true;
 			it._fPrereqPact = it.prerequisite.filter(it => it.type === "prereqPact").map(it => {
 				pactFilter.addIfAbsent(it.entry);
 				return it.entry;
@@ -119,14 +136,29 @@ function addOptionalfeatures (data) {
 				patronFilter.addIfAbsent(it.entry);
 				return it.entry;
 			});
-			it._fPrereqSpell = it.prerequisite.filter(it => it.type === "prereqSpell").map(it => {
+			it._fprereqSpell = it.prerequisite.filter(it => it.type === "prereqSpell").map(it => {
 				spellFilter.addIfAbsent(it.entries);
 				return it.entries;
 			});
-			it._fPrereqLevel = it.prerequisite.filter(it => it.type === "prereqLevel").map(it => {
-				levelFilter.addIfAbsent(it.level);
-				return it.level;
+			it._fprereqFeature = it.prerequisite.filter(it => it.type === "prereqFeature").map(it => {
+				featureFilter.addIfAbsent(it.entries);
+				return it.entries;
 			});
+			it._fPrereqLevel = it.prerequisite.filter(it => it.type === "prereqLevel").map(lvl => {
+				const item = getLevelFilterNestedItem(lvl);
+				it._sLevel = it._sLevel || lvl.level;
+				levelFilter.addIfAbsent(item);
+				return item;
+			});
+		}
+
+		if (it.featureType instanceof Array) {
+			it._dFeatureType = it.featureType.map(ft => Parser.optFeatureTypeToFull(ft));
+			it._lFeatureType = it.featureType.join(", ");
+			it.featureType.sort((a, b) => SortUtil.ascSortLower(Parser.optFeatureTypeToFull(a), Parser.optFeatureTypeToFull(b)));
+		} else {
+			it._dFeatureType = Parser.optFeatureTypeToFull(it.featureType);
+			it._lFeatureType = it.featureType;
 		}
 
 		tempString += `
@@ -134,9 +166,9 @@ function addOptionalfeatures (data) {
 				<a id="${ivI}" href="#${UrlUtil.autoEncodeHash(it)}" title="${it.name}">
 					<span class="name col-xs-3 col-xs-3-2">${it.name}</span>
 					<span class="source col-xs-1 col-xs-1-5 ${Parser.sourceJsonToColor(it.source)} text-align-center" title="${Parser.sourceJsonToFull(it.source)}">${Parser.sourceJsonToAbv(it.source)}</span>
-					<span class="source col-xs-1 col-xs-1-5 text-align-center type" title="${Parser.optFeatureTypeToFull(it.featureType)}">${it.featureType}</span>
+					<span class="source col-xs-1 col-xs-1-5 text-align-center type" title="${it._dFeatureType}">${it._lFeatureType}</span>
 					<span class="prerequisite col-xs-5 col-xs-5-8 ${it.prerequisite == null ? CLS_NONE : ""}">${EntryRenderer.optionalfeature.getPrerequisiteText(it.prerequisite, true)}</span>
-					<span class="hidden sortIndex">${it._fPrereqLevel && it._fPrereqLevel.length ? it._fPrereqLevel[0] : -1}</span>
+					<span class="hidden sortIndex">${it._sLevel ? it._sLevel : it._sPrereq ? -1 : -2}</span>
 				</a>
 			</li>
 		`;
@@ -151,7 +183,7 @@ function addOptionalfeatures (data) {
 	// sort filters
 	sourceFilter.items.sort(SortUtil.ascSort);
 	spellFilter.items.sort(SortUtil.ascSort);
-	levelFilter.items.sort(SortUtil.ascSort);
+	levelFilter.items.sort(SortUtil.ascSortNumericalSuffix);
 	typeFilter.items.sort((a, b) => SortUtil.ascSort(Parser.optFeatureTypeToFull(a), Parser.optFeatureTypeToFull(b)));
 
 	list.reIndex();
@@ -183,8 +215,9 @@ function handleFilterChange () {
 			[
 				it._fPrereqPact,
 				it._fPrereqPatron,
-				it._fPrereqSpell,
-				it._fPrereqLevel
+				it._fprereqSpell,
+				it._fPrereqLevel,
+				it._fprereqFeature
 			]
 		);
 	});
@@ -212,12 +245,27 @@ function loadhash (jsonIndex) {
 
 	const $wrpTab = $(`#stat-tabs`);
 	$wrpTab.find(`.opt-feature-type`).remove();
-	$(`<span class="opt-feature-type roller">${Parser.optFeatureTypeToFull(it.featureType)}</span>`)
-		.click(() => {
-			filterBox.setFromValues({"Feature Type": [it.featureType.toLowerCase()]});
-			handleFilterChange();
-		})
-		.prependTo($wrpTab);
+	const $wrpOptFeatType = $(`<div class="opt-feature-type"/>`).prependTo($wrpTab);
+	if (it.featureType instanceof Array) {
+		const commonPrefix = MiscUtil.findCommonPrefix(it.featureType.map(fs => Parser.optFeatureTypeToFull(fs)));
+		if (commonPrefix) $wrpOptFeatType.append(`${commonPrefix.trim()} `);
+		it.featureType.forEach((ft, i) => {
+			if (i > 0) $wrpOptFeatType.append("/");
+			$(`<span class="roller">${Parser.optFeatureTypeToFull(ft).substring(commonPrefix.length)}</span>`)
+				.click(() => {
+					filterBox.setFromValues({"Feature Type": [ft.toLowerCase()]});
+					handleFilterChange();
+				})
+				.appendTo($wrpOptFeatType);
+		});
+	} else {
+		$(`<span class="roller">${Parser.optFeatureTypeToFull(it.featureType)}</span>`)
+			.click(() => {
+				filterBox.setFromValues({"Feature Type": [it.featureType.toLowerCase()]});
+				handleFilterChange();
+			})
+			.appendTo($wrpOptFeatType);
+	}
 
 	$content.append(`
 		${EntryRenderer.utils.getBorderTr()}

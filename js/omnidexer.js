@@ -289,6 +289,16 @@ Omnidexer.TO_INDEX = [
 		hashBuilder: (it) => {
 			return UrlUtil.encodeForHash([it.name, it.inherits.source]);
 		},
+		deepIndex: (primary, it) => {
+			const revName = EntryRenderer.item.modifierPostToPre(it);
+			if (revName) {
+				return [{
+					d: 1,
+					u: UrlUtil.encodeForHash([revName.name, it.inherits.source])
+				}];
+			}
+			return [];
+		},
 		test_extraIndex: () => {
 			const specVars = UtilSearchIndex._test_getBasicVariantItems();
 
@@ -328,7 +338,7 @@ Omnidexer.TO_INDEX = [
 	},
 	{
 		category: 18,
-		file: "bookref-quick.json",
+		file: "generated/bookref-quick.json",
 		listProp: "data.bookref-quick",
 		baseUrl: "quickreference.html",
 		hashBuilder: (it, i) => {
@@ -373,6 +383,20 @@ Omnidexer.TO_INDEX = [
 		file: "conditionsdiseases.json",
 		listProp: "disease",
 		baseUrl: "conditionsdiseases.html",
+		hover: true
+	},
+	{
+		category: 24,
+		file: "generated/gendata-tables.json",
+		listProp: "table",
+		baseUrl: "tables.html",
+		hover: true
+	},
+	{
+		category: 25,
+		file: "generated/gendata-tables.json",
+		listProp: "tableGroup",
+		baseUrl: "tables.html",
 		hover: true
 	}
 ];

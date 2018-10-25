@@ -40,6 +40,10 @@ $link-blue: #337ab7;
 	user-select: none;
 }
 
+.full-width {
+	width: 100%;
+}
+
 html {
 	height: 100%;
 }
@@ -322,6 +326,7 @@ dialog.dialog-modal {
 	display: none;
 }
 
+.glyphicon.top-border-icon,
 .glyphicon.delete-icon {
 	top: 0;
 	margin-left: auto;
@@ -392,6 +397,14 @@ dialog.dialog-modal {
 	overflow-y: auto;
 	animation-name: kf-fade-in, kf-pop-in;
 	animation-duration: 150ms, 75ms;
+
+	&--popout {
+		box-shadow: initial;
+		max-width: 100%;
+		width: 100%;
+		max-height: 100%;
+		animation-duration: initial;
+	}
 
 	@media (max-width: 1023px) {
 		max-width: 95vw;
@@ -677,6 +690,12 @@ dialog.dialog-modal {
 	&__col--tall {
 		line-height: 30px;
 	}
+
+	&__load_all_wrp {
+		display: flex;
+		justify-content: flex-end;
+		margin-bottom: 2px;
+	}
 }
 
 /* *** */
@@ -719,6 +738,12 @@ dialog.dialog-modal {
 #listcontainer.view-col {
 	display: flex;
 	flex-flow: column nowrap;
+}
+
+#listcontainer .list a.book-name {
+	display: flex;
+	justify-content: space-between;
+	padding: 0;
 }
 
 #contentwrapper.view-col {
@@ -978,6 +1003,10 @@ span {
 	&.sourceWDH {
 		color: #d4af37;
 	}
+
+	&.sourceAL {
+		color: #ed1c24;
+	}
 }
 
 table.stats {
@@ -1101,7 +1130,11 @@ th#author {
 }
 
 .monster th.name {
-	padding-right: calc(5.1em + 2px);
+	padding-right: calc(11.2rem + 2px);
+}
+
+.mon__wrp_hp {
+	max-width: calc(100% - 11rem);
 }
 
 table.stats td#sizetypealignment {
@@ -1621,10 +1654,10 @@ img.token {
 	position: absolute;
 	z-index: 10;
 	top: 0;
-	right: 0.1em;
+	right: 0.5rem;
 	float: right;
 	width: auto;
-	max-width: 5em;
+	max-width: 11rem;
 	height: auto;
 }
 
@@ -1639,18 +1672,6 @@ img.token:hover {
 
 #classtable tr th {
 	padding: 1px 0.2em;
-}
-
-table.stats #ability,
-table.stats #size,
-table.stats #speed {
-	font-weight: bold;
-}
-
-table.stats #ability span,
-table.stats #size span,
-table.stats #speed span {
-	font-weight: normal !important;
 }
 
 .monster-disclaimer {
@@ -1944,6 +1965,10 @@ body.dm-screen-fullscreen .dm-sidemenu-burger {
 		display: none;
 	}
 
+	#sticky-nav {
+		display: none !important;
+	}
+
 	table {
 		width: 100%;
 		margin-bottom: 5mm;
@@ -1997,6 +2022,11 @@ body.dm-screen-fullscreen .dm-sidemenu-burger {
 			border: 0 !important;
 			padding: 0 !important;
 		}
+
+		// classes page book view
+		.pnl-menu {
+			display: none;
+		}
 	}
 
 	.printbook-bestiary > td,
@@ -2026,6 +2056,10 @@ body.dm-screen-fullscreen .dm-sidemenu-burger {
 
 	a[href]::after {
 		content: none !important;
+	}
+
+	.help {
+		text-decoration: none;
 	}
 }
 
@@ -2093,6 +2127,10 @@ body.dm-screen-fullscreen .dm-sidemenu-burger {
 
 .col-xs-5-8 {
 	width: 48.33333333333333%;
+}
+
+.col-xs-5-3 {
+	width: 44.16666666666666%;
 }
 
 .col-xs-4-7 {
@@ -2749,6 +2787,10 @@ span.showhide {
 	padding: 1px 7px;
 }
 
+.caret--reverse {
+	transform: rotate(180deg);
+}
+
 /* ENTRY RENDERING CSS */
 table.stats div.statsBlockSectionHead > span.entry-title,
 table.stats div.statsBlockHead > span.entry-title,
@@ -3269,7 +3311,8 @@ table.stats {
 	box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
 }
 
-table.stats.stats-book {
+table.stats.stats-book,
+table.stats.stats-book--hover {
 	background: white;
 	box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
 
@@ -3324,18 +3367,22 @@ table.stats.stats-book {
 
 table.stats table.striped-odd > tbody > tr:nth-child(odd),
 table.stats table.striped-even > tbody > tr:nth-child(even) {
-	background: #e4d8c3;
+	background: #cbbfaa80; // pre-blend: e4 d8 c3
 }
 
 table.stats.stats-book table.striped-odd > tbody > tr:nth-child(odd),
-table.stats.stats-book table.striped-even > tbody > tr:nth-child(even) {
-	background: #e0e0e0;
+table.stats.stats-book table.striped-even > tbody > tr:nth-child(even),
+table.stats.stats-book--hover table.striped-odd > tbody > tr:nth-child(odd),
+table.stats.stats-book--hover table.striped-even > tbody > tr:nth-child(even) {
+	background: #c0c0c080; // pre-blend: e0 e0 e0
 }
 
 table.stats table.no-stripes > tbody > tr:nth-child(odd),
 table.stats table.no-stripes > tbody > tr:nth-child(even),
 table.stats.stats-book table.no-stripes > tbody > tr:nth-child(odd),
-table.stats.stats-book table.no-stripes > tbody > tr:nth-child(even) {
+table.stats.stats-book table.no-stripes > tbody > tr:nth-child(even),
+table.stats.stats-book--hover table.no-stripes > tbody > tr:nth-child(odd),
+table.stats.stats-book--hover table.no-stripes > tbody > tr:nth-child(even) {
 	background: initial;
 }
 
@@ -3344,7 +3391,9 @@ th.border {
 	background: #e69a28;
 }
 
-table.stats.stats-book th.border {
+.hoverbox .hoverborder.hoverborder-book,
+table.stats.stats-book th.border,
+table.stats.stats-book--hover th.border {
 	background: silver;
 }
 
@@ -3622,6 +3671,32 @@ table.stats tr.homebrew-hover {
 	}
 }
 
+.don {
+	&__bar {
+		width: calc(100% - 40px);
+		height: 20px;
+		margin: 20px 20px 5px;
+		box-shadow: 0 0 3px 0 black;
+		border-radius: 4px;
+		border: 1px solid #ccc;
+		background: #f0f0f0;
+	}
+
+	&__bar--home {
+		width: calc(100% - 10px);
+		height: 20px;
+		margin: 5px;
+	}
+
+	&__bar_inner {
+		height: 18px;
+		background: gold;
+		width: 0;
+		text-align: right;
+		color: black;
+	}
+}
+
 /* Day Mode End */
 
 /* Night Mode */
@@ -3814,7 +3889,8 @@ table.stats tr.homebrew-hover {
 
 	.hoverbox .hoverborder,
 	th.border,
-	table.stats.stats-book th.border {
+	table.stats.stats-book th.border,
+	table.stats.stats-book--hover th.border {
 		background: #565656;
 	}
 
@@ -3823,7 +3899,8 @@ table.stats tr.homebrew-hover {
 		border-bottom: 1px solid #565656;
 	}
 
-	table.stats.stats-book ::selection {
+	table.stats.stats-book ::selection,
+	table.stats.stats-book--hover ::selection {
 		color: #242527;
 		background: white;
 	}
@@ -3873,6 +3950,7 @@ table.stats tr.homebrew-hover {
 
 	#crcalc label span.explanation {
 		border: 1px solid black;
+		background: $bg-color;
 	}
 
 	#msbcr tr:nth-child(even) {
@@ -4034,6 +4112,10 @@ table.stats tr.homebrew-hover {
 	#monsterfeatures tr:nth-child(odd),
 	ul.bk-headers li:nth-child(odd) {
 		background: rgba(0, 0, 0, 0.31);
+	}
+
+	ul.list-display-only.brew-list--groups li:nth-child(odd) {
+		background: initial;
 	}
 
 	ul.list.encounters > li > span:first-child,
@@ -4336,6 +4418,15 @@ table.stats tr.homebrew-hover {
 	/* Bootstrap overrides */
 	.table-striped > tbody > tr:nth-of-type(odd) {
 		background-color: #444;
+	}
+
+	.alert-info {
+		color: white;
+		background-color: #354e5a;
+	}
+
+	.don__bar {
+		background: $bg-color;
 	}
 
 	/* *** */

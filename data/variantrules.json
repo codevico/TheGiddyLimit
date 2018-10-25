@@ -112,27 +112,27 @@
 					"rows": [
 						[
 							"Common",
-							"100gp",
+							"100 gp",
 							"3rd"
 						],
 						[
 							"Uncommon",
-							"500gp",
+							"500 gp",
 							"3rd"
 						],
 						[
 							"Rare",
-							"5,000gp",
+							"5,000 gp",
 							"6th"
 						],
 						[
 							"Very rare",
-							"50,000gp",
+							"50,000 gp",
 							"11th"
 						],
 						[
 							"Legendary",
-							"500,000gp",
+							"500,000 gp",
 							"17th"
 						]
 					]
@@ -571,7 +571,7 @@
 					"type": "entries",
 					"name": "Initiative Score",
 					"entries": [
-						"With this optional rule, creature don't roll initiative at the start of combat. Instead, each creature has an initiative score, which is a passive Dexterity check: 10 + Dexterity modifier.",
+						"With this optional rule, creatures don't roll initiative at the start of combat. Instead, each creature has an initiative score, which is a passive Dexterity check: 10 + Dexterity modifier.",
 						"By cutting down on die rolls, math done on the fly, and the process of asking for and recording totals, you can speed your game up considerably\u2014at the cost of an initiative order that is often predictable."
 					]
 				},
@@ -1300,7 +1300,7 @@
 								},
 								{
 									"type": "table",
-									"caption": "",
+									"caption": "Multiclass Spellcaster: Spell Slots per Spell Level",
 									"colLabels": [
 										"Lvl.",
 										"1st",
@@ -2380,7 +2380,7 @@
 						],
 						[
 							"6th",
-							8
+							9
 						],
 						[
 							"7th",
@@ -8062,7 +8062,6 @@
 						"These rules for magic item creation are derived from the system presented in Xanathar's Guide to Everything. This also offers the idea that the creation of a magic item is a complex procedure and that complications can arise. If you use this rule, there's a 10 percent chance of a complication arising for every five workweeks spent on crafting the item. Xanathar's Guide presents a number of possible complications. Here are few tied to Eberron.",
 						{
 							"type": "table",
-							"caption": "",
 							"colLabels": [
 								"d6",
 								"Complications"
@@ -8273,8 +8272,8 @@
 				"A humanoid hit by an attack that carries the curse of lycanthropy must succeed on a Constitution saving throw (DC 8 + the lycanthrope's proficiency bonus + the lycanthrope's Constitution modifier) or be cursed. If the character embraces the curse, his or her alignment becomes the one defined for the lycanthrope. The DM is free to decide that a change in alignment places the character under DM control until the curse of lycanthropy is removed.",
 				"The following information applies to specific lycanthropes.",
 				{
-				    "type": "entries",
-				    "entries": [
+					"type": "entries",
+					"entries": [
 						{
 							"type": "entries",
 							"name": "{@creature Werebear}",
@@ -8317,7 +8316,7 @@
 								"A character cursed with wereraven lycanthropy gains a Dexterity of 15 if his or her score isn't already higher. Attack and damage rolls for the wereraven's bite are based on whichever is higher of the character's Strength and Dexterity. The bite of a wereraven in raven form deals 1 piercing damage (no ability modifier applies to this damage) and carries the curse of lycanthropy."
 							]
 						}
-				    ]
+					]
 				}
 			]
 		}

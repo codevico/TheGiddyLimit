@@ -3,6 +3,7 @@ const JSON_URL = "data/variantrules.json";
 
 window.onload = function load () {
 	ExcludeUtil.initialise();
+	SortUtil.initHandleFilterButtonClicks();
 	DataUtil.loadJSON(JSON_URL).then(onJsonLoad);
 };
 
@@ -47,6 +48,7 @@ function onJsonLoad (data) {
 			BrewUtil.bind({list, filterBox, sourceFilter});
 
 			History.init(true);
+			ExcludeUtil.checkShowAllExcluded(rulesList, $(`#pagecontent`));
 		});
 }
 

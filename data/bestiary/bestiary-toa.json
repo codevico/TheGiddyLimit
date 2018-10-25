@@ -918,6 +918,9 @@
 			"page": 213,
 			"traitTags": [
 				"False Appearance"
+			],
+			"senseTags": [
+				"B"
 			]
 		},
 		{
@@ -1071,6 +1074,7 @@
 		},
 		{
 			"name": "Bag of Nails",
+			"isNPC": true,
 			"size": "M",
 			"type": {
 				"type": "humanoid",
@@ -1267,7 +1271,10 @@
 					]
 				}
 			],
-			"page": 216
+			"page": 216,
+			"senseTags": [
+				"B"
+			]
 		},
 		{
 			"name": "Clay Gladiator",
@@ -1553,7 +1560,7 @@
 			],
 			"hp": {
 				"average": 3,
-				"formula": "1d6 + 4"
+				"formula": "1d6"
 			},
 			"speed": {
 				"walk": 30,
@@ -1574,6 +1581,12 @@
 					"entries": [
 						"The flying monkey has advantage on an attack roll against a creature if at least one of the monkey's allies is within 5 feet of the creature and the ally isn't {@condition incapacitated}."
 					]
+				},
+				{
+					"name": "Familiar",
+					"entries": [
+						"With the DM's permission, the {@spell find familiar} spell can summon a flying monkey."
+					]
 				}
 			],
 			"action": [
@@ -1587,7 +1600,8 @@
 			"page": 220,
 			"traitTags": [
 				"Pack Tactics"
-			]
+			],
+			"familiar": true
 		},
 		{
 			"source": "ToA",
@@ -1992,6 +2006,9 @@
 			"page": 225,
 			"traitTags": [
 				"Keen Senses"
+			],
+			"senseTags": [
+				"B"
 			]
 		},
 		{
@@ -2916,6 +2933,9 @@
 				"Immutable Form",
 				"Regeneration",
 				"Siege Monster"
+			],
+			"senseTags": [
+				"B"
 			]
 		},
 		{
@@ -3437,6 +3457,9 @@
 			"page": 234,
 			"actionTags": [
 				"Multiattack"
+			],
+			"senseTags": [
+				"B"
 			]
 		},
 		{
@@ -4214,6 +4237,9 @@
 			"traitTags": [
 				"False Appearance",
 				"Regeneration"
+			],
+			"senseTags": [
+				"B"
 			]
 		},
 		{
@@ -4266,6 +4292,9 @@
 			"page": 237,
 			"traitTags": [
 				"Undead Fortitude"
+			],
+			"senseTags": [
+				"B"
 			]
 		},
 		{
@@ -4432,6 +4461,7 @@
 				"P"
 			],
 			"senseTags": [
+				"B",
 				"D"
 			]
 		},

@@ -4,6 +4,7 @@ const JSON_URL = "data/trapshazards.json";
 
 window.onload = function load () {
 	ExcludeUtil.initialise();
+	SortUtil.initHandleFilterButtonClicks();
 	DataUtil.loadJSON(JSON_URL).then(onJsonLoad);
 };
 
@@ -27,10 +28,12 @@ function onJsonLoad (data) {
 			"HAZ",
 			"WTH",
 			"ENV",
-			"WLD"
+			"WLD",
+			"GEN"
 		],
 		displayFn: Parser.trapHazTypeToFull
 	});
+	typeFilter.items.sort((a, b) => SortUtil.ascSortLower(Parser.trapHazTypeToFull(a), Parser.trapHazTypeToFull(b)));
 	filterBox = initFilterBox(
 		sourceFilter,
 		typeFilter
@@ -65,6 +68,7 @@ function onJsonLoad (data) {
 			RollerUtil.addListRollButton();
 
 			History.init(true);
+			ExcludeUtil.checkShowAllExcluded(trapsAndHazardsList, $(`#pagecontent`));
 		});
 }
 
@@ -147,9 +151,9 @@ function getSublistItem (it, pinId) {
 	return `
 		<li class="row" ${FLTR_ID}="${pinId}" oncontextmenu="ListUtil.openSubContextMenu(event, this)">
 			<a href="#${UrlUtil.autoEncodeHash(it)}" title="${it.name}">
-				<span class="name col-xs-8">${it.name}</span>		
-				<span class="type col-xs-4">${Parser.trapHazTypeToFull(it.trapHazType)}</span>		
-				<span class="id hidden">${pinId}</span>				
+				<span class="name col-xs-8">${it.name}</span>
+				<span class="type col-xs-4">${Parser.trapHazTypeToFull(it.trapHazType)}</span>
+				<span class="id hidden">${pinId}</span>
 			</a>
 		</li>
 	`;
@@ -166,11 +170,12 @@ function loadhash (jsonIndex) {
 
 	const simplePart = EntryRenderer.traphazard.getSimplePart(renderer, it);
 	const complexPart = EntryRenderer.traphazard.getComplexPart(renderer, it);
+	const subtitle = EntryRenderer.traphazard.getSubtitle(it);
 	const $content = $(`#pagecontent`).empty();
 	$content.append(`
 		${EntryRenderer.utils.getBorderTr()}
 		${EntryRenderer.utils.getNameTr(it)}
-		<tr class="text"><td colspan="6"><i>${EntryRenderer.traphazard.getSubtitle(it)}</i></td>
+		${subtitle ? `<tr class="text"><td colspan="6"><i>${EntryRenderer.traphazard.getSubtitle(it)}</i></td>` : ""}
 		<tr class="text"><td colspan="6">${renderStack.join("")}${simplePart || ""}${complexPart || ""}</td></tr>
 		${EntryRenderer.utils.getPageTr(it)}
 		${EntryRenderer.utils.getBorderTr()}

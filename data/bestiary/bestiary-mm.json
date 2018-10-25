@@ -690,6 +690,7 @@
 				"DR"
 			],
 			"senseTags": [
+				"B",
 				"SD"
 			]
 		},
@@ -844,6 +845,7 @@
 				"DR"
 			],
 			"senseTags": [
+				"B",
 				"SD"
 			]
 		},
@@ -977,6 +979,7 @@
 				"DR"
 			],
 			"senseTags": [
+				"B",
 				"SD"
 			]
 		},
@@ -1132,6 +1135,7 @@
 				"DR"
 			],
 			"senseTags": [
+				"B",
 				"SD"
 			]
 		},
@@ -1300,6 +1304,7 @@
 				"DR"
 			],
 			"senseTags": [
+				"B",
 				"SD"
 			]
 		},
@@ -1454,6 +1459,7 @@
 				"DR"
 			],
 			"senseTags": [
+				"B",
 				"SD"
 			]
 		},
@@ -1624,6 +1630,7 @@
 				"DR"
 			],
 			"senseTags": [
+				"B",
 				"SD"
 			]
 		},
@@ -1774,6 +1781,7 @@
 				"DR"
 			],
 			"senseTags": [
+				"B",
 				"SD"
 			]
 		},
@@ -1912,6 +1920,7 @@
 				"DR"
 			],
 			"senseTags": [
+				"B",
 				"SD"
 			]
 		},
@@ -2074,6 +2083,7 @@
 				"DR"
 			],
 			"senseTags": [
+				"B",
 				"SD"
 			]
 		},
@@ -2218,6 +2228,7 @@
 				"DR"
 			],
 			"senseTags": [
+				"B",
 				"SD"
 			]
 		},
@@ -2325,6 +2336,7 @@
 		},
 		{
 			"name": "Allosaurus",
+			"group": "Dinosaurs",
 			"size": "L",
 			"type": "beast",
 			"source": "MM",
@@ -2529,6 +2541,7 @@
 				"DR"
 			],
 			"senseTags": [
+				"B",
 				"SD"
 			]
 		},
@@ -2667,6 +2680,7 @@
 				"DR"
 			],
 			"senseTags": [
+				"B",
 				"SD"
 			]
 		},
@@ -2829,6 +2843,7 @@
 				"DR"
 			],
 			"senseTags": [
+				"B",
 				"SD"
 			]
 		},
@@ -2997,6 +3012,7 @@
 				"DR"
 			],
 			"senseTags": [
+				"B",
 				"SD"
 			]
 		},
@@ -3158,6 +3174,7 @@
 				"DR"
 			],
 			"senseTags": [
+				"B",
 				"SD"
 			]
 		},
@@ -3328,6 +3345,7 @@
 				"DR"
 			],
 			"senseTags": [
+				"B",
 				"SD"
 			]
 		},
@@ -3478,6 +3496,7 @@
 				"DR"
 			],
 			"senseTags": [
+				"B",
 				"SD"
 			]
 		},
@@ -3616,6 +3635,7 @@
 				"DR"
 			],
 			"senseTags": [
+				"B",
 				"SD"
 			]
 		},
@@ -3778,6 +3798,7 @@
 				"DR"
 			],
 			"senseTags": [
+				"B",
 				"SD"
 			]
 		},
@@ -3922,6 +3943,7 @@
 				"DR"
 			],
 			"senseTags": [
+				"B",
 				"SD"
 			]
 		},
@@ -4143,6 +4165,7 @@
 		},
 		{
 			"name": "Animated Armor",
+			"group": "Animated Objects",
 			"size": "M",
 			"type": "construct",
 			"source": "MM",
@@ -4223,6 +4246,9 @@
 			],
 			"actionTags": [
 				"Multiattack"
+			],
+			"senseTags": [
+				"B"
 			]
 		},
 		{
@@ -4289,6 +4315,7 @@
 		},
 		{
 			"name": "Ankylosaurus",
+			"group": "Dinosaurs",
 			"size": "H",
 			"type": "beast",
 			"source": "MM",
@@ -5934,6 +5961,7 @@
 				"TP"
 			],
 			"senseTags": [
+				"B",
 				"SD"
 			]
 		},
@@ -6051,6 +6079,9 @@
 			"soundClip": "https://media-waterdeep.cursecdn.com/file-attachments/0/44/bat.mp3",
 			"traitTags": [
 				"Keen Senses"
+			],
+			"senseTags": [
+				"B"
 			]
 		},
 		{
@@ -6685,6 +6716,7 @@
 				"DR"
 			],
 			"senseTags": [
+				"B",
 				"D"
 			]
 		},
@@ -6774,6 +6806,9 @@
 			"traitTags": [
 				"Amorphous",
 				"Spider Climb"
+			],
+			"senseTags": [
+				"B"
 			]
 		},
 		{
@@ -6979,6 +7014,7 @@
 				"DR"
 			],
 			"senseTags": [
+				"B",
 				"D"
 			]
 		},
@@ -7254,131 +7290,31 @@
 					]
 				}
 			],
+			"variant": [
+				{
+					"type": "variant",
+					"name": "Bone Devil Polearm",
+					"entries": [
+						"Some bone devils have the following action options.",
+						{
+							"name": "Multiattack",
+							"type": "entries",
+							"entries": [
+								"The devil makes two attacks: one with its hooked polearm and one with its sting."
+							]
+						},
+						{
+							"name": "Hooked Polearm",
+							"type": "entries",
+							"entries": [
+								"{@atk mw} {@hit 8} to hit, reach 10 ft., one target. Hit: 17 ({@dice 2d12 + 4}) piercing damage. If the target is a Huge or smaller creature, it is grappled (escape DC 14). Until this grapple ends, the devil can't use its polearm on another target."
+							]
+						}
+					]
+				}
+			],
 			"page": 71,
 			"soundClip": "https://media-waterdeep.cursecdn.com/file-attachments/0/65/bone-devil.mp3",
-			"traitTags": [
-				"Devil's Sight",
-				"Magic Resistance"
-			],
-			"actionTags": [
-				"Multiattack"
-			],
-			"languageTags": [
-				"I",
-				"TP"
-			],
-			"senseTags": [
-				"SD"
-			]
-		},
-		{
-			"name": "Bone Devil Polearm",
-			"size": "L",
-			"type": {
-				"type": "fiend",
-				"tags": [
-					"devil"
-				]
-			},
-			"source": "MM",
-			"alignment": [
-				"L",
-				"E"
-			],
-			"ac": [
-				{
-					"ac": 19,
-					"from": [
-						"natural armor"
-					]
-				}
-			],
-			"hp": {
-				"average": 142,
-				"formula": "15d10 + 60"
-			},
-			"speed": {
-				"walk": 40,
-				"fly": 40
-			},
-			"str": 18,
-			"dex": 16,
-			"con": 18,
-			"int": 13,
-			"wis": 14,
-			"cha": 16,
-			"save": {
-				"int": "+5",
-				"wis": "+6",
-				"cha": "+7"
-			},
-			"skill": {
-				"deception": "+7",
-				"insight": "+6"
-			},
-			"resist": [
-				"cold",
-				{
-					"resist": [
-						"bludgeoning",
-						"piercing",
-						"slashing"
-					],
-					"note": "from nonmagical attacks that aren't silvered"
-				}
-			],
-			"immune": [
-				"fire",
-				"poison"
-			],
-			"conditionImmune": [
-				"poisoned"
-			],
-			"senses": "darkvision 120 ft.",
-			"passive": 9,
-			"languages": "Infernal, telepathy 120 ft.",
-			"cr": "9",
-			"trait": [
-				{
-					"name": "Devil's Sight",
-					"entries": [
-						"Magical darkness doesn't impede the devil's darkvision."
-					]
-				},
-				{
-					"name": "Magic Resistance",
-					"entries": [
-						"The devil has advantage on saving throws against spells and other magical effects."
-					]
-				}
-			],
-			"action": [
-				{
-					"name": "Multiattack",
-					"entries": [
-						"The devil makes three attacks: two with its hooked polearm and one with its sting."
-					]
-				},
-				{
-					"name": "Hooked Polearm",
-					"entries": [
-						"{@atk mw} {@hit 8} to hit, reach 10 ft., one target. Hit: 17 ({@damage 2d12 + 4}) piercing damage. If the target is a huge or smaller creature, it is {@condition grappled} (escape DC 14). Until the grapple ends, the devil can't use its polearm on another target."
-					]
-				},
-				{
-					"name": "Claw",
-					"entries": [
-						"{@atk mw} {@hit 8} to hit, reach 10 ft., one target. Hit: 8 ({@damage 1d8 + 4}) slashing damage."
-					]
-				},
-				{
-					"name": "Sting",
-					"entries": [
-						"{@atk mw} {@hit 8} to hit, reach 10 ft., one target. Hit: 13 ({@damage 2d8 + 4}) piercing damage plus 17 ({@damage 5d6}) poison damage, and the target must succeed on a DC 14 Constitution saving throw or become {@condition poisoned} for 1 minute. The target can repeat the saving throw at the end of each of its turns, ending the effect on itself on a success."
-					]
-				}
-			],
-			"page": 71,
 			"traitTags": [
 				"Devil's Sight",
 				"Magic Resistance"
@@ -7683,6 +7619,7 @@
 				"DR"
 			],
 			"senseTags": [
+				"B",
 				"D"
 			]
 		},
@@ -7782,6 +7719,7 @@
 				"DR"
 			],
 			"senseTags": [
+				"B",
 				"D"
 			]
 		},
@@ -8945,6 +8883,7 @@
 				"TP"
 			],
 			"senseTags": [
+				"B",
 				"SD"
 			]
 		},
@@ -9658,7 +9597,10 @@
 				"swamp",
 				"desert"
 			],
-			"soundClip": "https://media-waterdeep.cursecdn.com/file-attachments/0/98/constrictor-snake.mp3"
+			"soundClip": "https://media-waterdeep.cursecdn.com/file-attachments/0/98/constrictor-snake.mp3",
+			"senseTags": [
+				"B"
+			]
 		},
 		{
 			"name": "Copper Dragon Wyrmling",
@@ -9745,6 +9687,7 @@
 				"DR"
 			],
 			"senseTags": [
+				"B",
 				"D"
 			]
 		},
@@ -9945,6 +9888,9 @@
 			"soundClip": "https://media-waterdeep.cursecdn.com/file-attachments/0/104/crab.mp3",
 			"traitTags": [
 				"Amphibious"
+			],
+			"senseTags": [
+				"B"
 			]
 		},
 		{
@@ -10006,6 +9952,9 @@
 			],
 			"languageTags": [
 				"C"
+			],
+			"senseTags": [
+				"B"
 			]
 		},
 		{
@@ -10534,6 +10483,9 @@
 			"soundClip": "https://media-waterdeep.cursecdn.com/file-attachments/0/114/darkmantle.mp3",
 			"traitTags": [
 				"False Appearance"
+			],
+			"senseTags": [
+				"B"
 			]
 		},
 		{
@@ -10920,6 +10872,7 @@
 				"TP"
 			],
 			"senseTags": [
+				"B",
 				"D"
 			]
 		},
@@ -11343,6 +11296,7 @@
 		},
 		{
 			"name": "Deva",
+			"group": "Angels",
 			"size": "M",
 			"type": "celestial",
 			"source": "MM",
@@ -12187,184 +12141,31 @@
 					"ability": "wis"
 				}
 			],
+			"variant": [
+				{
+					"type": "variant",
+					"name": "Drider Spellcasting",
+					"entries": [
+						"Driders that were once drow spellcasters might retain their ability to cast spells. Such driders typically have a higher spellcasting ability (15 or 16) than other driders. Further, the drider gains the Spellcasting trait. A drider that was a drow divine spellcaster, therefore, could have a Wisdom of 16 (+3) and a Spellcasting trait as follows.",
+						"Spellcasting. The drider is a 7th-level spellcaster. Its spellcasting ability is Wisdom (spell save DC 14, {@hit 6} to hit with spell attacks). The drider has the following spells prepared from the cleric spell list:",
+						{
+							"type": "list",
+							"style": "list-hang-notitle",
+							"items": [
+								"Cantrips (at will): {@spell poison spray}, {@spell thaumaturgy}",
+								"1st level (4 slots): {@spell bane}, {@spell detect magic}, {@spell sanctuary}",
+								"2nd level (3 slots): {@spell hold person}, {@spell silence}",
+								"3rd level (3 slots): {@spell clairvoyance}, {@spell dispel magic}",
+								"4th level (2 slots): {@spell divination}, {@spell freedom of movement}"
+							]
+						}
+					]
+				}
+			],
 			"environment": [
 				"underdark"
 			],
 			"soundClip": "https://media-waterdeep.cursecdn.com/file-attachments/0/137/drider.mp3",
-			"traitTags": [
-				"Fey Ancestry",
-				"Spider Climb",
-				"Sunlight Sensitivity",
-				"Web Walker"
-			],
-			"actionTags": [
-				"Multiattack"
-			],
-			"languageTags": [
-				"E",
-				"U"
-			],
-			"senseTags": [
-				"SD"
-			]
-		},
-		{
-			"name": "Drider Spellcaster",
-			"size": "L",
-			"type": "monstrosity",
-			"source": "MM",
-			"alignment": [
-				"C",
-				"E"
-			],
-			"ac": [
-				{
-					"ac": 19,
-					"from": [
-						"natural armor"
-					]
-				}
-			],
-			"hp": {
-				"average": 123,
-				"formula": "13d10 + 52"
-			},
-			"speed": {
-				"walk": 30,
-				"climb": 30
-			},
-			"str": 16,
-			"dex": 16,
-			"con": 18,
-			"int": 13,
-			"wis": 16,
-			"cha": 12,
-			"skill": {
-				"perception": "+5",
-				"stealth": "+9"
-			},
-			"senses": "darkvision 120 ft.",
-			"passive": 15,
-			"languages": "Elvish, Undercommon",
-			"cr": "6",
-			"trait": [
-				{
-					"name": "Fey Ancestry",
-					"entries": [
-						"The drider has advantage on saving throws against being {@condition charmed}, and magic can't put the drider to sleep."
-					]
-				},
-				{
-					"name": "Spider Climb",
-					"entries": [
-						"The drider can climb difficult surfaces, including upside down on ceilings, without needing to make an ability check."
-					]
-				},
-				{
-					"name": "Sunlight Sensitivity",
-					"entries": [
-						"While in sunlight, the drider has disadvantage on attack rolls, as well as on Wisdom ({@skill Perception}) checks that rely on sight."
-					]
-				},
-				{
-					"name": "Web Walker",
-					"entries": [
-						"The drider ignores movement restrictions caused by webbing."
-					]
-				}
-			],
-			"action": [
-				{
-					"name": "Multiattack",
-					"entries": [
-						"The drider makes three attacks, either with its longsword or its longbow. It can replace one of those attacks with a bite attack."
-					]
-				},
-				{
-					"name": "Bite",
-					"entries": [
-						"{@atk mw} {@hit 6} to hit, reach 5 ft., one creature. Hit: 2 ({@damage 1d4}) piercing damage plus 9 ({@damage 2d8}) poison damage."
-					]
-				},
-				{
-					"name": "Longsword",
-					"entries": [
-						"{@atk mw} {@hit 6} to hit, reach 5 ft., one target. Hit: 7 ({@damage 1d8 + 3}) slashing damage, or 8 ({@damage 1d10 + 3}) slashing damage if used with two hands."
-					]
-				},
-				{
-					"name": "Longbow",
-					"entries": [
-						"{@atk rw} {@hit 6} to hit, range 150/600 ft., one target. Hit: 7 ({@damage 1d8 + 3}) piercing damage plus 4 ({@damage 1d8}) poison damage."
-					]
-				}
-			],
-			"page": 120,
-			"spellcasting": [
-				{
-					"name": "Innate Spellcasting",
-					"headerEntries": [
-						"The drider's innate spellcasting ability is Wisdom (spell save DC 13). The drider can innately cast the following spells, requiring no material components:"
-					],
-					"will": [
-						"{@spell dancing lights}"
-					],
-					"daily": {
-						"1e": [
-							"{@spell darkness}",
-							"{@spell faerie fire}"
-						]
-					},
-					"ability": "wis"
-				},
-				{
-					"name": "Spellcasting",
-					"headerEntries": [
-						"The drider is a 7th-level spellcaster. Its spellcasting ability is Wisdom (spell save DC 14, {@hit 6} to hit with spell attacks). The drider has the following spells prepared from the cleric spell list:"
-					],
-					"spells": {
-						"0": {
-							"spells": [
-								"{@spell poison spray}",
-								"{@spell thaumaturgy}"
-							]
-						},
-						"1": {
-							"slots": 4,
-							"spells": [
-								"{@spell bane}",
-								"{@spell detect magic}",
-								"{@spell sanctuary}"
-							]
-						},
-						"2": {
-							"slots": 3,
-							"spells": [
-								"{@spell hold person}",
-								"{@spell silence}"
-							]
-						},
-						"3": {
-							"slots": 3,
-							"spells": [
-								"{@spell clairvoyance}",
-								"{@spell dispel magic}"
-							]
-						},
-						"4": {
-							"slots": 2,
-							"spells": [
-								"{@spell divination}",
-								"{@spell freedom of movement}"
-							]
-						}
-					},
-					"ability": "wis"
-				}
-			],
-			"environment": [
-				"underdark"
-			],
 			"traitTags": [
 				"Fey Ancestry",
 				"Spider Climb",
@@ -13374,6 +13175,16 @@
 					"name": "Javelin",
 					"entries": [
 						"{@atk mw,rw} {@hit 3} to hit, reach 5 ft. or range 30/120 ft., one target. Hit: 4 ({@damage 1d6 + 1}) piercing damage."
+					]
+				}
+			],
+			"variant": [
+				{
+					"type": "variant",
+					"name": "Rogue Modrons",
+					"entries": [
+						"A modron unit sometimes becomes defective, either through natural decay or exposure to chaotic forces. Rogue modrons don't act in accordance with Primus's wishes and directives, breaking laws, disobeying orders, and even engaging in violence. Other modrons hunt down such rogues.",
+						"A rogue modron loses the Axiomatic Mind trait and can have any alignment other than lawful neutral. Otherwise, it has the same statistics as a regular modron of its rank."
 					]
 				}
 			],
@@ -15935,10 +15746,14 @@
 			"soundClip": "https://media-waterdeep.cursecdn.com/file-attachments/0/172/flying-snake.mp3",
 			"traitTags": [
 				"Flyby"
+			],
+			"senseTags": [
+				"B"
 			]
 		},
 		{
 			"name": "Flying Sword",
+			"group": "Animated Objects",
 			"size": "S",
 			"type": "construct",
 			"source": "MM",
@@ -16017,6 +15832,9 @@
 			"traitTags": [
 				"Antimagic Susceptibility",
 				"False Appearance"
+			],
+			"senseTags": [
+				"B"
 			]
 		},
 		{
@@ -16527,6 +16345,9 @@
 			"soundClip": "https://media-waterdeep.cursecdn.com/file-attachments/0/181/gas-spore.mp3",
 			"traitTags": [
 				"Death Burst"
+			],
+			"senseTags": [
+				"B"
 			]
 		},
 		{
@@ -16602,7 +16423,10 @@
 			"environment": [
 				"underdark"
 			],
-			"soundClip": "https://media-waterdeep.cursecdn.com/file-attachments/0/184/gelatinous-cube.mp3"
+			"soundClip": "https://media-waterdeep.cursecdn.com/file-attachments/0/184/gelatinous-cube.mp3",
+			"senseTags": [
+				"B"
+			]
 		},
 		{
 			"name": "Ghast",
@@ -17055,6 +16879,9 @@
 			"soundClip": "https://media-waterdeep.cursecdn.com/file-attachments/0/191/giant-bat.mp3",
 			"traitTags": [
 				"Keen Senses"
+			],
+			"senseTags": [
+				"B"
 			]
 		},
 		{
@@ -17167,7 +16994,10 @@
 				"underdark",
 				"urban"
 			],
-			"soundClip": "https://media-waterdeep.cursecdn.com/file-attachments/0/193/giant-centipede.mp3"
+			"soundClip": "https://media-waterdeep.cursecdn.com/file-attachments/0/193/giant-centipede.mp3",
+			"senseTags": [
+				"B"
+			]
 		},
 		{
 			"name": "Giant Constrictor Snake",
@@ -17222,7 +17052,10 @@
 				"swamp",
 				"desert"
 			],
-			"soundClip": "https://media-waterdeep.cursecdn.com/file-attachments/0/194/giant-constrictor-snake.mp3"
+			"soundClip": "https://media-waterdeep.cursecdn.com/file-attachments/0/194/giant-constrictor-snake.mp3",
+			"senseTags": [
+				"B"
+			]
 		},
 		{
 			"name": "Giant Crab",
@@ -17283,6 +17116,9 @@
 			"soundClip": "https://media-waterdeep.cursecdn.com/file-attachments/0/195/giant-crab.mp3",
 			"traitTags": [
 				"Amphibious"
+			],
+			"senseTags": [
+				"B"
 			]
 		},
 		{
@@ -17572,6 +17408,9 @@
 			"soundClip": "https://media-waterdeep.cursecdn.com/file-attachments/0/199/giant-fire-beetle.mp3",
 			"traitTags": [
 				"Illumination"
+			],
+			"senseTags": [
+				"B"
 			]
 		},
 		{
@@ -18055,7 +17894,10 @@
 				"urban",
 				"desert"
 			],
-			"soundClip": "https://media-waterdeep.cursecdn.com/file-attachments/0/206/giant-poisonous-snake.mp3"
+			"soundClip": "https://media-waterdeep.cursecdn.com/file-attachments/0/206/giant-poisonous-snake.mp3",
+			"senseTags": [
+				"B"
+			]
 		},
 		{
 			"name": "Giant Rat",
@@ -18227,6 +18069,9 @@
 			"soundClip": "https://media-waterdeep.cursecdn.com/file-attachments/0/208/giant-scorpion.mp3",
 			"actionTags": [
 				"Multiattack"
+			],
+			"senseTags": [
+				"B"
 			]
 		},
 		{
@@ -18357,6 +18202,9 @@
 			"soundClip": "https://media-waterdeep.cursecdn.com/file-attachments/0/210/giant-shark.mp3",
 			"traitTags": [
 				"Water Breathing"
+			],
+			"senseTags": [
+				"B"
 			]
 		},
 		{
@@ -18444,6 +18292,7 @@
 				"Web Walker"
 			],
 			"senseTags": [
+				"B",
 				"D"
 			]
 		},
@@ -18785,6 +18634,7 @@
 				"Web Walker"
 			],
 			"senseTags": [
+				"B",
 				"D"
 			]
 		},
@@ -18918,7 +18768,7 @@
 				{
 					"name": "Silver Greatsword",
 					"entries": [
-						"{@atk mw} {@hit 9} to hit, reach 5 ft., one target. Hit: 13 ({@damage 2d6 + 6}) slashing damage plus 10 ({@damage 3d6}) psychic damage. This is a magic weapon attack. On a critical hit against a target in an astral body (as with the astral projection spell), the githyanki can cut the silvery cord that tethers the target to its material body, instead of dealing damage."
+						"{@atk mw} {@hit 9} to hit, reach 5 ft., one target. Hit: 13 ({@damage 2d6 + 6}) slashing damage plus 10 ({@damage 3d6}) psychic damage. This is a magic weapon attack. On a critical hit against a target in an astral body (as with the {@spell astral projection} spell), the githyanki can cut the silvery cord that tethers the target to its material body, instead of dealing damage."
 					]
 				}
 			],
@@ -20087,6 +19937,7 @@
 				"DR"
 			],
 			"senseTags": [
+				"B",
 				"D"
 			]
 		},
@@ -20384,6 +20235,9 @@
 			"traitTags": [
 				"Amorphous",
 				"False Appearance"
+			],
+			"senseTags": [
+				"B"
 			]
 		},
 		{
@@ -20473,6 +20327,9 @@
 			"traitTags": [
 				"Amorphous",
 				"False Appearance"
+			],
+			"senseTags": [
+				"B"
 			]
 		},
 		{
@@ -20635,6 +20492,7 @@
 				"TP"
 			],
 			"senseTags": [
+				"B",
 				"D"
 			]
 		},
@@ -20721,6 +20579,7 @@
 				"DR"
 			],
 			"senseTags": [
+				"B",
 				"D"
 			]
 		},
@@ -21054,6 +20913,7 @@
 				"TP"
 			],
 			"senseTags": [
+				"B",
 				"D"
 			]
 		},
@@ -21134,6 +20994,9 @@
 			],
 			"languageTags": [
 				"OTH"
+			],
+			"senseTags": [
+				"B"
 			]
 		},
 		{
@@ -21470,6 +21333,9 @@
 			],
 			"languageTags": [
 				"U"
+			],
+			"senseTags": [
+				"B"
 			]
 		},
 		{
@@ -22012,6 +21878,7 @@
 				"DR"
 			],
 			"senseTags": [
+				"B",
 				"D"
 			]
 		},
@@ -22324,6 +22191,9 @@
 			],
 			"actionTags": [
 				"Multiattack"
+			],
+			"senseTags": [
+				"B"
 			]
 		},
 		{
@@ -23039,6 +22909,7 @@
 				"OTH"
 			],
 			"senseTags": [
+				"B",
 				"D"
 			]
 		},
@@ -23506,6 +23377,7 @@
 				"TP"
 			],
 			"senseTags": [
+				"B",
 				"SD"
 			]
 		},
@@ -23638,6 +23510,7 @@
 				"TP"
 			],
 			"senseTags": [
+				"B",
 				"SD"
 			]
 		},
@@ -24089,6 +23962,9 @@
 			"languageTags": [
 				"DS",
 				"TP"
+			],
+			"senseTags": [
+				"B"
 			]
 		},
 		{
@@ -24632,6 +24508,9 @@
 			"traitTags": [
 				"Hold Breath",
 				"Keen Senses"
+			],
+			"senseTags": [
+				"B"
 			]
 		},
 		{
@@ -27150,6 +27029,7 @@
 				"AQ"
 			],
 			"senseTags": [
+				"B",
 				"SD"
 			]
 		},
@@ -27757,6 +27637,7 @@
 				"TP"
 			],
 			"senseTags": [
+				"B",
 				"D"
 			]
 		},
@@ -28375,6 +28256,16 @@
 					"name": "Javelin",
 					"entries": [
 						"{@atk mw,rw} {@hit 2} to hit, reach 5 ft. or range 30/120 ft., one target. Hit: 3 ({@damage 1d6}) piercing damage."
+					]
+				}
+			],
+			"variant": [
+				{
+					"type": "variant",
+					"name": "Rogue Modrons",
+					"entries": [
+						"A modron unit sometimes becomes defective, either through natural decay or exposure to chaotic forces. Rogue modrons don't act in accordance with Primus's wishes and directives, breaking laws, disobeying orders, and even engaging in violence. Other modrons hunt down such rogues.",
+						"A rogue modron loses the Axiomatic Mind trait and can have any alignment other than lawful neutral. Otherwise, it has the same statistics as a regular modron of its rank."
 					]
 				}
 			],
@@ -29340,6 +29231,9 @@
 			"soundClip": "https://media-waterdeep.cursecdn.com/file-attachments/0/353/needle-blight.mp3",
 			"languageTags": [
 				"C"
+			],
+			"senseTags": [
+				"B"
 			]
 		},
 		{
@@ -29934,6 +29828,7 @@
 				"TP"
 			],
 			"senseTags": [
+				"B",
 				"D"
 			]
 		},
@@ -30018,6 +29913,9 @@
 			"traitTags": [
 				"Amorphous",
 				"Spider Climb"
+			],
+			"senseTags": [
+				"B"
 			]
 		},
 		{
@@ -31212,6 +31110,16 @@
 					]
 				}
 			],
+			"variant": [
+				{
+					"type": "variant",
+					"name": "Rogue Modrons",
+					"entries": [
+						"A modron unit sometimes becomes defective, either through natural decay or exposure to chaotic forces. Rogue modrons don't act in accordance with Primus's wishes and directives, breaking laws, disobeying orders, and even engaging in violence. Other modrons hunt down such rogues.",
+						"A rogue modron loses the Axiomatic Mind trait and can have any alignment other than lawful neutral. Otherwise, it has the same statistics as a regular modron of its rank."
+					]
+				}
+			],
 			"page": 226,
 			"soundClip": "https://media-waterdeep.cursecdn.com/file-attachments/0/381/pentadrone.mp3",
 			"actionTags": [
@@ -31479,6 +31387,7 @@
 				"Spider Climb"
 			],
 			"senseTags": [
+				"B",
 				"D"
 			]
 		},
@@ -31722,6 +31631,7 @@
 		},
 		{
 			"name": "Planetar",
+			"group": "Angels",
 			"size": "L",
 			"type": "celestial",
 			"source": "MM",
@@ -31863,6 +31773,7 @@
 		},
 		{
 			"name": "Plesiosaurus",
+			"group": "Dinosaurs",
 			"size": "L",
 			"type": "beast",
 			"source": "MM",
@@ -31969,7 +31880,10 @@
 				"desert",
 				"coastal"
 			],
-			"soundClip": "https://media-waterdeep.cursecdn.com/file-attachments/0/389/poisonous-snake.mp3"
+			"soundClip": "https://media-waterdeep.cursecdn.com/file-attachments/0/389/poisonous-snake.mp3",
+			"senseTags": [
+				"B"
+			]
 		},
 		{
 			"name": "Polar Bear",
@@ -32409,11 +32323,13 @@
 				"DR"
 			],
 			"senseTags": [
+				"B",
 				"D"
 			]
 		},
 		{
 			"name": "Pteranodon",
+			"group": "Dinosaurs",
 			"size": "M",
 			"type": "beast",
 			"source": "MM",
@@ -32550,6 +32466,7 @@
 				"Multiattack"
 			],
 			"senseTags": [
+				"B",
 				"T"
 			]
 		},
@@ -32623,6 +32540,16 @@
 					"name": "Shortbow",
 					"entries": [
 						"{@atk rw} {@hit 4} to hit, range 80/320 ft., one target. Hit: 5 ({@damage 1d6 + 2}) piercing damage."
+					]
+				}
+			],
+			"variant": [
+				{
+					"type": "variant",
+					"name": "Rogue Modrons",
+					"entries": [
+						"A modron unit sometimes becomes defective, either through natural decay or exposure to chaotic forces. Rogue modrons don't act in accordance with Primus's wishes and directives, breaking laws, disobeying orders, and even engaging in violence. Other modrons hunt down such rogues.",
+						"A rogue modron loses the Axiomatic Mind trait and can have any alignment other than lawful neutral. Otherwise, it has the same statistics as a regular modron of its rank."
 					]
 				}
 			],
@@ -32788,6 +32715,9 @@
 			"soundClip": "https://media-waterdeep.cursecdn.com/file-attachments/0/397/quaggoth-spore-servant.mp3",
 			"actionTags": [
 				"Multiattack"
+			],
+			"senseTags": [
+				"B"
 			]
 		},
 		{
@@ -33385,6 +33315,7 @@
 				"DR"
 			],
 			"senseTags": [
+				"B",
 				"D"
 			]
 		},
@@ -33562,6 +33493,9 @@
 			"traitTags": [
 				"Pack Tactics",
 				"Water Breathing"
+			],
+			"senseTags": [
+				"B"
 			]
 		},
 		{
@@ -33734,6 +33668,15 @@
 					"name": "Vengeful Glare",
 					"entries": [
 						"The revenant targets one creature it can see within 30 feet of it and against which it has sworn vengeance. The target must make a DC 15 Wisdom saving throw. On a failure, the target is {@condition paralyzed} until the revenant deals damage to it, or until the end of the revenant's next turn. When the paralysis ends, the target is {@condition frightened} of the revenant for 1 minute. The {@condition frightened} target can repeat the saving throw at the end of each of its turns, with disadvantage if it can see the revenant, ending the {@condition frightened} condition on itself on a success."
+					]
+				}
+			],
+			"variant": [
+				{
+					"type": "variant",
+					"name": "Revenants with Spells and Weapons",
+					"entries": [
+						"Revenants that were spellcasters before they died might retain some or all of their spellcasting capabilities. Similarly, revenants that wore armor and wielded weapons in life might continue to do so."
 					]
 				}
 			],
@@ -34043,6 +33986,7 @@
 		},
 		{
 			"name": "Rug of Smothering",
+			"group": "Animated Objects",
 			"size": "L",
 			"type": "construct",
 			"source": "MM",
@@ -34114,6 +34058,9 @@
 			"traitTags": [
 				"Antimagic Susceptibility",
 				"False Appearance"
+			],
+			"senseTags": [
+				"B"
 			]
 		},
 		{
@@ -34967,7 +34914,10 @@
 			"environment": [
 				"desert"
 			],
-			"soundClip": "https://media-waterdeep.cursecdn.com/file-attachments/0/434/scorpion.mp3"
+			"soundClip": "https://media-waterdeep.cursecdn.com/file-attachments/0/434/scorpion.mp3",
+			"senseTags": [
+				"B"
+			]
 		},
 		{
 			"name": "Scout",
@@ -35562,6 +35512,9 @@
 			],
 			"actionTags": [
 				"Multiattack"
+			],
+			"senseTags": [
+				"B"
 			]
 		},
 		{
@@ -35664,6 +35617,7 @@
 				"X"
 			],
 			"senseTags": [
+				"B",
 				"D"
 			]
 		},
@@ -35722,6 +35676,9 @@
 			"soundClip": "https://media-waterdeep.cursecdn.com/file-attachments/0/446/shrieker.mp3",
 			"traitTags": [
 				"False Appearance"
+			],
+			"senseTags": [
+				"B"
 			]
 		},
 		{
@@ -35808,6 +35765,7 @@
 				"DR"
 			],
 			"senseTags": [
+				"B",
 				"D"
 			]
 		},
@@ -36046,6 +36004,7 @@
 		},
 		{
 			"name": "Solar",
+			"group": "Angels",
 			"size": "L",
 			"type": "celestial",
 			"source": "MM",
@@ -37637,6 +37596,9 @@
 			"soundClip": "https://media-waterdeep.cursecdn.com/file-attachments/0/473/swarm-of-bats.mp3",
 			"traitTags": [
 				"Keen Senses"
+			],
+			"senseTags": [
+				"B"
 			]
 		},
 		{
@@ -37716,6 +37678,9 @@
 				"hill",
 				"urban",
 				"desert"
+			],
+			"senseTags": [
+				"B"
 			]
 		},
 		{
@@ -37795,6 +37760,9 @@
 				"hill",
 				"urban",
 				"desert"
+			],
+			"senseTags": [
+				"B"
 			]
 		},
 		{
@@ -37874,7 +37842,10 @@
 				"urban",
 				"desert"
 			],
-			"soundClip": "https://media-waterdeep.cursecdn.com/file-attachments/0/475/swarm-of-insects.mp3"
+			"soundClip": "https://media-waterdeep.cursecdn.com/file-attachments/0/475/swarm-of-insects.mp3",
+			"senseTags": [
+				"B"
+			]
 		},
 		{
 			"name": "Swarm of Poisonous Snakes",
@@ -37943,7 +37914,10 @@
 				"forest",
 				"swamp"
 			],
-			"soundClip": "https://media-waterdeep.cursecdn.com/file-attachments/0/476/swarm-of-poisonous-snakes.mp3"
+			"soundClip": "https://media-waterdeep.cursecdn.com/file-attachments/0/476/swarm-of-poisonous-snakes.mp3",
+			"senseTags": [
+				"B"
+			]
 		},
 		{
 			"name": "Swarm of Quippers",
@@ -38280,6 +38254,9 @@
 				"Spider Climb",
 				"Web Sense",
 				"Web Walker"
+			],
+			"senseTags": [
+				"B"
 			]
 		},
 		{
@@ -38358,6 +38335,9 @@
 				"hill",
 				"urban",
 				"desert"
+			],
+			"senseTags": [
+				"B"
 			]
 		},
 		{
@@ -38525,6 +38505,9 @@
 				"Multiattack",
 				"Frightful Presence",
 				"Swallow"
+			],
+			"senseTags": [
+				"B"
 			]
 		},
 		{
@@ -39117,6 +39100,7 @@
 		},
 		{
 			"name": "Triceratops",
+			"group": "Dinosaurs",
 			"size": "H",
 			"type": "beast",
 			"source": "MM",
@@ -39240,6 +39224,16 @@
 					"name": "Javelin",
 					"entries": [
 						"{@atk mw,rw} {@hit 3} to hit, reach 5 ft. or range 30/120 ft., one target. Hit: 4 ({@damage 1d6 + 1}) piercing damage."
+					]
+				}
+			],
+			"variant": [
+				{
+					"type": "variant",
+					"name": "Rogue Modrons",
+					"entries": [
+						"A modron unit sometimes becomes defective, either through natural decay or exposure to chaotic forces. Rogue modrons don't act in accordance with Primus's wishes and directives, breaking laws, disobeying orders, and even engaging in violence. Other modrons hunt down such rogues.",
+						"A rogue modron loses the Axiomatic Mind trait and can have any alignment other than lawful neutral. Otherwise, it has the same statistics as a regular modron of its rank."
 					]
 				}
 			],
@@ -39560,10 +39554,14 @@
 			],
 			"languageTags": [
 				"C"
+			],
+			"senseTags": [
+				"B"
 			]
 		},
 		{
 			"name": "Tyrannosaurus Rex",
+			"group": "Dinosaurs",
 			"size": "H",
 			"type": "beast",
 			"source": "MM",
@@ -40893,6 +40891,9 @@
 			],
 			"languageTags": [
 				"C"
+			],
+			"senseTags": [
+				"B"
 			]
 		},
 		{
@@ -40959,6 +40960,9 @@
 			],
 			"actionTags": [
 				"Multiattack"
+			],
+			"senseTags": [
+				"B"
 			]
 		},
 		{
@@ -41195,6 +41199,56 @@
 					"name": "Hooves",
 					"entries": [
 						"{@atk mw} {@hit 6} to hit, reach 5 ft., one target. Hit: 11 ({@damage 2d6 + 4}) bludgeoning damage."
+					]
+				}
+			],
+			"variant": [
+				{
+					"type": "variant",
+					"name": "Warhorse Armor",
+					"entries": [
+						"An armored warhorse has an AC based on the type of barding worn (see the Player's Handbook for more information on barding). The horse's AC includes its Dexterity modifier, where applicable. Barding doesn't alter the horse's challenge rating.",
+						{
+							"type": "table",
+							"colLabels": [
+								"AC",
+								"Barding"
+							],
+							"colStyles": [
+								"col-xs-6",
+								"col-xs-6"
+							],
+							"rows": [
+								[
+									"12",
+									"Leather"
+								],
+								[
+									"13",
+									"Studded leather"
+								],
+								[
+									"14",
+									"Ring mail"
+								],
+								[
+									"15",
+									"Scale mail"
+								],
+								[
+									"16",
+									"Chain mail"
+								],
+								[
+									"17",
+									"Splint"
+								],
+								[
+									"18",
+									"Plate"
+								]
+							]
+						}
 					]
 				}
 			],
@@ -41453,6 +41507,9 @@
 			"soundClip": "https://media-waterdeep.cursecdn.com/file-attachments/0/525/water-weird.mp3",
 			"languageTags": [
 				"AQ"
+			],
+			"senseTags": [
+				"B"
 			]
 		},
 		{
@@ -42201,6 +42258,7 @@
 				"DR"
 			],
 			"senseTags": [
+				"B",
 				"D"
 			]
 		},
@@ -43393,6 +43451,7 @@
 				"DR"
 			],
 			"senseTags": [
+				"B",
 				"SD"
 			]
 		},
@@ -43486,6 +43545,7 @@
 				"DR"
 			],
 			"senseTags": [
+				"B",
 				"SD"
 			]
 		},
@@ -43595,6 +43655,7 @@
 				"DR"
 			],
 			"senseTags": [
+				"B",
 				"SD"
 			]
 		},
@@ -43715,6 +43776,7 @@
 				"DR"
 			],
 			"senseTags": [
+				"B",
 				"SD"
 			]
 		},
@@ -43824,6 +43886,7 @@
 				"DR"
 			],
 			"senseTags": [
+				"B",
 				"SD"
 			]
 		},
@@ -43946,6 +44009,7 @@
 				"DR"
 			],
 			"senseTags": [
+				"B",
 				"SD"
 			]
 		},
@@ -44053,6 +44117,7 @@
 				"DR"
 			],
 			"senseTags": [
+				"B",
 				"SD"
 			]
 		},
@@ -44146,6 +44211,7 @@
 				"DR"
 			],
 			"senseTags": [
+				"B",
 				"SD"
 			]
 		},
@@ -44264,6 +44330,7 @@
 				"DR"
 			],
 			"senseTags": [
+				"B",
 				"SD"
 			]
 		},
@@ -44437,6 +44504,7 @@
 				"DR"
 			],
 			"senseTags": [
+				"B",
 				"SD"
 			]
 		},
@@ -44538,6 +44606,7 @@
 				"DR"
 			],
 			"senseTags": [
+				"B",
 				"SD"
 			]
 		},

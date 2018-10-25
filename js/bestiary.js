@@ -14,6 +14,7 @@ window.PROF_DICE_MODE = PROF_MODE_BONUS;
 function imgError (x) {
 	$(x).closest("th").css("padding-right", "0.2em");
 	$(x).remove();
+	$(`.mon__wrp_hp`).css("max-width", "none");
 }
 
 function getAllImmRest (toParse, key) {
@@ -102,11 +103,13 @@ function pPostLoad () {
 
 window.onload = function load () {
 	ExcludeUtil.initialise();
+	SortUtil.initHandleFilterButtonClicks();
 	pLoadMeta()
 		.then(pLoadFluffIndex)
 		.then(multisourceLoad.bind(null, JSON_DIR, JSON_LIST_NAME, pPageInit, addMonsters, pPostLoad))
 		.then(() => {
 			if (History.lastLoadedId == null) History._freshLoad();
+			ExcludeUtil.checkShowAllExcluded(monsters, $(`#pagecontent`));
 		});
 };
 
@@ -299,8 +302,9 @@ function pPageInit (loadedSources) {
 	sourceFilter.items.sort(SortUtil.ascSort);
 
 	list = ListUtil.search({
-		valueNames: ["name", "source", "type", "cr", "group"],
-		listClass: "monsters"
+		valueNames: ["name", "source", "type", "cr", "group", "alias"],
+		listClass: "monsters",
+		sortFunction: sortMonsters
 	});
 	list.on("updated", () => {
 		filterBox.setCount(list.visibleItems.length, list.items.length);
@@ -315,7 +319,10 @@ function pPageInit (loadedSources) {
 	// sorting headers
 	$("#filtertools").find("button.sort").on(EVNT_CLICK, function () {
 		const $this = $(this);
-		$this.data("sortby", $this.data("sortby") === "asc" ? "desc" : "asc");
+		let direction = $this.data("sortby") === "desc" ? "asc" : "desc";
+
+		$this.data("sortby", direction);
+		$this.find('span').addClass($this.data("sortby") === "desc" ? "caret" : "caret caret--reverse");
 		list.sort($this.data("sort"), {order: $this.data("sortby"), sortFunction: sortMonsters});
 	});
 
@@ -367,6 +374,11 @@ function pPageInit (loadedSources) {
 					const renderCreature = (mon) => {
 						stack.push(`<table class="printbook-bestiary-entry"><tbody>`);
 						stack.push(EntryRenderer.monster.getCompactRenderedString(mon, renderer));
+						if (mon.legendaryGroup) {
+							const thisGroup = meta[mon.legendaryGroup];
+							stack.push(EntryRenderer.monster.getCompactRenderedStringSection(thisGroup, renderer, "Lair Actions", "lairActions", 0));
+							stack.push(EntryRenderer.monster.getCompactRenderedStringSection(thisGroup, renderer, "Regional Effects", "regionalEffects", 0));
+						}
 						stack.push(`</tbody></table>`);
 					};
 
@@ -485,6 +497,7 @@ function addMonsters (data) {
 	// build the table
 	for (; mI < monsters.length; mI++) {
 		const mon = monsters[mI];
+		EntryRenderer.monster.mergeCopy(monsters, mon);
 		if (ExcludeUtil.isExcluded(mon.name, "monster", mon.source)) continue;
 		_initParsed(mon);
 		mon._fSpeed = Object.keys(mon.speed).filter(k => mon.speed[k]);
@@ -498,7 +511,6 @@ function addMonsters (data) {
 		else if (tempAlign.includes("N") && !tempAlign.includes("L") && !tempAlign.includes("C")) tempAlign.push("NX");
 		else if (tempAlign.length === 1 && tempAlign.includes("N")) Array.prototype.push.apply(tempAlign, _NEUT_ALIGNS);
 		mon._fAlign = tempAlign;
-		mon.environment = mon.environment || [];
 		mon._fVuln = mon.vulnerable ? getAllImmRest(mon.vulnerable, "vulnerable") : [];
 		mon._fRes = mon.resist ? getAllImmRest(mon.resist, "resist") : [];
 		mon._fImm = mon.immune ? getAllImmRest(mon.immune, "immune") : [];
@@ -517,6 +529,7 @@ function addMonsters (data) {
 					<span class="type col-xs-4 col-xs-4-1">${mon._pTypes.asText.uppercaseFirst()}</span>
 					<span class="col-xs-1 col-xs-1-7 text-align-center cr">${mon._pCr}</span>
 					${mon.group ? `<span class="group hidden">${mon.group}</span>` : ""}
+					<span class="alias hidden">${(mon.alias || []).map(it => `"${it}"`).join(",")}</span>
 				</a>
 			</li>`;
 
@@ -541,6 +554,8 @@ function addMonsters (data) {
 			if (meta[mon.legendaryGroup].lairActions) mon._fMisc.push("Lair Actions");
 			if (meta[mon.legendaryGroup].regionalEffects) mon._fMisc.push("Regional Effects");
 		}
+		traitFilter.addIfAbsent(mon.traitTags);
+		actionReactionFilter.addIfAbsent(mon.actionTags);
 	}
 	const lastSearch = ListUtil.getSearchTermAndReset(list);
 	table.append(textStack);
@@ -615,10 +630,10 @@ function pGetSublistItem (mon, pinId, addCount, data = {}) {
 					<a href="#${UrlUtil.autoEncodeHash(mon)}${subHash}" title="${mon._displayName || mon.name}">
 						<span class="name col-xs-4">${mon._displayName || mon.name}</span>
 						<span class="type col-xs-3">${mon._pTypes.asText.uppercaseFirst()}</span>
-						<span class="cr col-xs-3 text-align-center">${mon._pCr}</span>		
-						<span class="count col-xs-2 text-align-center">${addCount || 1}</span>		
-						<span class="id hidden">${pinId}</span>				
-						<span class="uid hidden">${data.uid || ""}</span>				
+						<span class="cr col-xs-3 text-align-center">${mon._pCr}</span>
+						<span class="count col-xs-2 text-align-center">${addCount || 1}</span>
+						<span class="id hidden">${pinId}</span>
+						<span class="uid hidden">${data.uid || ""}</span>
 					</a>
 				</li>
 			`);
@@ -677,7 +692,7 @@ function renderStatblock (mon, isScaled) {
 		<tr><td id="sizetypealignment" colspan="6"><span id="size">${Parser.sizeAbvToFull(mon.size)}</span> <span id="type">type</span>, <span id="alignment">alignment</span></td></tr>
 		<tr><td class="divider" colspan="6"><div></div></td></tr>
 		<tr><td colspan="6"><strong>Armor Class</strong> <span id="ac">## (source)</span></td></tr>
-		<tr><td colspan="6"><strong>Hit Points</strong> <span id="hp">hp</span></td></tr>
+		<tr><td colspan="6"><div class="mon__wrp_hp"><strong>Hit Points</strong> <span id="hp">hp</span></div></td></tr>
 		<tr><td colspan="6"><strong>Speed</strong> <span id="speed">30 ft.</span></td></tr>
 		<tr><td class="divider" colspan="6"><div></div></td></tr>
 		<tr id="abilitynames"><th>STR</th><th>DEX</th><th>CON</th><th>INT</th><th>WIS</th><th>CHA</th></tr>
@@ -773,7 +788,7 @@ function renderStatblock (mon, isScaled) {
 		var skills = mon.skill;
 		if (skills) {
 			$content.find("td span#skills").parent().show();
-			$content.find("td span#skills").html(EntryRenderer.monster.getSkillsString(mon));
+			$content.find("td span#skills").html(EntryRenderer.monster.getSkillsString(renderer, mon));
 		} else {
 			$content.find("td span#skills").parent().hide();
 		}
@@ -896,7 +911,7 @@ function renderStatblock (mon, isScaled) {
 		$trSource.append($tdSource);
 		if (mon.environment && mon.environment.length) {
 			$tdSource.attr("colspan", 4);
-			$trSource.append(`<td colspan="2" class="text-align-right mr-2"><i>Environment: ${mon.environment.map(it => it.toTitleCase()).join(",")}</i></td>`)
+			$trSource.append(`<td colspan="2" class="text-align-right mr-2"><i>Environment: ${mon.environment.sort(SortUtil.ascSortLower).map(it => it.toTitleCase()).join(", ")}</i></td>`)
 		}
 
 		const legendary = mon.legendary;
@@ -947,49 +962,6 @@ function renderStatblock (mon, isScaled) {
 		});
 
 		const isProfDiceMode = PROF_DICE_MODE === PROF_MODE_DICE;
-		if (mon.skill) {
-			$content.find("#skills").each(makeSkillRoller);
-		}
-
-		function makeSkillRoller () {
-			const $this = $(this);
-
-			const re = /,\s*(?![^()]*\))/g; // Don't split commas within parentheses
-			const skills = $this.html().split(re).map(s => s.trim());
-			const out = [];
-
-			skills.forEach(s => {
-				if (!s || !s.trim()) return;
-
-				const re = /([-+])?\d+|(?:[^-+]|\n(?![-+]))+/g; // Split before and after each bonus
-				const spl = s.match(re);
-
-				const skillName = spl[0].trim();
-
-				let skillString = "";
-				spl.forEach(b => {
-					const re = /([-+])?\d+/;
-
-					if (b.match(re)) {
-						const bonus = Number(b);
-						const pBonusStr = `${bonus >= 0 ? "+" : ""}${bonus}`;
-						skillString += renderSkillOrSaveRoller(skillName, pBonusStr, false);
-					} else {
-						skillString += b;
-					}
-				});
-
-				out.push(skillString);
-			});
-
-			$this.html(out.join(", "));
-		}
-
-		function renderSkillOrSaveRoller (itemName, profBonusString, isSave) {
-			itemName = itemName.replace(/plus one of the following:/g, "").replace(/^or\s*/, "");
-			return EntryRenderer.getDefaultRenderer().renderEntry(`{@d20 ${profBonusString}|${profBonusString}|${itemName}${isSave ? " save" : ""}`);
-		}
-
 		// inline rollers
 		// /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		// add proficiency dice stuff for attack rolls, since those _generally_ have proficiency
@@ -1009,13 +981,13 @@ function renderStatblock (mon, isScaled) {
 				let pB = expectedPB;
 				let fromAbility;
 				let ability;
-				if ($(this).parent().prop("id") === "saves") {
+				if ($(this).parent().attr("data-mon-save")) {
 					const title = $(this).attr("title");
 					ability = title.split(" ")[0].trim().toLowerCase().substring(0, 3);
 					fromAbility = Parser.getAbilityModNumber(mon[ability]);
 					pB = bonus - fromAbility;
 					expert = (pB === expectedPB * 2) ? 2 : 1;
-				} else if ($(this).parent().prop("id") === "skills") {
+				} else if ($(this).parent().attr("data-mon-skill")) {
 					const title = $(this).attr("title");
 					ability = Parser.skillToAbilityAbv(title.toLowerCase().trim());
 					fromAbility = Parser.getAbilityModNumber(mon[ability]);
@@ -1031,7 +1003,7 @@ function renderStatblock (mon, isScaled) {
 						$(this).attr("data-roll-prof-bonus", $(this).text());
 						$(this).attr("data-roll-prof-dice", profDiceString);
 
-						// here be (metallic) dragons
+						// here be (chromatic) dragons
 						const cached = $(this).attr("onclick");
 						const nu = `
 							(function(it) {

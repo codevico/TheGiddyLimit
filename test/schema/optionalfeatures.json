@@ -1,6 +1,6 @@
 {
 	"$schema": "http://json-schema.org/draft-06/schema#",
-	"version": "1.3.0",
+	"version": "1.5.0",
 	"title": "Optional Features",
 	"type": "object",
 
@@ -73,10 +73,28 @@
 						"additionalProperties": false
 					},
 					{
+						"properties": {
+							"type": {"const": "prereqFeature"},
+							"entries": {
+								"type": "array",
+								"items": {
+									"$ref": "/Entry"
+								}
+							}
+						},
+						"required": ["entries"],
+						"additionalProperties": false
+					},
+					{
 						"type": "string"
 					}
 				]
 			}
+		},
+
+		"featureType": {
+			"type": "string",
+			"enum":  ["EI", "MM", "MV:B", "OTH", "FS:F", "FS:B", "FS:R", "FS:P", "MV:C2-UA", "AS:V1-UA", "AS:V2-UA", "AS"]
 		},
 
 		"optionalfeature": {
@@ -103,8 +121,36 @@
 					"type": "integer"
 				},
 				"featureType": {
-					"type": "string",
-					"enum": ["EI", "MM", "MV:B", "OTH"]
+					"oneOf": [
+						{
+							"$ref": "#/definitions/featureType"
+						},
+						{
+							"type": "array",
+							"items": {
+								"$ref": "#/definitions/featureType"
+							}
+						}
+					]
+				},
+				"otherSources": {
+					"type": "array",
+					"items": {
+						"type": "object",
+						"properties": {
+							"source": {
+								"type": "string"
+							},
+							"page": {
+								"type": "integer"
+							}
+						},
+						"required": [
+							"source",
+							"page"
+						],
+						"additionalProperties": false
+					}
 				}
 			},
 			"required": [
