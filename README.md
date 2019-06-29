@@ -1,7 +1,10 @@
 ## 5e.tools
+
+[![Build Status](https://ci.develop.5etools.com/api/badges/5eTools/5etoolsR20/status.svg)](https://ci.develop.5etools.com/5eTools/5etoolsR20)
+
 Visit the [main site](https://5e.tools/5etools.html) or go to the unofficial GitHub [mirror](5etools.html).
 
-[Join the 5etools Discord here!](https://discord.gg/AzyBjtQ)
+[Join the 5etools Discord here!](https://discord.gg/nGvRCDs)
 
 ## Running 5etools Locally (Offline Copy)
 There are several options for running a local/offline copy of 5etools, including:
@@ -17,17 +20,19 @@ Be sure to close any running Chrome instances (and kill any remaining Chrome pro
 **Advanced:** Host the project locally on a dev webserver, perhaps using [this](https://github.com/cortesi/devd).
 
 ## How to import 5etools creatures/spells/items into Roll20
-1. Get Greasemonkey (Firefox) or Tampermonkey (Chrome).
+1. Get Tampermonkey for [Firefox](https://tampermonkey.net/?ext=dhdg&browser=firefox) or [Chrome](https://tampermonkey.net/).
 
 2. Click [here](https://get.5e.tools/script/betteR20-5etools.user.js) and install the script.
 
 3. Open the Roll20 game where you want the stuff imported.
 
-4. Go to the gear icon and click on the things you want imported.
+4. Go to the gear icon and click within the Import by Category on the thing you want imported.
 
-5. Let it run. The journal will start fill up with the stuff you selected. It's not too laggy but can take a long time depending on the amount of stuff you selected.
+5. Follow the prompts and make selections as are needed.
 
-6. Bam. Done. If you are using the Shaped sheet, be sure to open up the NPC sheets and let them convert before using it.
+6. Let it run. The journal will start fill up with the stuff you selected. It's not too laggy but can take a long time depending on the amount of stuff you selected.
+
+7. Bam. Done. If you are using the Shaped sheet, be sure to open up the NPC sheets and let them convert before using it.
 
 You can convert stat blocks to JSON for importing via [this converter](converter.html).
 
@@ -38,6 +43,9 @@ Targeting ES6 was the original intent, but more modern features have long since 
 ### Style Guidelines
 #### Code
 - Use tabs over spaces.
+
+#### CSS
+- The [BEM](http://getbem.com/) ("Block Element Modifier") naming strategy should be used where possible.
 
 #### Data/Text
 - When "tagging" references in data (e.g. `{@creature goblin}`), the following rules apply:

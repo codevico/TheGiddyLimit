@@ -119,8 +119,14 @@
 							"type": "entries",
 							"entries": [
 								"Barovian witches have no scruples. They will deal with anyone in return for power. They will also betray anyone for the same reason. The only thing they fear is Strahd, and his wish is their command. Barovian witches sometimes refer to themselves as the brothers and sisters of Strahd, though never to Strahd's face.",
-								"Pack Rats with Cats. Barovian witches are obsessive collectors, each believing that almost anything found - a piece of broken bone, a dead rodent, a handful of dust, or some other worthless item or substance - could be valuable or useful as a spell component, a ritual object, or a potion ingredient.",
-								"Barovian witches use the find familiar spell to call forth familiars. They are particularly fond of cats, though snakes and toads are also common. These animals lurk amid the clutter of the witches' lairs, seldom wandering far from their vile masters."
+								{
+									"name": "Pack Rats with Cats",
+									"entries": [
+										" Barovian witches are obsessive collectors, each believing that almost anything found - a piece of broken bone, a dead rodent, a handful of dust, or some other worthless item or substance - could be valuable or useful as a spell component, a ritual object, or a potion ingredient.",
+										"Barovian witches use the find familiar spell to call forth familiars. They are particularly fond of cats, though snakes and toads are also common. These animals lurk amid the clutter of the witches' lairs, seldom wandering far from their vile masters."
+									],
+									"type": "entries"
+								}
 							]
 						}
 					]
@@ -136,7 +142,7 @@
 					"name": "Flying Broom",
 					"type": "entries",
 					"entries": [
-						"Some brooms of animated attack allow their creators to ride them, in which case they behave like typical brooms of flying. A broom of animated attack, however, can carry only half the weight that a broom of flying can (see chapter 7, \"Treasure,\" of the Dungeon Master's Guide )."
+						"Some brooms of animated attack allow their creators to ride them, in which case they behave like typical brooms of flying. A broom of animated attack, however, can carry only half the weight that a broom of flying can (see chapter 7, \"Treasure,\" of the Dungeon Master's Guide)."
 					]
 				}
 			]
@@ -627,8 +633,14 @@
 							"type": "entries",
 							"entries": [
 								"Van Richten isn't a young man anymore. He knows his road is coming to an end, but his work isn't done. He has come to Barovia to kill Strahd von Zarovich, the greatest vampire of them all. Van Richten has studied Strahd for years and knows he can't hope to best the vampire in a straight-up confrontation: he must wait for the right moment to strike. He has good evidence to suggest that Strahd periodically hibernates in his coffin, sometimes for years, when all is quiet in the realm. While he bides his time, van Richten hides in plain sight with the aid of a hat of disguise, his thoughts protected by a ring of mind shielding. He is trying to learn more about the Keepers of the Feather - a society of wereravens that oppose Strahd - while trying not to expose the secret society to their mutual enemy. He thinks the wereravens might prove helpful when the time comes. Van Richten also wants to take out as many of Strahd's spies as he can, starting with evil Vistani.",
-								"Man with a Plan. Van Richten doesn't know that his former protégé, a good-aligned Vistana named Ezmerelda d'Avenir, has come to Barovia looking for him. He taught her many of his monster-hunting techniques, but she doesn't know all of his tricks and disguises. So far, their paths haven't crossed. In the event that van Richten becomes aware of Ezmerelda's presence, he does his utmost to protect her without putting his own plans in jeopardy. If he can manipulate a party of adventurers into keeping an eye on her, he will do so.",
-								"Van Richten works alone. A curse placed on him long ago by a Vistani seer brings doom to those he befriends. Furthermore, he believes too much is at stake to risk exposure. Consequently, if he thinks he's in danger of being unmasked, he retreats to his tower (see chapter 11) or some other quiet corner of Strahd's domain."
+								{
+									"name": "Man with a Plan",
+									"entries": [
+										" Van Richten doesn't know that his former protégé, a good-aligned Vistana named Ezmerelda d'Avenir, has come to Barovia looking for him. He taught her many of his monster-hunting techniques, but she doesn't know all of his tricks and disguises. So far, their paths haven't crossed. In the event that van Richten becomes aware of Ezmerelda's presence, he does his utmost to protect her without putting his own plans in jeopardy. If he can manipulate a party of adventurers into keeping an eye on her, he will do so.",
+										"Van Richten works alone. A curse placed on him long ago by a Vistani seer brings doom to those he befriends. Furthermore, he believes too much is at stake to risk exposure. Consequently, if he thinks he's in danger of being unmasked, he retreats to his tower (see chapter 11) or some other quiet corner of Strahd's domain."
+									],
+									"type": "entries"
+								}
 							]
 						}
 					]
@@ -740,8 +752,8 @@
 								"Creatures"
 							],
 							"colStyles": [
-								"col-xs-6",
-								"col-xs-6"
+								"col-6",
+								"col-6"
 							],
 							"rows": [
 								[
@@ -786,23 +798,6 @@
 						"The effect of the protection afforded by the Heart of Sorrow can be chilling to behold, as damage to Strahd is quickly undone. For example, a critical hit might dislocate Strahd's jaw, but only for a moment; then the vampire's jaw quickly resets itself.",
 						"The ability of the Heart of Sorrow to absorb damage is suppressed if it or Strahd is fully within an antimagic field."
 					]
-				},
-				{
-					"type": "entries",
-					"name": "Lair Actions",
-					"entries": [
-						"While Strahd is in Castle Ravenloft, he can take lair actions as long as he isn't incapacitated.",
-						"On initiative count 20 (losing initiative ties), Strahd can take one of the following lair action options, or forgo using any of them in that round:",
-						{
-							"type": "list",
-							"items": [
-								"Until initiative count 20 of the next round, Strahd can pass through solid walls, doors, ceilings, and floors as if they weren't there.",
-								"Strahd targets any number of doors and windows that he can see, causing each one to either open or close as he wishes. Closed doors can be magically locked (needing a successful DC 20 Strength check to force open) until Strahd chooses to end the effect, or until Strahd uses this lair action again.",
-								"Strahd summons the angry spirit of one who has died in the castle. The apparition appears next to a hostile creature that Strahd can see, makes an attack against that creature, and then disappears. The apparition has the statistics of a specter.",
-								"Strahd targets one Medium or smaller creature that casts a shadow. The target's shadow must be visible to Strahd and within 30 feet of him. If the target fails a DC 17 Charisma saving throw, its shadow detaches from it and becomes a shadow that obeys Strahd's commands, acting on initiative count 20. A greater restoration spell or a remove curse spell cast on the target restores its natural shadow, but only if its undead shadow has been destroyed."
-							]
-						}
-					]
 				}
 			]
 		},
@@ -842,12 +837,12 @@
 				{
 					"type": "entries",
 					"entries": [
-						"Blights (as described in the Monster Manual ) are evil, ambulatory plant creatures, and a tree blight is a particularly enormous variety. It looks like a dead tree or treant, 30 feet tall, with spongy wooden flesh, thorny branches, and rubbery roots that trail behind it. It has blood for sap and is so saturated with blood that it doesn't catch fire easily.",
+						"Blights (as described in the Monster Manual) are evil, ambulatory plant creatures, and a tree blight is a particularly enormous variety. It looks like a dead tree or treant, 30 feet tall, with spongy wooden flesh, thorny branches, and rubbery roots that trail behind it. It has blood for sap and is so saturated with blood that it doesn't catch fire easily.",
 						{
 							"name": "Vicious Carnivore",
 							"type": "entries",
 							"entries": [
-								"A tree blight feeds on warmblooded prey and takes perverse delight in causing carnage. It strikes with its heavy branches and crushes prey to death with its roots. It can open its gaping, tooth-filled mouth and bite a creature caught in its roots. The roots of a tree blight can be severed, though cutting them causes the blight no harm."
+								"A tree blight feeds on warm-blooded prey and takes perverse delight in causing carnage. It strikes with its heavy branches and crushes prey to death with its roots. It can open its gaping, tooth-filled mouth and bite a creature caught in its roots. The roots of a tree blight can be severed, though cutting them causes the blight no harm."
 							]
 						},
 						{
@@ -882,8 +877,14 @@
 							"entries": [
 								"Unwilling to accept his failure, Vladimir returned as a revenant. So great was his hatred of Strahd and his thirst for vengeance that those feelings fueled the spirits of many of his fellow knights - including Godfrey - to come back as revenants as well. Vladimir continued to wage the hopeless war, even as Strahd tightened his grip on the valley.",
 								"When Strahd became a vampire, Vladimir and his revenants should have gone to their eternal rest. But Strahd's deeds were so heinous that Barovia and the knight's spirits became trapped behind curtains of mist.",
-								"Blinded by Hatred. Vladimir hates Strahd but doesn't want to see the vampire given his final rest. Vladimir wants Strahd to suffer forever for the deaths of Godfrey and Argynvost, the destruction of their order, and all the other crimes of which the vampire is guilty. Vladimir believes that all of Barovia has been swept into hell, and he wants to make sure that Strahd stays trapped in it forever. It angers Vladimir that he and his fellow knights are also trapped, but in Vladimir's mind, such is the price of keeping the vampire confined. Even his love for Godfrey is now just a dim memory shrouded by his hate.",
-								"Were Vladimir to let go of his hatred, his spirit would find peace and could remember the warmth of love. Were Strahd to be defeated, even temporarily, the mists surrounding Barovia would fade, allowing the spirits of Vladimir and his knights to enter the afterlife. Nevertheless, Vladimir would rather savor Strahd's torment than bring peace to his fallen order or peace to the land of Barovia. Gone are the days of honor and valor."
+								{
+									"name": "Blinded by Hatred",
+									"entries": [
+										" Vladimir hates Strahd but doesn't want to see the vampire given his final rest. Vladimir wants Strahd to suffer forever for the deaths of Godfrey and Argynvost, the destruction of their order, and all the other crimes of which the vampire is guilty. Vladimir believes that all of Barovia has been swept into hell, and he wants to make sure that Strahd stays trapped in it forever. It angers Vladimir that he and his fellow knights are also trapped, but in Vladimir's mind, such is the price of keeping the vampire confined. Even his love for Godfrey is now just a dim memory shrouded by his hate.",
+										"Were Vladimir to let go of his hatred, his spirit would find peace and could remember the warmth of love. Were Strahd to be defeated, even temporarily, the mists surrounding Barovia would fade, allowing the spirits of Vladimir and his knights to enter the afterlife. Nevertheless, Vladimir would rather savor Strahd's torment than bring peace to his fallen order or peace to the land of Barovia. Gone are the days of honor and valor."
+									],
+									"type": "entries"
+								}
 							]
 						},
 						{
@@ -937,9 +938,14 @@
 					"type": "entries",
 					"name": "Revenant",
 					"entries": [
-						"A revenant forms from the soul of a mortal who met a cruel and undeserving fate. It claws its way back into the world to seek revenge against the one who wronged it. The revenant reclaims its mortal body and superficially resembles a zombie. However, instead of lifeless eyes, a revenant's eyes burn with resolve and flare in the presence of its adversary. If the revenant's original body was destroyed or is otherwise unavailable, the spirit of the revenant enters another humanoid corpse.",
-						"Regardless of the body the revenant uses as a vessel, its adversary always recognizes the revenant for what it truly is.",
-						"Hunger for Revenge. A revenant has only one year to exact revenge. When its adversary dies, or if the revenant fails to kill its adversary before its time runs out, it crumbles to dust and its soul fades into the afterlife. If its foe is too powerful for the revenant to destroy on its own,it seeks worthy allies to help it fulfill its quest.",
+						"A revenant forms from the soul of a mortal who met a cruel and undeserving fate. It claws its way back into the world to seek revenge against the one who wronged it. The revenant reclaims its mortal body and superficially resembles a zombie. However, instead of lifeless eyes, a revenant's eyes burn with resolve and flare in the presence of its adversary. If the revenant's original body was destroyed or is otherwise unavailable, the spirit of the revenant enters another humanoid corpse. Regardless of the body the revenant uses as a vessel, its adversary always recognizes the revenant for what it truly is.",
+						{
+							"type": "entries",
+							"name": "Hunger for Revenge",
+							"entries": [
+								"A revenant has only one year to exact revenge. When its adversary dies, or if the revenant fails to kill its adversary before its time runs out, it crumbles to dust and its soul fades into the afterlife. If its foe is too powerful for the revenant to destroy on its own, it seeks worthy allies to help it fulfill its quest."
+							]
+						},
 						{
 							"name": "Divine Justice",
 							"type": "entries",
@@ -951,9 +957,7 @@
 							"name": "Undead Nature",
 							"type": "entries",
 							"entries": [
-								"A revenant doesn't require air, food, drink, or sleep.",
-								"Variant: Revenants with Spells and Weapons",
-								"Revenants that were spellcasters before they died might retain some or all of their spellcasting capabilities. Similarly, revenants that wore armor and wielded weapons in life might continue to do so."
+								"A revenant doesn't require air, food, drink, or sleep."
 							]
 						}
 					]
@@ -966,7 +970,13 @@
 			"entries": [
 				"Wereravens are secretive and extraordinarily cautious lycanthropes that trust one another but are wary of just about everyone else. Although skilled at blending into society, they keep mostly to themselves, respect local laws, and strive to do good whenever possible.",
 				"In their human and hybrid forms, wereravens favor light weapons. They are reluctant to make bite attacks in raven form for fear of spreading their curse to those who don't deserve it or who would abuse it.",
-				"A Kindness of Wereravens. Wereravens refer to their tightly knit groups as kindnesses. A kindness of were-ravens usually numbers between seven and twelve individuals. Not surprisingly, wereravens get along well with ravens and often hide in plain sight among them.",
+				{
+					"name": "A Kindness of Wereravens",
+					"entries": [
+						" Wereravens refer to their tightly knit groups as kindnesses. A kindness of were-ravens usually numbers between seven and twelve individuals. Not surprisingly, wereravens get along well with ravens and often hide in plain sight among them."
+					],
+					"type": "entries"
+				},
 				{
 					"name": "Charitable Collectors",
 					"type": "entries",
@@ -981,6 +991,19 @@
 						"The Monster Manual has rules for characters afflicted with lycanthropy. The following text applies to wereraven characters specifically.",
 						"A character cursed with wereraven lycanthropy gains a Dexterity of 15 if his or her score isn't already higher. Attack and damage rolls for the wereraven's bite are based on whichever is higher of the character's Strength and Dexterity. The bite of a wereraven in raven form deals 1 piercing damage (no ability modifier applies to this damage) and carries the curse of lycanthropy; see the \"Player Characters as Lycanthropes\" sidebar in the lycanthropes entry in the Monster Manual for details."
 					]
+				}
+			]
+		},
+		{
+			"name": "Amber Golem",
+			"source": "CoS",
+			"images": [
+				{
+					"type": "image",
+					"href": {
+						"type": "internal",
+						"path": "bestiary/CoS/Amber Golem.jpg"
+					}
 				}
 			]
 		}

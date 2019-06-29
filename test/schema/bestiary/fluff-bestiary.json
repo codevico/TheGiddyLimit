@@ -1,6 +1,6 @@
 {
-	"$schema": "http://json-schema.org/draft-06/schema#",
-	"version": "1.0.0",
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"version": "1.0.1",
 	"type": "object",
 	"properties": {
 		"monster": {
@@ -14,16 +14,19 @@
 					"source": {
 						"type": "string"
 					},
+					"type": {
+						"type": "string"
+					},
 					"images": {
 						"type": "array",
 						"items": {
-							"$ref": "/Entry#/definitions/entryImage"
+							"$ref": "entry.json#/definitions/entryImage"
 						}
 					},
 					"entries": {
 						"type": "array",
 						"items": {
-							"$ref": "/Entry"
+							"$ref": "entry.json"
 						}
 					},
 					"_copy": {

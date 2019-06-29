@@ -14,8 +14,8 @@
 			"classTableGroups": [
 				{
 					"colLabels": [
-						"Talents Known",
-						"Disciplines Known",
+						"{@filter Talents Known|psionics|type=T}",
+						"{@filter Disciplines Known|psionics|type=D}",
 						"Psi Points",
 						"Psi Limit"
 					],
@@ -173,7 +173,8 @@
 					"(a) {@item leather armor|phb} or (b) {@item studded leather armor|phb}",
 					"(a) a {@item light crossbow|phb} and {@item crossbow bolts (20)|phb|20 bolts} or (b) any {@filter simple weapon|items|source=phb|category=basic|type=simple weapon}",
 					"(a) a {@item scholar's pack|phb} or (b) an {@item explorer's pack|phb}"
-				]
+				],
+				"goldAlternative": "{@dice 5d4×10|5d4 × 10|Starting Gold}"
 			},
 			"classFeatures": [
 				[
@@ -319,7 +320,7 @@
 								"type": "entries",
 								"name": "Combining Psionic Effects",
 								"entries": [
-									"The effects of different psionic disciplines add together while the durations of the disciplines overlap. Likewise, different options from a psionic discipline combine if they are active at the same time. However, a specific option from a psionic discipline doesn't combine with itself if the option is used multiple times. Instead, the most potent effect\u2014usually dependent on how many psi points were used to create the effect\u2014 applies while the durations of the effects overlap.",
+									"The effects of different psionic disciplines add together while the durations of the disciplines overlap. Likewise, different options from a psionic discipline combine if they are active at the same time. However, a specific option from a psionic discipline doesn't combine with itself if the option is used multiple times. Instead, the most potent effect\u2014usually dependent on how many psi points were used to create the effect\u2014applies while the durations of the effects overlap.",
 									"Psionics and spells are separate effects, and therefore their benefits and drawbacks overlap. A psionic effect that reproduces a spell is an exception to this rule."
 								]
 							}
@@ -830,8 +831,8 @@
 													"Attack and Damage Bonus"
 												],
 												"colStyles": [
-													"col-xs-6 text-align-center",
-													"col-xs-6 text-align-center"
+													"col-6 text-center",
+													"col-6 text-center"
 												],
 												"rows": [
 													[
@@ -938,8 +939,8 @@
 													"Psi Cost"
 												],
 												"colStyles": [
-													"col-xs-6 text-align-center",
-													"col-xs-6 text-align-center"
+													"col-6 text-center",
+													"col-6 text-center"
 												],
 												"rows": [
 													[
@@ -963,7 +964,9 @@
 														"7"
 													]
 												]
-											}
+											},
+											"The spell slot remains until you use it or finish a long rest. You must observe your psi limit when spending psi points to create a spell slot.",
+											"Whenever you gain a level in this class, you cna replace on of the chosen wizard spells with a different wizard spell of 1st through 3rh level."
 										]
 									}
 								]
@@ -986,7 +989,8 @@
 					"source": "UATheMysticClass",
 					"shortName": "Wu Jen"
 				}
-			]
+			],
+			"page": 1
 		}
 	]
 }

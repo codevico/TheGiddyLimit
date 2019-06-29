@@ -6,7 +6,7 @@
 			"type": "undead",
 			"source": "DMG",
 			"alignment": [
-				"L",
+				"N",
 				"E"
 			],
 			"ac": [
@@ -41,9 +41,14 @@
 				"poisoned",
 				"unconscious"
 			],
-			"senses": "darkvision 60 ft., truesight 60 ft.",
+			"senses": [
+				"darkvision 60 ft.",
+				"truesight 60 ft."
+			],
 			"passive": 13,
-			"languages": "all languages known to its summoner",
+			"languages": [
+				"all languages known to its summoner"
+			],
 			"cr": "Unknown",
 			"trait": [
 				{
@@ -78,6 +83,11 @@
 			"senseTags": [
 				"D",
 				"U"
+			],
+			"damageTags": [
+				"S",
+				"N",
+				"O"
 			]
 		},
 		{
@@ -105,7 +115,9 @@
 			"int": 2,
 			"wis": 10,
 			"cha": 3,
-			"senses": "darkvision 60 ft.",
+			"senses": [
+				"darkvision 60 ft."
+			],
 			"passive": 10,
 			"cr": "0",
 			"page": 169,
@@ -119,7 +131,7 @@
 			"size": "M",
 			"type": "fiend",
 			"alignment": [
-				"L",
+				"N",
 				"E"
 			],
 			"ac": [
@@ -139,17 +151,28 @@
 			"wis": 10,
 			"cha": 2,
 			"passive": 10,
-			"languages": "understands the languages it knew in life but can't speak",
+			"languages": [
+				"understands the languages it knew in life but can't speak"
+			],
 			"cr": "0",
 			"action": [
 				{
 					"name": "Bite",
 					"entries": [
-						"{@atk mw} {@hit 1} to hit, reach 5 ft., one target. Hit: 1 ({@damage 1d4 - 1}) piercing damage."
+						"{@atk mw} {@hit 1} to hit, reach 5 ft., one target. {@h}1 ({@damage 1d4 - 1}) piercing damage."
 					]
 				}
 			],
-			"page": 63
+			"page": 63,
+			"languageTags": [
+				"CS"
+			],
+			"damageTags": [
+				"P"
+			],
+			"miscTags": [
+				"MW"
+			]
 		}
 	]
 }

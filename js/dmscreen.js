@@ -7,19 +7,26 @@ const DOWN = "DOWN";
 const AX_X = "AXIS_X";
 const AX_Y = "AXIS_Y";
 
+const EVT_NAMESPACE = ".dm_screen";
+
 const TITLE_LOADING = "Loading...";
 
 const PANEL_TYP_EMPTY = 0;
 const PANEL_TYP_STATS = 1;
-const PANEL_TYP_CREATURE_SCALED_CR = 7;
 const PANEL_TYP_ROLLBOX = 2;
 const PANEL_TYP_TEXTBOX = 3;
 const PANEL_TYP_RULES = 4;
 const PANEL_TYP_INITIATIVE_TRACKER = 5;
 const PANEL_TYP_UNIT_CONVERTER = 6;
+const PANEL_TYP_CREATURE_SCALED_CR = 7;
+const PANEL_TYP_SUNDIAL = 8;
+const PANEL_TYP_MONEY_CONVERTER = 9;
 const PANEL_TYP_TUBE = 10;
 const PANEL_TYP_TWITCH = 11;
 const PANEL_TYP_TWITCH_CHAT = 12;
+const PANEL_TYP_ADVENTURES = 13;
+const PANEL_TYP_BOOKS = 14;
+const PANEL_TYP_INITIATIVE_TRACKER_PLAYER = 15;
 const PANEL_TYP_IMAGE = 20;
 const PANEL_TYP_GENERIC_EMBED = 90;
 
@@ -32,14 +39,23 @@ class Board {
 		this.height = this.getInitialHeight();
 		this.sideMenu = new SideMenu(this);
 		this.menu = new AddMenu();
-		this.storage = StorageUtil.getStorage();
 		this.isFullscreen = false;
+		this.isLocked = false;
+		this.reactor = new Reactor();
+		this.isAlertOnNav = false;
 
 		this.nextId = 1;
 		this.hoveringPanel = null;
 		this.availContent = {};
 		this.availRules = {};
+		this.availAdventures = {};
+		this.availBooks = {};
+
 		this.$cbConfirmTabClose = null;
+		this.$btnFullscreen = null;
+		this.$btnLockPanels = null;
+
+		this._pDoSaveStateDebounced = MiscUtil.debounce(() => StorageUtil.pSet(DMSCREEN_STORAGE, this.getSaveableState()), 25);
 	}
 
 	getInitialWidth () {
@@ -83,6 +99,7 @@ class Board {
 			this.sideMenu.doUpdateDimensions();
 		}
 		this.doCheckFillSpaces();
+		this.reactor.fire("panelResize");
 	}
 
 	doCullPanels (oldWidth, oldHeight) {
@@ -150,115 +167,122 @@ class Board {
 		this.$creen.find(`.dm-screen-loading`).remove();
 	}
 
-	initialise () {
+	async pInitialise () {
 		this.doAdjust$creenCss();
 		this.doShowLoading();
 
-		this.pLoadIndex()
-			.then(() => {
-				if (this.hasSavedStateUrl()) {
-					this.doLoadUrlState();
-					this.initUnloadHandler();
-				} else if (this.hasSavedState()) {
-					this.doLoadState();
-					this.initUnloadHandler();
-				} else {
-					this.doCheckFillSpaces();
-					this.initUnloadHandler();
-				}
-			});
+		await this.pLoadIndex();
+		if (this.hasSavedStateUrl()) {
+			this.doLoadUrlState();
+		} else if (await this.pHasSavedState()) {
+			await this.pDoLoadState();
+		} else {
+			this.doCheckFillSpaces();
+		}
+		this.initGlobalHandlers();
 	}
 
-	initUnloadHandler () {
+	initGlobalHandlers () {
 		window.onhashchange = () => this.doLoadUrlState();
-		$(window).on("beforeunload", () => this.doSaveState());
+		$(window).resize(() => this.reactor.fire("panelResize"));
 	}
 
-	pLoadIndex () {
-		return new Promise((resolve, reject) => {
-			elasticlunr.clearStopWords();
-			EntryRenderer.item.populatePropertyAndTypeReference().then(() => DataUtil.loadJSON("data/generated/bookref-dmscreen-index.json")).then((data) => {
-				this.availRules.ALL = elasticlunr(function () {
-					this.addField("b");
-					this.addField("s");
+	async pLoadIndex () {
+		await SearchUiUtil.pDoGlobalInit();
+
+		// rules
+		await (async () => {
+			const data = await DataUtil.loadJSON("data/generated/bookref-dmscreen-index.json");
+			this.availRules.ALL = elasticlunr(function () {
+				this.addField("b");
+				this.addField("s");
+				this.addField("p");
+				this.addField("n");
+				this.addField("h");
+				this.setRef("id");
+			});
+			SearchUtil.removeStemmer(this.availRules.ALL);
+
+			data.data.forEach(d => {
+				d.n = data._meta.name[d.b];
+				d.b = data._meta.id[d.b];
+				d.s = data._meta.section[d.s];
+				this.availRules.ALL.addDoc(d);
+			});
+		})();
+
+		async function pDoBuildAdvantureOrAdventureIndex (dataPath, dataProp, indexStorage, indexIdField) {
+			const data = await DataUtil.loadJSON(dataPath);
+			indexStorage.ALL = elasticlunr(function () {
+				this.addField(indexIdField);
+				this.addField("c");
+				this.addField("n");
+				this.addField("p");
+				this.addField("o");
+				this.setRef("id");
+			});
+			SearchUtil.removeStemmer(indexStorage.ALL);
+
+			let bookOrAdventureId = 0;
+			data[dataProp].forEach(adventureOrBook => {
+				indexStorage[adventureOrBook.id] = elasticlunr(function () {
+					this.addField(indexIdField);
+					this.addField("c");
+					this.addField("n");
 					this.addField("p");
-					this.addField("n");
-					this.addField("h");
+					this.addField("o");
 					this.setRef("id");
 				});
-				SearchUtil.removeStemmer(this.availRules.ALL);
+				SearchUtil.removeStemmer(indexStorage[adventureOrBook.id]);
 
-				data.data.forEach(d => {
-					d.n = data._meta.name[d.b];
-					d.b = data._meta.id[d.b];
-					d.s = data._meta.section[d.s];
-					this.availRules.ALL.addDoc(d);
-				});
+				adventureOrBook.contents.forEach((chap, i) => {
+					const chapDoc = {
+						[indexIdField]: adventureOrBook.id,
+						n: adventureOrBook.name,
+						c: chap.name,
+						p: i,
+						id: bookOrAdventureId++
+					};
+					if (chap.ordinal) chapDoc.o = Parser.bookOrdinalToAbv(chap.ordinal, true);
 
-				return DataUtil.loadJSON("search/index.json");
-			}).then((data) => {
-				function hasBadCat (d) {
-					return d.c === Parser.CAT_ID_ADVENTURE || d.c === Parser.CAT_ID_CLASS || d.c === Parser.CAT_ID_QUICKREF;
-				}
-
-				function fromDeepIndex (d) {
-					return d.d; // flag for "deep indexed" content that refers to the same item
-				}
-
-				this.availContent.ALL = elasticlunr(function () {
-					this.addField("n");
-					this.addField("s");
-					this.setRef("id");
-				});
-				SearchUtil.removeStemmer(this.availContent.ALL);
-				// Add main site index
-				let ixMax = 0;
-				data.forEach(d => {
-					if (hasBadCat(d) || fromDeepIndex(d)) return;
-					d.cf = d.c === Parser.CAT_ID_CREATURE ? "Creature" : Parser.pageCategoryToFull(d.c);
-					if (!this.availContent[d.cf]) {
-						this.availContent[d.cf] = elasticlunr(function () {
-							this.addField("n");
-							this.addField("s");
-							this.setRef("id");
-						});
-						SearchUtil.removeStemmer(this.availContent[d.cf]);
-					}
-					this.availContent.ALL.addDoc(d);
-					this.availContent[d.cf].addDoc(d);
-					ixMax = Math.max(ixMax, d.id);
-				});
-
-				// Add homebrew
-				Omnisearch.highestId = Math.max(ixMax, Omnisearch.highestId);
-				BrewUtil.pGetSearchIndex().then(index => {
-					index.forEach(d => {
-						if (hasBadCat(d) || fromDeepIndex(d)) return;
-						d.cf = Parser.pageCategoryToFull(d.c);
-						d.cf = d.c === Parser.CAT_ID_CREATURE ? "Creature" : Parser.pageCategoryToFull(d.c);
-						this.availContent.ALL.addDoc(d);
-						this.availContent[d.cf].addDoc(d);
-					});
-
-					// add tabs
-					const omniTab = new AddMenuSearchTab(this.availContent);
-					omniTab.setSpotlight(true);
-					const ruleTab = new AddMenuSearchTab(this.availRules, "rules");
-					const embedTab = new AddMenuVideoTab();
-					const imageTab = new AddMenuImageTab();
-					const specialTab = new AddMenuSpecialTab();
-
-					this.menu.addTab(omniTab).addTab(ruleTab).addTab(imageTab).addTab(embedTab).addTab(specialTab);
-
-					this.menu.render();
-
-					this.sideMenu.render();
-
-					resolve();
-					this.doHideLoading();
+					indexStorage.ALL.addDoc(chapDoc);
+					indexStorage[adventureOrBook.id].addDoc(chapDoc);
 				});
 			});
-		});
+		}
+
+		// adventures
+		await pDoBuildAdvantureOrAdventureIndex(`data/adventures.json`, "adventure", this.availAdventures, "a");
+
+		// books
+		await pDoBuildAdvantureOrAdventureIndex(`data/books.json`, "book", this.availBooks, "b");
+
+		// search
+		this.availContent = await SearchUiUtil.pGetContentIndices();
+
+		// add tabs
+		const omniTab = new AddMenuSearchTab(this.availContent);
+		const ruleTab = new AddMenuSearchTab(this.availRules, "rules");
+		const adventureTab = new AddMenuSearchTab(this.availAdventures, "adventures");
+		const bookTab = new AddMenuSearchTab(this.availBooks, "books");
+		const embedTab = new AddMenuVideoTab();
+		const imageTab = new AddMenuImageTab();
+		const specialTab = new AddMenuSpecialTab();
+
+		this.menu
+			.addTab(omniTab)
+			.addTab(ruleTab)
+			.addTab(adventureTab)
+			.addTab(bookTab)
+			.addTab(imageTab)
+			.addTab(embedTab)
+			.addTab(specialTab);
+
+		this.menu.render();
+
+		this.sideMenu.render();
+
+		this.doHideLoading();
 	}
 
 	getPanel (x, y) {
@@ -303,6 +327,7 @@ class Board {
 				toDestroy.forEach(p => p.destroy());
 				this.sideMenu.doUpdateHistory()
 			} else this.destroyPanel(id);
+			this.doSaveStateDebounced();
 		}
 	}
 
@@ -310,11 +335,13 @@ class Board {
 		const ix = this.exiledPanels.findIndex(p => p.id === panel.id);
 		if (~ix) this.exiledPanels.splice(ix, 1);
 		this.panels[panel.id] = panel;
+		this.doSaveStateDebounced();
 	}
 
 	destroyPanel (id) {
 		const panelK = Object.keys(this.panels).find(k => this.panels[k].id === id);
 		if (panelK) delete this.panels[panelK];
+		this.doSaveStateDebounced();
 	}
 
 	doCheckFillSpaces () {
@@ -328,6 +355,7 @@ class Board {
 			}
 		}
 		Object.values(this.panels).forEach(p => p.render());
+		this.doSaveStateDebounced();
 	}
 
 	hasSavedStateUrl () {
@@ -343,8 +371,8 @@ class Board {
 		window.location.hash = "";
 	}
 
-	hasSavedState () {
-		return !!((this.storage.getItem(DMSCREEN_STORAGE) || "").trim());
+	async pHasSavedState () {
+		return !!await StorageUtil.pGet(DMSCREEN_STORAGE);
 	}
 
 	getSaveableState () {
@@ -352,17 +380,21 @@ class Board {
 			w: this.width,
 			h: this.height,
 			ctc: this.getConfirmTabClose(),
+			fs: this.isFullscreen,
+			lk: this.isLocked,
 			ps: Object.values(this.panels).map(p => p.getSaveableState()),
 			ex: this.exiledPanels.map(p => p.getSaveableState())
 		};
 	}
 
-	doSaveState () {
-		this.storage.setItem(DMSCREEN_STORAGE, JSON.stringify(this.getSaveableState()));
+	doSaveStateDebounced () {
+		this._pDoSaveStateDebounced();
 	}
 
 	doLoadStateFrom (toLoad) {
-		if (this.$cbConfirmTabClose) this.$cbConfirmTabClose.prop("checked", toLoad.ctc);
+		if (this.$cbConfirmTabClose) this.$cbConfirmTabClose.prop("checked", !!toLoad.ctc);
+		if (this.$btnFullscreen && (toLoad.fs !== !!this.isFullscreen)) this.$btnFullscreen.click();
+		if (this.$btnLockPanels && (toLoad.lk !== !!this.isLocked)) this.$btnLockPanels.click();
 
 		// re-exile
 		toLoad.ex.filter(Boolean).reverse().forEach(saved => {
@@ -383,24 +415,18 @@ class Board {
 		this.setDimensions(toLoad.w, toLoad.h);
 	}
 
-	doLoadState () {
-		const purgeSaved = () => {
-			window.alert("Error when loading DM screen! Purging saved data...");
-			this.storage.removeItem(DMSCREEN_STORAGE);
-		};
-
-		const raw = this.storage.getItem(DMSCREEN_STORAGE);
-		if (raw) {
-			try {
-				const toLoad = JSON.parse(raw);
-				this.doLoadStateFrom(toLoad);
-			} catch (e) {
-				// on error, purge saved data and reset
-				purgeSaved();
-				setTimeout(() => {
-					throw e
-				});
-			}
+	async pDoLoadState () {
+		try {
+			const toLoad = await StorageUtil.pGet(DMSCREEN_STORAGE);
+			this.doLoadStateFrom(toLoad);
+		} catch (e) {
+			// on error, purge saved data and reset
+			JqueryUtil.doToast({
+				content: "Error when loading DM screen! Purged saved data. (See the log for more information.)",
+				type: "danger"
+			});
+			await StorageUtil.pRemove(DMSCREEN_STORAGE);
+			setTimeout(() => { throw e; });
 		}
 	}
 
@@ -428,13 +454,32 @@ class Board {
 	addPanel (panel) {
 		this.panels[panel.id] = panel;
 		panel.render();
+		this.doSaveStateDebounced();
+	}
+
+	disablePanelMoves () {
+		Object.values(this.panels).forEach(p => p.toggleMovable(false));
+	}
+
+	doBindAlertOnNavigation () {
+		if (this.isAlertOnNav) return;
+		this.isAlertOnNav = true;
+		$(window).on("beforeunload", evt => {
+			const message = `Temporary data and connections will be lost.`;
+			(evt || window.event).message = message;
+			return message;
+		});
+	}
+
+	getPanelsByType (type) {
+		return Object.values(this.panels).filter(p => p.tabDatas.length && p.tabDatas.find(td => td.type === type));
 	}
 }
 
 class SideMenu {
 	constructor (board) {
 		this.board = board;
-		this.$mnu = $(`.dm-sidemenu`);
+		this.$mnu = $(`.sidemenu`);
 
 		this.$mnu.on("mouseover", () => {
 			this.board.setHoveringPanel(null);
@@ -448,17 +493,16 @@ class SideMenu {
 	}
 
 	render () {
-		const renderDivider = () => {
-			this.$mnu.append(`<hr class="dm-sidemenu-row-divider">`);
-		};
+		const renderDivider = () => this.$mnu.append(`<hr class="sidemenu__row__divider">`);
 
-		const $wrpResizeW = $(`<div class="dm-sidemenu-row"><div class="dm-sidemenu-row-label">Width</div></div>`).appendTo(this.$mnu);
+		const $wrpResizeW = $(`<div class="sidemenu__row split-v-center"><div class="sidemenu__row__label">Width</div></div>`).appendTo(this.$mnu);
 		const $iptWidth = $(`<input class="form-control" type="number" value="${this.board.width}">`).appendTo($wrpResizeW);
 		this.$iptWidth = $iptWidth;
-		const $wrpResizeH = $(`<div class="dm-sidemenu-row"><div class="dm-sidemenu-row-label">Height</div></div>`).appendTo(this.$mnu);
+		const $wrpResizeH = $(`<div class="sidemenu__row split-v-center"><div class="sidemenu__row__label">Height</div></div>`).appendTo(this.$mnu);
 		const $iptHeight = $(`<input class="form-control" type="number" value="${this.board.height}">`).appendTo($wrpResizeH);
 		this.$iptHeight = $iptHeight;
-		const $btnSetDim = $(`<div class="btn btn-primary">Set Dimensions</div>`).appendTo(this.$mnu);
+		const $wrpSetDim = $(`<div class="sidemenu__row split-v-center"/>`).appendTo(this.$mnu);
+		const $btnSetDim = $(`<button class="btn btn-primary" style="width: 100%;">Set Dimensions</div>`).appendTo($wrpSetDim);
 		$btnSetDim.on("click", () => {
 			const w = Number($iptWidth.val());
 			const h = Number($iptHeight.val());
@@ -467,44 +511,60 @@ class SideMenu {
 		});
 		renderDivider();
 
-		const $wrpFullscreen = $(`<div class="dm-sidemenu-row-alt"></div>`).appendTo(this.$mnu);
-		const $btnFullscreen = $(`<div class="btn btn-primary">Toggle Fullscreen</div>`).appendTo($wrpFullscreen);
+		const $wrpFullscreen = $(`<div class="sidemenu__row flex-vh-center-around"></div>`).appendTo(this.$mnu);
+		const $btnFullscreen = $(`<button class="btn btn-primary">Toggle Fullscreen</button>`).appendTo($wrpFullscreen);
+		this.board.$btnFullscreen = $btnFullscreen;
 		$btnFullscreen.on("click", () => {
 			this.board.isFullscreen = !this.board.isFullscreen;
-			if (this.board.isFullscreen) $(`body`).addClass(`dm-screen-fullscreen`);
-			else $(`body`).removeClass(`dm-screen-fullscreen`);
+			if (this.board.isFullscreen) $(`body`).addClass(`is-fullscreen`);
+			else $(`body`).removeClass(`is-fullscreen`);
 			this.board.doAdjust$creenCss();
+			this.board.doSaveStateDebounced();
+			this.board.reactor.fire("panelResize")
+		});
+		const $btnLockPanels = $(`<button class="btn btn-danger" title="Lock Panels"><span class="glyphicon glyphicon-lock"/></button>`).appendTo($wrpFullscreen);
+		this.board.$btnLockPanels = $btnLockPanels;
+		$btnLockPanels.on("click", () => {
+			this.board.isLocked = !this.board.isLocked;
+			if (this.board.isLocked) {
+				this.board.disablePanelMoves();
+				$(`body`).addClass(`dm-screen-locked`);
+				$btnLockPanels.removeClass(`btn-danger`).addClass(`btn-success`);
+			} else {
+				$(`body`).removeClass(`dm-screen-locked`);
+				$btnLockPanels.addClass(`btn-danger`).removeClass(`btn-success`);
+			}
+			this.board.doSaveStateDebounced();
 		});
 		renderDivider();
 
-		const $wrpSaveLoadFile = $(`<div class="dm-sidemenu-row-alt"/>`).appendTo(this.$mnu);
-		const $btnSaveFile = $(`<div class="btn btn-primary">Save to File</div>`).appendTo($wrpSaveLoadFile);
+		const $wrpSaveLoad = $(`<div class="sidemenu__row--vert"/>`).appendTo(this.$mnu);
+		const $wrpSaveLoadFile = $(`<div class="sidemenu__row flex-vh-center-around"/>`).appendTo($wrpSaveLoad);
+		const $btnSaveFile = $(`<button class="btn btn-primary">Save to File</button>`).appendTo($wrpSaveLoadFile);
 		$btnSaveFile.on("click", () => {
 			DataUtil.userDownload(`dm-screen`, this.board.getSaveableState());
 		});
-		const $btnLoadFile = $(`<div class="btn btn-primary">Load from File</div>`).appendTo($wrpSaveLoadFile);
-		$btnLoadFile.on("click", () => {
-			DataUtil.userUpload((json) => {
-				this.board.doReset();
-				this.board.doLoadStateFrom(json);
-			});
+		const $btnLoadFile = $(`<button class="btn btn-primary">Load from File</button>`).appendTo($wrpSaveLoadFile);
+		$btnLoadFile.on("click", async () => {
+			const json = await DataUtil.pUserUpload();
+			this.board.doReset();
+			this.board.doLoadStateFrom(json);
 		});
-		renderDivider();
-
-		const $wrpSaveLoadLink = $(`<div class="dm-sidemenu-row-alt"/>`).appendTo(this.$mnu);
-		const $btnSaveLink = $(`<div class="btn btn-primary">Save to URL</div>`).appendTo($wrpSaveLoadLink);
-		$btnSaveLink.on("click", () => {
+		const $wrpSaveLoadUrl = $(`<div class="sidemenu__row flex-vh-center-around"/>`).appendTo($wrpSaveLoad);
+		const $btnSaveLink = $(`<button class="btn btn-primary">Save to URL</button>`).appendTo($wrpSaveLoadUrl);
+		$btnSaveLink.on("click", async () => {
 			const encoded = `${window.location.href.split("#")[0]}#${encodeURIComponent(JSON.stringify(this.board.getSaveableState()))}`;
-			copyText(encoded);
-			showCopiedEffect($btnSaveLink);
+			await MiscUtil.pCopyTextToClipboard(encoded);
+			JqueryUtil.showCopiedEffect($btnSaveLink);
 		});
 		renderDivider();
 
-		const $wrpCbConfirm = $(`<div class="dm-sidemenu-row"><label class="dm-sidemenu-row-label dm-sidemenu-row-label--cb-label">Confirm on Tab Close </label></div>`).appendTo(this.$mnu);
-		this.board.$cbConfirmTabClose = $(`<input type="checkbox" class="dm-sidemenu-row-label-cb">`).appendTo($wrpCbConfirm.find(`label`));
+		const $wrpCbConfirm = $(`<div class="sidemenu__row split-v-center"><label class="sidemenu__row__label sidemenu__row__label--cb-label"><span>Confirm on Tab Close</span></label></div>`).appendTo(this.$mnu);
+		this.board.$cbConfirmTabClose = $(`<input type="checkbox" class="sidemenu__row__label__cb">`).appendTo($wrpCbConfirm.find(`label`));
 		renderDivider();
 
-		const $btnReset = $(`<div class="btn btn-danger">Reset Screen</div>`).appendTo(this.$mnu);
+		const $wrpReset = $(`<div class="sidemenu__row split-v-center"/>`).appendTo(this.$mnu);
+		const $btnReset = $(`<button class="btn btn-danger" style="width: 100%;">Reset Screen</button>`).appendTo($wrpReset);
 		$btnReset.on("click", () => {
 			if (window.confirm("Are you sure?")) {
 				this.board.doReset();
@@ -512,8 +572,7 @@ class SideMenu {
 		});
 		renderDivider();
 
-		const $wrpHistory = $(`<div class="dm-sidemenu-history"/>`).appendTo(this.$mnu);
-		this.$wrpHistory = $wrpHistory;
+		this.$wrpHistory = $(`<div class="sidemenu__history"/>`).appendTo(this.$mnu);
 	}
 
 	doUpdateDimensions () {
@@ -525,16 +584,16 @@ class SideMenu {
 		this.board.exiledPanels.forEach(p => p.get$ContentWrapper().detach());
 		this.$wrpHistory.children().remove();
 		if (this.board.exiledPanels.length) {
-			const $wrpHistHeader = $(`<div class="dm-sidemenu-row"><span style="font-variant: small-caps;">Recently Removed</span></div>`).appendTo(this.$wrpHistory);
-			const $btnHistClear = $(`<div class="btn btn-danger">Clear</div>`).appendTo($wrpHistHeader);
+			const $wrpHistHeader = $(`<div class="sidemenu__row split-v-center"><span style="font-variant: small-caps;">Recently Removed</span></div>`).appendTo(this.$wrpHistory);
+			const $btnHistClear = $(`<button class="btn btn-danger">Clear</button>`).appendTo($wrpHistHeader);
 			$btnHistClear.on("click", () => {
 				this.board.exiledPanels = [];
 				this.doUpdateHistory();
 			});
 		}
 		this.board.exiledPanels.forEach((p, i) => {
-			const $wrpHistItem = $(`<div class="dm-sidemenu-history-item"/>`).appendTo(this.$wrpHistory);
-			const $cvrHistItem = $(`<div class="dm-sidemenu-history-item-cover"/>`).appendTo($wrpHistItem);
+			const $wrpHistItem = $(`<div class="sidemenu__history-item"/>`).appendTo(this.$wrpHistory);
+			const $cvrHistItem = $(`<div class="sidemenu__history-item-cover"/>`).appendTo($wrpHistItem);
 			const $btnRemove = $(`<div class="panel-history-control-remove-wrapper"><span class="panel-history-control-remove glyphicon glyphicon-remove" title="Remove"/></div>`).appendTo($cvrHistItem);
 			const $ctrlMove = $(`<div class="panel-history-control-middle" title="Move"/>`).appendTo($cvrHistItem);
 
@@ -570,9 +629,9 @@ class SideMenu {
 
 				Panel.bindMovingEvents(this.board, $contents, offsetX, offsetY);
 
-				$(document).on("mouseup touchend", () => {
+				$(document).on(`mouseup${EVT_NAMESPACE} touchend${EVT_NAMESPACE}`, () => {
 					this.board.setVisiblyHoveringPanel(false);
-					$(document).off("mousemove touchmove").off("mouseup touchend");
+					$(document).off(`mousemove${EVT_NAMESPACE} touchmove${EVT_NAMESPACE}`).off(`mouseup${EVT_NAMESPACE} touchend${EVT_NAMESPACE}`);
 
 					$body.css("userSelect", "");
 					$contents.css("overflow-y", "");
@@ -603,9 +662,11 @@ class SideMenu {
 						this.doUpdateHistory();
 					}
 					MiscUtil.clearSelection();
+					this.board.doSaveStateDebounced();
 				});
 			});
 		});
+		this.board.doSaveStateDebounced();
 	}
 }
 
@@ -661,7 +722,8 @@ class Panel {
 					const page = saved.c.p;
 					const source = saved.c.s;
 					const hash = saved.c.u;
-					p.doPopulate_Stats(page, source, hash, skipSetTab);
+					p.doPopulate_Stats(page, source, hash, skipSetTab, saved.r);
+					handleTabRenamed(p);
 					return p;
 				}
 				case PANEL_TYP_CREATURE_SCALED_CR: {
@@ -669,28 +731,59 @@ class Panel {
 					const source = saved.c.s;
 					const hash = saved.c.u;
 					const cr = saved.c.cr;
-					p.doPopulate_StatsScaledCr(page, source, hash, cr, skipSetTab);
+					p.doPopulate_StatsScaledCr(page, source, hash, cr, skipSetTab, saved.r);
+					handleTabRenamed(p);
 					return p;
 				}
 				case PANEL_TYP_RULES: {
 					const book = saved.c.b;
 					const chapter = saved.c.c;
 					const header = saved.c.h;
-					p.doPopulate_Rules(book, chapter, header, skipSetTab);
+					p.doPopulate_Rules(book, chapter, header, skipSetTab, saved.r);
+					handleTabRenamed(p);
+					return p;
+				}
+				case PANEL_TYP_ADVENTURES: {
+					const adventure = saved.c.a;
+					const chapter = saved.c.c;
+					p.doPopulate_Adventures(adventure, chapter, skipSetTab, saved.r);
+					handleTabRenamed(p);
+					return p;
+				}
+				case PANEL_TYP_BOOKS: {
+					const book = saved.c.b;
+					const chapter = saved.c.c;
+					p.doPopulate_Books(book, chapter, skipSetTab, saved.r);
+					handleTabRenamed(p);
 					return p;
 				}
 				case PANEL_TYP_ROLLBOX:
-					EntryRenderer.dice.bindDmScreenPanel(p);
+					Renderer.dice.bindDmScreenPanel(p, saved.r);
+					handleTabRenamed(p);
 					return p;
 				case PANEL_TYP_TEXTBOX:
 					p.doPopulate_TextBox(saved.s.x, saved.r);
 					handleTabRenamed(p);
 					return p;
 				case PANEL_TYP_INITIATIVE_TRACKER:
-					p.doPopulate_InitiativeTracker(saved.s);
+					p.doPopulate_InitiativeTracker(saved.s, saved.r);
+					handleTabRenamed(p);
+					return p;
+				case PANEL_TYP_INITIATIVE_TRACKER_PLAYER:
+					p.doPopulate_InitiativeTrackerPlayer(saved.s, saved.r);
+					handleTabRenamed(p);
 					return p;
 				case PANEL_TYP_UNIT_CONVERTER:
-					p.doPopulate_UnitConverter(saved.s);
+					p.doPopulate_UnitConverter(saved.s, saved.r);
+					handleTabRenamed(p);
+					return p;
+				case PANEL_TYP_MONEY_CONVERTER:
+					p.doPopulate_MoneyConverter(saved.s, saved.r);
+					handleTabRenamed(p);
+					return p;
+				case PANEL_TYP_SUNDIAL:
+					p.doPopulate_Sundial(saved.s, saved.r);
+					handleTabRenamed(p);
 					return p;
 				case PANEL_TYP_TUBE:
 					p.doPopulate_YouTube(saved.c.u, saved.r);
@@ -729,7 +822,7 @@ class Panel {
 	}
 
 	static _get$eleLoading (message = "Loading") {
-		return $(`<div class="panel-content-wrapper-inner"><div class="panel-tab-message loading-spinner"><i>${message}...</i></div></div>`);
+		return $(`<div class="panel-content-wrapper-inner"><div class="ui-search__message loading-spinner"><i>${message}...</i></div></div>`);
 	}
 
 	static setMovingCss (evt, $ele, w, h, offsetX, offsetY, zIndex) {
@@ -761,8 +854,8 @@ class Panel {
 	}
 
 	static bindMovingEvents (board, $content, offsetX, offsetY) {
-		$(document).off("mousemove touchmove").off("mouseup touchend");
-		$(document).on("mousemove touchmove", (e) => {
+		$(document).off(`mousemove${EVT_NAMESPACE} touchmove${EVT_NAMESPACE}`).off(`mouseup${EVT_NAMESPACE} touchend${EVT_NAMESPACE}`);
+		$(document).on(`mousemove${EVT_NAMESPACE} touchmove${EVT_NAMESPACE}`, (e) => {
 			board.setVisiblyHoveringPanel(true);
 			$content.css({
 				top: e.clientY - offsetY,
@@ -788,19 +881,19 @@ class Panel {
 		);
 	}
 
-	doPopulate_Stats (page, source, hash) {
+	doPopulate_Stats (page, source, hash, skipSetTab, title) { // FIXME skipSetTab is never used
 		const meta = {p: page, s: source, u: hash};
 		const ix = this.set$TabLoading(
 			PANEL_TYP_STATS,
 			meta
 		);
-		EntryRenderer.hover._doFillThenCall(
+		Renderer.hover._doFillThenCall(
 			page,
 			source,
 			hash,
 			() => {
-				const fn = EntryRenderer.hover._pageToRenderFn(page);
-				const it = EntryRenderer.hover._getFromCache(page, source, hash);
+				const fn = Renderer.hover._pageToRenderFn(page);
+				const it = Renderer.hover._getFromCache(page, source, hash);
 
 				const $contentInner = $(`<div class="panel-content-wrapper-inner"/>`);
 				const $contentStats = $(`<table class="stats"/>`).appendTo($contentInner);
@@ -813,7 +906,9 @@ class Panel {
 					PANEL_TYP_STATS,
 					meta,
 					$contentInner,
-					it.name
+					title || it.name,
+					true,
+					!!title
 				);
 			}
 		);
@@ -826,11 +921,11 @@ class Panel {
 			const $this = $(this);
 			const lastCr = self.contentMeta.cr != null ? Parser.numberToCr(self.contentMeta.cr) : mon.cr.cr || mon.cr;
 
-			EntryRenderer.monster.getCrScaleTarget($this, lastCr, (targetCr) => {
+			Renderer.monster.getCrScaleTarget($this, lastCr, (targetCr) => {
 				const originalCr = Parser.crToNumber(mon.cr.cr || mon.cr) === targetCr;
 
 				const doRender = (toRender) => {
-					$contentStats.empty().append(EntryRenderer.monster.getCompactRenderedString(toRender, null, {showScaler: true, isScaled: !originalCr}));
+					$contentStats.empty().append(Renderer.monster.getCompactRenderedString(toRender, null, {showScaler: true, isScaled: !originalCr}));
 
 					const nxtMeta = {
 						...meta,
@@ -843,9 +938,10 @@ class Panel {
 						originalCr ? PANEL_TYP_STATS : PANEL_TYP_CREATURE_SCALED_CR,
 						nxtMeta,
 						$contentInner,
-						toRender._displayName || toRender.name
+						toRender._displayName || toRender.name,
+						true
 					);
-				}
+				};
 
 				if (originalCr) {
 					doRender(mon)
@@ -855,33 +951,34 @@ class Panel {
 			}, true);
 		});
 		$contentStats.off("click", ".mon__btn-reset-cr").on("click", ".mon__btn-reset-cr", function () {
-			$contentStats.empty().append(EntryRenderer.monster.getCompactRenderedString(mon, null, {showScaler: true, isScaled: false}));
+			$contentStats.empty().append(Renderer.monster.getCompactRenderedString(mon, null, {showScaler: true, isScaled: false}));
 			self.set$Tab(
 				self.tabIndex,
 				PANEL_TYP_STATS,
 				meta,
 				$contentInner,
-				mon.name
+				mon.name,
+				true
 			);
 		});
 	}
 
-	doPopulate_StatsScaledCr (page, source, hash, targetCr) {
+	doPopulate_StatsScaledCr (page, source, hash, targetCr, skipSetTab, title) { // FIXME skipSetTab is never used
 		const meta = {p: page, s: source, u: hash, cr: targetCr};
 		const ix = this.set$TabLoading(
 			PANEL_TYP_CREATURE_SCALED_CR,
 			meta
 		);
-		EntryRenderer.hover._doFillThenCall(
+		Renderer.hover._doFillThenCall(
 			page,
 			source,
 			hash,
 			() => {
-				const it = EntryRenderer.hover._getFromCache(page, source, hash);
+				const it = Renderer.hover._getFromCache(page, source, hash);
 				ScaleCreature.scale(it, targetCr).then(initialRender => {
 					const $contentInner = $(`<div class="panel-content-wrapper-inner"/>`);
 					const $contentStats = $(`<table class="stats"/>`).appendTo($contentInner);
-					$contentStats.append(EntryRenderer.monster.getCompactRenderedString(initialRender, null, {showScaler: true, isScaled: true}));
+					$contentStats.append(Renderer.monster.getCompactRenderedString(initialRender, null, {showScaler: true, isScaled: true}));
 
 					this._stats_bindCrScaleClickHandler(it, meta, $contentInner, $contentStats);
 
@@ -890,14 +987,16 @@ class Panel {
 						PANEL_TYP_CREATURE_SCALED_CR,
 						meta,
 						$contentInner,
-						initialRender._displayName || initialRender.name
+						title || initialRender._displayName || initialRender.name,
+						true,
+						!!title
 					);
 				});
 			}
 		);
 	}
 
-	doPopulate_Rules (book, chapter, header) {
+	doPopulate_Rules (book, chapter, header, skipSetTab, title) { // FIXME skipSetTab is never used
 		const meta = {b: book, c: chapter, h: header};
 		const ix = this.set$TabLoading(
 			PANEL_TYP_RULES,
@@ -905,13 +1004,57 @@ class Panel {
 		);
 		RuleLoader.pFill(book).then(() => {
 			const rule = RuleLoader.getFromCache(book, chapter, header);
-			const it = EntryRenderer.rule.getCompactRenderedString(rule);
+			const it = Renderer.rule.getCompactRenderedString(rule);
 			this.set$Tab(
 				ix,
 				PANEL_TYP_RULES,
 				meta,
 				$(`<div class="panel-content-wrapper-inner"><table class="stats">${it}</table></div>`),
-				rule.name || ""
+				title || rule.name || "",
+				true,
+				!!title
+			);
+		});
+	}
+
+	doPopulate_Adventures (adventure, chapter, skipSetTab, title) { // FIXME skipSetTab is never used
+		const meta = {a: adventure, c: chapter};
+		const ix = this.set$TabLoading(
+			PANEL_TYP_ADVENTURES,
+			meta
+		);
+		adventureLoader.pFill(adventure).then(() => {
+			const data = adventureLoader.getFromCache(adventure, chapter);
+			const view = new AdventureOrBookView("adventure", this, adventureLoader, ix, {adventure, chapter});
+			this.set$Tab(
+				ix,
+				PANEL_TYP_ADVENTURES,
+				meta,
+				$(`<div class="panel-content-wrapper-inner"></div>`).append(view.$getEle()),
+				title || data.name || "",
+				true,
+				!!title
+			);
+		});
+	}
+
+	doPopulate_Books (book, chapter, skipSetTab, title) { // FIXME skipSetTab is never used
+		const meta = {b: book, c: chapter};
+		const ix = this.set$TabLoading(
+			PANEL_TYP_BOOKS,
+			meta
+		);
+		bookLoader.pFill(book).then(() => {
+			const data = bookLoader.getFromCache(book, chapter);
+			const view = new AdventureOrBookView("book", this, bookLoader, ix, {book, chapter});
+			this.set$Tab(
+				ix,
+				PANEL_TYP_BOOKS,
+				meta,
+				$(`<div class="panel-content-wrapper-inner"></div>`).append(view.$getEle()),
+				title || data.name || "",
+				true,
+				!!title
 			);
 		});
 	}
@@ -921,30 +1064,64 @@ class Panel {
 		return this.set$Tab(ix, type, contentMeta, $content, title, tabCanRename, tabRenamed);
 	}
 
-	doPopulate_Rollbox () {
+	doPopulate_Rollbox (title) {
 		this.set$ContentTab(
 			PANEL_TYP_ROLLBOX,
 			null,
-			$(`<div class="panel-content-wrapper-inner"/>`).append(EntryRenderer.dice.get$Roller().addClass("rollbox-panel")),
-			"Dice Roller"
+			$(`<div class="panel-content-wrapper-inner"/>`).append(Renderer.dice.get$Roller().addClass("rollbox-panel")),
+			title || "Dice Roller",
+			true,
+			!!title
 		);
 	}
 
-	doPopulate_InitiativeTracker (state = {}) {
+	doPopulate_InitiativeTracker (state = {}, title) {
 		this.set$ContentTab(
 			PANEL_TYP_INITIATIVE_TRACKER,
 			state,
 			$(`<div class="panel-content-wrapper-inner"/>`).append(InitiativeTracker.make$Tracker(this.board, state)),
-			"Initiative Tracker"
+			title || "Initiative Tracker",
+			true
 		);
 	}
 
-	doPopulate_UnitConverter (state = {}) {
+	doPopulate_InitiativeTrackerPlayer (state = {}, title) {
+		this.set$ContentTab(
+			PANEL_TYP_INITIATIVE_TRACKER_PLAYER,
+			state,
+			$(`<div class="panel-content-wrapper-inner"/>`).append(InitiativeTrackerPlayer.make$tracker(this.board, state)),
+			title || "Initiative Tracker",
+			true
+		);
+	}
+
+	doPopulate_UnitConverter (state = {}, title) {
 		this.set$ContentTab(
 			PANEL_TYP_UNIT_CONVERTER,
 			state,
 			$(`<div class="panel-content-wrapper-inner"/>`).append(UnitConverter.make$Converter(this.board, state)),
-			"Unit Converter"
+			title || "Unit Converter",
+			true
+		);
+	}
+
+	doPopulate_MoneyConverter (state = {}, title) {
+		this.set$ContentTab(
+			PANEL_TYP_MONEY_CONVERTER,
+			state,
+			$(`<div class="panel-content-wrapper-inner"/>`).append(MoneyConverter.make$Converter(this.board, state)),
+			title || "Money Converter",
+			true
+		);
+	}
+
+	doPopulate_Sundial (state = {}, title) {
+		this.set$ContentTab(
+			PANEL_TYP_SUNDIAL,
+			state,
+			$(`<div class="panel-content-wrapper-inner"/>`).append(Sundial.make$Sundail(this.board, state)),
+			title || "Sundial",
+			true
 		);
 	}
 
@@ -952,7 +1129,7 @@ class Panel {
 		this.set$ContentTab(
 			PANEL_TYP_TEXTBOX,
 			null,
-			$(`<div class="panel-content-wrapper-inner"/>`).append(NoteBox.make$Notebox(content)),
+			$(`<div class="panel-content-wrapper-inner"/>`).append(NoteBox.make$Notebox(this.board, content)),
 			title,
 			true
 		);
@@ -1006,8 +1183,8 @@ class Panel {
 		const meta = {u: url};
 		const $wrpPanel = $(`<div class="panel-content-wrapper-inner"/>`);
 		const $wrpImage = $(`<div class="panel-content-wrapper-img"/>`).appendTo($wrpPanel);
-		const $img = $(`<img src="${url}">`).appendTo($wrpImage);
-		const $iptReset = $(`<div class="panel-zoom-reset btn btn-xs btn-default"><span class="glyphicon glyphicon-refresh"/></div>`).appendTo($wrpPanel);
+		const $img = $(`<img src="${url}" alt="${title}">`).appendTo($wrpImage);
+		const $iptReset = $(`<button class="panel-zoom-reset btn btn-xs btn-default"><span class="glyphicon glyphicon-refresh"/></button>`).appendTo($wrpPanel);
 		const $iptRange = $(`<input type="range" class="panel-zoom-slider">`).appendTo($wrpPanel);
 		this.set$ContentTab(
 			PANEL_TYP_IMAGE,
@@ -1246,7 +1423,7 @@ class Panel {
 
 	doRenderTitle () {
 		const displayText = this.title !== TITLE_LOADING &&
-			(this.type === PANEL_TYP_STATS || this.type === PANEL_TYP_CREATURE_SCALED_CR || this.type === PANEL_TYP_RULES) ? this.title : "";
+			(this.type === PANEL_TYP_STATS || this.type === PANEL_TYP_CREATURE_SCALED_CR || this.type === PANEL_TYP_RULES || this.type === PANEL_TYP_ADVENTURES || this.type === PANEL_TYP_BOOKS) ? this.title : "";
 
 		this.$pnlTitle.text(displayText);
 		if (!displayText) this.$pnlTitle.addClass("hidden");
@@ -1277,7 +1454,7 @@ class Panel {
 
 			this.tabDatas.filter(it => it.type === PANEL_TYP_ROLLBOX).forEach(it => {
 				it.isDeleted = true;
-				EntryRenderer.dice.unbindDmScreenPanel();
+				Renderer.dice.unbindDmScreenPanel();
 			});
 		}
 
@@ -1285,6 +1462,11 @@ class Panel {
 		this.board.addPanel(replacement);
 		this.board.doCheckFillSpaces();
 		return replacement;
+	}
+
+	toggleMovable (val) {
+		this.$pnl.find(`.panel-control`).toggle(val);
+		this.$pnl.toggleClass(`panel-mode-move`, val);
 	}
 
 	render () {
@@ -1310,7 +1492,7 @@ class Panel {
 			const $pnl = $(`<div data-panelId="${this.id}" class="dm-screen-panel" empty="true"/>`);
 			this.$pnl = $pnl;
 			const $ctrlBar = $(`<div class="panel-control-bar"/>`).appendTo($pnl);
-			this.$pnlTitle = $(`<div class="panel-control-bar panel-control-title"/>`).appendTo($pnl);
+			this.$pnlTitle = $(`<div class="panel-control-bar panel-control-title"/>`).appendTo($pnl).click(() => this.$pnlTitle.toggleClass("panel-control-title--bumped"));
 			this.$pnlAddTab = $(`<div class="panel-control-bar panel-control-addtab"><div class="panel-control-icon glyphicon glyphicon-plus" title="Add Tab"/></div>`).click(() => {
 				this.setHasTabs(true);
 				this.setDirty(true);
@@ -1320,16 +1502,14 @@ class Panel {
 
 			const $ctrlMove = $(`<div class="panel-control-icon glyphicon glyphicon-move" title="Move"/>`).appendTo($ctrlBar);
 			$ctrlMove.on("click", () => {
-				$pnl.find(`.panel-control`).toggle();
-				$pnl.find(`.btn-panel-add`).toggle();
-				$pnl.toggleClass(`panel-mode-move`);
+				this.toggleMovable();
 			});
-			const $ctrlEmpty = $(`<div class="panel-control-icon glyphicon glyphicon-remove" title="Empty"/>`).appendTo($ctrlBar);
+			const $ctrlEmpty = $(`<div class="panel-control-icon glyphicon glyphicon-remove" title="Close"/>`).appendTo($ctrlBar);
 			$ctrlEmpty.on("click", () => {
 				this.getReplacementPanel();
 			});
 
-			const joyMenu = new JoystickMenu(this);
+			const joyMenu = new JoystickMenu(this.board, this);
 			this.joyMenu = joyMenu;
 			joyMenu.initialise();
 
@@ -1348,7 +1528,7 @@ class Panel {
 				const curr = $wrpTabsInner.scrollLeft();
 				$wrpTabsInner.scrollLeft(Math.max(0, curr + delta));
 			}).appendTo($wrpTabs);
-			const $btnTabAdd = $(`<div class="btn btn-default content-tab"><span class="glyphicon glyphicon-plus"/></div>`)
+			const $btnTabAdd = $(`<button class="btn btn-default content-tab"><span class="glyphicon glyphicon-plus"/></button>`)
 				.click(() => openAddMenu()).appendTo($wrpTabsInner);
 			this.$pnlWrpTabs = $wrpTabs;
 			this.$pnlTabs = $wrpTabsInner;
@@ -1401,8 +1581,12 @@ class Panel {
 			this.close$TabContent(ixOpt);
 		}
 
-		// closing the last tab flips this, so we may need to do it in either case
-		if (!this.isTabs) {
+		const activeTabs = this.tabDatas.filter(it => !it.isDeleted).length;
+
+		if (activeTabs === 1) { // if there is only one active tab remaining, remove the tab bar
+			this.isTabs = false;
+			this.doRenderTabs();
+		} else if (activeTabs === 0) {
 			const replacement = new Panel(this.board, this.x, this.y, this.width, this.height);
 			this.exile();
 			this.board.addPanel(replacement);
@@ -1422,9 +1606,17 @@ class Panel {
 		this.tabCanRename = tabCanRename;
 		this.tabRenamed = tabRenamed;
 
-		this.$pnlWrpContent.children().detach();
-		if ($content === null) this.$pnlWrpContent.append(this.$btnAdd);
-		else this.$pnlWrpContent.append($content);
+		if ($content === null) {
+			this.$pnlWrpContent.children().detach();
+			this.$pnlWrpContent.append(this.$btnAdd);
+		} else {
+			this.$pnlWrpContent.find(`.panel-add`).remove(); // clean up any "add panel" wrappers
+			this.$pnlWrpContent.find(`.ui-search__message.loading-spinner`).remove(); // clean up any temp "loading" panels
+			this.$pnlWrpContent.children().addClass("dms__tab_hidden");
+			$content.removeClass("dms__tab_hidden");
+			if (!this.$pnlWrpContent.has($content[0]).length) this.$pnlWrpContent.append($content);
+		}
+
 		this.$pnl.attr("empty", !$content);
 		this.doRenderTitle();
 		this.doRenderTabs();
@@ -1464,7 +1656,7 @@ class Panel {
 
 	_get$BtnSelTab (ix, title, tabCanRename) {
 		title = title || "[Untitled]";
-		const $btnSelTab = $(`<div class="btn btn-default content-tab ${tabCanRename ? "content-tab-can-rename" : ""}"><span class="content-tab-title">${title}</span></div>`)
+		const $btnSelTab = $(`<span class="btn btn-default content-tab flex ${tabCanRename ? "content-tab-can-rename" : ""}"><span class="content-tab-title" title="${title}">${title}</span></span>`)
 			.on("mousedown", (evt) => {
 				if (evt.which === 1) {
 					this.setActiveTab(ix);
@@ -1476,14 +1668,7 @@ class Panel {
 				if (!evt.ctrlKey && $btnSelTab.hasClass("content-tab-can-rename")) {
 					const nuTitle = prompt("Rename tab to:");
 					if (nuTitle && nuTitle.trim()) {
-						$btnSelTab.find(`.content-tab-title`).text(nuTitle);
-						const x = this.tabDatas[ix];
-						x.title = nuTitle;
-						x.tabRenamed = true;
-						if (this.tabIndex === ix) {
-							this.title = nuTitle;
-							this.tabRenamed = true;
-						}
+						this.setTabTitle(ix, nuTitle);
 					}
 					evt.stopPropagation();
 					evt.preventDefault();
@@ -1491,10 +1676,27 @@ class Panel {
 			});
 		const $btnCloseTab = $(`<span class="glyphicon glyphicon-remove content-tab-remove"/>`)
 			.on("mousedown", (evt) => {
-				evt.stopPropagation();
-				if (!this.board.getConfirmTabClose() || (this.board.getConfirmTabClose() && confirm(`Are you sure you want to close tab "${this.title}"?`))) this.doCloseTab(ix);
+				if (evt.button === 0) {
+					evt.stopPropagation();
+					if (!this.board.getConfirmTabClose() || (this.board.getConfirmTabClose() && confirm(`Are you sure you want to close tab "${this.tabDatas[ix].title}"?`))) this.doCloseTab(ix);
+				}
 			}).appendTo($btnSelTab);
 		return $btnSelTab;
+	}
+
+	setTabTitle (ix, nuTitle) {
+		const tabData = this.tabDatas[ix];
+
+		tabData.$tabButton.find(`.content-tab-title`).text(nuTitle).attr("title", nuTitle);
+		this.$pnlTitle.text(nuTitle);
+		const x = this.tabDatas[ix];
+		x.title = nuTitle;
+		x.tabRenamed = true;
+		if (this.tabIndex === ix) {
+			this.title = nuTitle;
+			this.tabRenamed = true;
+		}
+		this.board.doSaveStateDebounced();
 	}
 
 	set$Tab (ix, type, contentMeta, $content, title, tabCanRename, tabRenamed) {
@@ -1525,7 +1727,7 @@ class Panel {
 			};
 
 			if (!this.tabDatas[ix].$tabButton) this.tabDatas[ix].$tabButton = doAdd$BtnSelTab(ix, title);
-			else this.tabDatas[ix].$tabButton.find(`.content-tab-title`).text(title);
+			else this.tabDatas[ix].$tabButton.find(`.content-tab-title`).text(title).attr("title", title);
 
 			this.tabDatas[ix].$tabButton.toggleClass("content-tab-can-rename", tabCanRename);
 		}
@@ -1555,6 +1757,7 @@ class Panel {
 			const tabData = this.tabDatas[ix];
 			this.set$Content(tabData.type, tabData.contentMeta, tabData.$content, tabData.title, tabData.tabCanRename, tabData.tabRenamed);
 		}
+		this.board.doSaveStateDebounced();
 	}
 
 	get$ContentWrapper () {
@@ -1574,7 +1777,7 @@ class Panel {
 	}
 
 	destroy () {
-		if (this.type === PANEL_TYP_ROLLBOX) EntryRenderer.dice.unbindDmScreenPanel();
+		if (this.type === PANEL_TYP_ROLLBOX) Renderer.dice.unbindDmScreenPanel();
 		if (this.$pnl) this.$pnl.remove();
 		this.board.destroyPanel(this.id);
 	}
@@ -1638,6 +1841,24 @@ class Panel {
 							h: contentMeta.h
 						}
 					};
+				case PANEL_TYP_ADVENTURES:
+					return {
+						t: type,
+						r: toSaveTitle,
+						c: {
+							a: contentMeta.a,
+							c: contentMeta.c
+						}
+					};
+				case PANEL_TYP_BOOKS:
+					return {
+						t: type,
+						r: toSaveTitle,
+						c: {
+							b: contentMeta.b,
+							c: contentMeta.c
+						}
+					};
 				case PANEL_TYP_TEXTBOX:
 					return {
 						t: type,
@@ -1653,11 +1874,32 @@ class Panel {
 						s: $content.find(`.dm-init`).data("getState")()
 					};
 				}
+				case PANEL_TYP_INITIATIVE_TRACKER_PLAYER: {
+					return {
+						t: type,
+						r: toSaveTitle,
+						s: {}
+					};
+				}
 				case PANEL_TYP_UNIT_CONVERTER: {
 					return {
 						t: type,
 						r: toSaveTitle,
 						s: $content.find(`.dm-unitconv`).data("getState")()
+					};
+				}
+				case PANEL_TYP_MONEY_CONVERTER: {
+					return {
+						t: type,
+						r: toSaveTitle,
+						s: $content.find(`.dm_money`).data("getState")()
+					};
+				}
+				case PANEL_TYP_SUNDIAL: {
+					return {
+						t: type,
+						r: toSaveTitle,
+						s: $content.find(`.dm_sundial`).data("getState")()
 					};
 				}
 				case PANEL_TYP_TUBE:
@@ -1695,7 +1937,8 @@ class Panel {
 }
 
 class JoystickMenu {
-	constructor (panel) {
+	constructor (board, panel) {
+		this.board = board;
 		this.panel = panel;
 
 		this.$ctrls = null;
@@ -1738,9 +1981,9 @@ class JoystickMenu {
 
 			Panel.bindMovingEvents(this.panel.board, this.panel.$content, offsetX, offsetY);
 
-			$(document).on("mouseup touchend", () => {
+			$(document).on(`mouseup${EVT_NAMESPACE} touchend${EVT_NAMESPACE}`, () => {
 				this.panel.board.setVisiblyHoveringPanel(false);
-				$(document).off("mousemove touchmove").off("mouseup touchend");
+				$(document).off(`mousemove${EVT_NAMESPACE} touchmove${EVT_NAMESPACE}`).off(`mouseup${EVT_NAMESPACE} touchend${EVT_NAMESPACE}`);
 
 				$body.css("userSelect", "");
 				Panel.unsetMovingCss(this.panel.$content);
@@ -1765,6 +2008,8 @@ class JoystickMenu {
 					her.doShowJoystick();
 				}
 				MiscUtil.clearSelection();
+				this.board.doSaveStateDebounced();
+				this.board.reactor.fire("panelResize");
 			});
 		});
 
@@ -1804,9 +2049,9 @@ class JoystickMenu {
 				boxShadow: "0 0 12px 0 #000000a0"
 			});
 
-			$(document).off("mousemove touchmove").off("mouseup touchend");
+			$(document).off(`mousemove${EVT_NAMESPACE} touchmove${EVT_NAMESPACE}`).off(`mouseup${EVT_NAMESPACE} touchend${EVT_NAMESPACE}`);
 
-			$(document).on("mousemove touchmove", (e) => {
+			$(document).on(`mousemove${EVT_NAMESPACE} touchmove${EVT_NAMESPACE}`, (e) => {
 				let delta = 0;
 				const px = axis === AX_X ? dim.pxWidth : dim.pxHeight;
 				switch (dir) {
@@ -1858,8 +2103,8 @@ class JoystickMenu {
 				}
 			});
 
-			$(document).on("mouseup touchend", () => {
-				$(document).off("mousemove touchmove").off("mouseup touchend");
+			$(document).on(`mouseup${EVT_NAMESPACE} touchend${EVT_NAMESPACE}`, () => {
+				$(document).off(`mousemove${EVT_NAMESPACE} touchmove${EVT_NAMESPACE}`).off(`mouseup${EVT_NAMESPACE} touchend${EVT_NAMESPACE}`);
 
 				$(`body`).css("userSelect", "");
 				this.panel.$pnl.find(`.panel-control`).show();
@@ -1968,6 +2213,7 @@ class JoystickMenu {
 				this.panel.render();
 				this.panel.board.doCheckFillSpaces();
 				MiscUtil.clearSelection();
+				this.board.reactor.fire("panelResize");
 			});
 		}
 
@@ -2033,17 +2279,15 @@ class AddMenu {
 
 	render () {
 		if (!this.$menu) {
-			const $menu = $(`<div class="panel-addmenu">`);
+			const $menu = $(`<div class="ui-modal__overlay">`);
 			this.$menu = $menu;
-			const $menuInner = $(`<div class="panel-addmenu-inner dropdown-menu">`).appendTo($menu);
+			const $menuInner = $(`<div class="ui-modal__inner dropdown-menu">`).appendTo($menu);
 			const $tabBar = $(`<div class="panel-addmenu-bar"/>`).appendTo($menuInner);
-			const $tabView = $(`<div class="panel-addmenu-view"/>`).appendTo($menuInner);
-			this.$tabView = $tabView;
+			this.$tabView = $(`<div class="panel-addmenu-view"/>`).appendTo($menuInner);
 
 			this.tabs.forEach(t => {
 				t.render();
-				const $head = $(`<div class="btn btn-default panel-addmenu-tab-head">${t.label}</div>`).appendTo($tabBar);
-				if (t.getSpotlight()) $head.addClass("btn-spotlight");
+				const $head = $(`<button class="btn btn-default panel-addmenu-tab-head">${t.label}</button>`).appendTo($tabBar);
 				const $body = $(`<div class="panel-addmenu-tab-body"/>`).appendTo($tabBar);
 				$body.append(t.get$Tab);
 				t.$head = $head;
@@ -2051,17 +2295,21 @@ class AddMenu {
 				$head.on("click", () => this.setActiveTab(t));
 			});
 
-			$menu.on("click", () => this.doClose());
+			$menu.on("click", () => {
+				this.doClose();
+
+				// undo entering "tabbed mode" if we close without adding a tab
+				if (this.pnl.isTabs && this.pnl.tabDatas.filter(it => !it.isDeleted).length === 1) {
+					this.pnl.isTabs = false;
+					this.pnl.doRenderTabs();
+				}
+			});
 			$menuInner.on("click", (e) => e.stopPropagation());
 		}
 	}
 
 	setPanel (pnl) {
 		this.pnl = pnl;
-	}
-
-	getPanel () {
-		return this.pnl;
 	}
 
 	doClose () {
@@ -2076,7 +2324,6 @@ class AddMenu {
 class AddMenuTab {
 	constructor (label) {
 		this.label = label;
-		this.spotlight = false;
 
 		this.$tab = null;
 		this.menu = null;
@@ -2093,14 +2340,6 @@ class AddMenuTab {
 	setMenu (menu) {
 		this.menu = menu;
 	}
-
-	setSpotlight (spotlight) {
-		this.spotlight = spotlight;
-	}
-
-	getSpotlight () {
-		return this.spotlight;
-	}
 }
 
 class AddMenuVideoTab extends AddMenuTab {
@@ -2111,11 +2350,15 @@ class AddMenuVideoTab extends AddMenuTab {
 
 	render () {
 		if (!this.$tab) {
-			const $tab = $(`<div class="panel-tab-list-wrapper underline-tabs" id="${this.tabId}"/>`);
+			const $tab = $(`<div class="ui-search__wrp-output underline-tabs" id="${this.tabId}"/>`);
 
-			const $wrpYT = $(`<div class="tab-body-row"/>`).appendTo($tab);
-			const $iptUrlYT = $(`<input class="form-control" placeholder="Paste YouTube URL">`).appendTo($wrpYT);
-			const $btnAddYT = $(`<div class="btn btn-primary">Embed</div>`).appendTo($wrpYT);
+			const $wrpYT = $(`<div class="ui-modal__row"/>`).appendTo($tab);
+			const $iptUrlYT = $(`<input class="form-control" placeholder="Paste YouTube URL">`)
+				.on("keydown", (e) => {
+					if (e.which === 13) $btnAddYT.click();
+				})
+				.appendTo($wrpYT);
+			const $btnAddYT = $(`<button class="btn btn-primary">Embed</button>`).appendTo($wrpYT);
 			$btnAddYT.on("click", () => {
 				let url = $iptUrlYT.val().trim();
 				const m = /https?:\/\/(www\.)?youtube\.com\/watch\?v=(.*?)(&.*$|$)/.exec(url);
@@ -2125,14 +2368,21 @@ class AddMenuVideoTab extends AddMenuTab {
 					this.menu.doClose();
 					$iptUrlYT.val("");
 				} else {
-					alert(`Please enter a URL of the form: "https://www.youtube.com/watch?v=XXXXXXX"`);
+					JqueryUtil.doToast({
+						content: `Please enter a URL of the form: "https://www.youtube.com/watch?v=XXXXXXX"`,
+						type: "danger"
+					});
 				}
 			});
 
-			const $wrpTwitch = $(`<div class="tab-body-row"/>`).appendTo($tab);
-			const $iptUrlTwitch = $(`<input class="form-control" placeholder="Paste Twitch URL">`).appendTo($wrpTwitch);
-			const $btnAddTwitch = $(`<div class="btn btn-primary">Embed</div>`).appendTo($wrpTwitch);
-			const $btnAddTwitchChat = $(`<div class="btn btn-primary">Embed Chat</div>`).appendTo($wrpTwitch);
+			const $wrpTwitch = $(`<div class="ui-modal__row"/>`).appendTo($tab);
+			const $iptUrlTwitch = $(`<input class="form-control" placeholder="Paste Twitch URL">`)
+				.on("keydown", (e) => {
+					if (e.which === 13) $btnAddTwitch.click();
+				})
+				.appendTo($wrpTwitch);
+			const $btnAddTwitch = $(`<button class="btn btn-primary">Embed</button>`).appendTo($wrpTwitch);
+			const $btnAddTwitchChat = $(`<button class="btn btn-primary">Embed Chat</button>`).appendTo($wrpTwitch);
 			const getTwitchM = (url) => {
 				return /https?:\/\/(www\.)?twitch\.tv\/(.*?)(\?.*$|$)/.exec(url);
 			};
@@ -2145,7 +2395,10 @@ class AddMenuVideoTab extends AddMenuTab {
 					this.menu.doClose();
 					$iptUrlTwitch.val("");
 				} else {
-					alert(`Please enter a URL of the form: "https://www.twitch.tv/XXXXXX"`);
+					JqueryUtil.doToast({
+						content: `Please enter a URL of the form: "https://www.twitch.tv/XXXXXX"`,
+						type: "danger"
+					});
 				}
 			});
 
@@ -2158,20 +2411,30 @@ class AddMenuVideoTab extends AddMenuTab {
 					this.menu.doClose();
 					$iptUrlTwitch.val("");
 				} else {
-					alert(`Please enter a URL of the form: "https://www.twitch.tv/XXXXXX"`);
+					JqueryUtil.doToast({
+						content: `Please enter a URL of the form: "https://www.twitch.tv/XXXXXX"`,
+						type: "danger"
+					});
 				}
 			});
 
-			const $wrpGeneric = $(`<div class="tab-body-row"/>`).appendTo($tab);
-			const $iptUrlGeneric = $(`<input class="form-control" placeholder="Paste any URL">`).appendTo($wrpGeneric);
-			const $btnAddGeneric = $(`<div class="btn btn-primary">Embed</div>`).appendTo($wrpGeneric);
+			const $wrpGeneric = $(`<div class="ui-modal__row"/>`).appendTo($tab);
+			const $iptUrlGeneric = $(`<input class="form-control" placeholder="Paste any URL">`)
+				.on("keydown", (e) => {
+					if (e.which === 13) $iptUrlGeneric.click();
+				})
+				.appendTo($wrpGeneric);
+			const $btnAddGeneric = $(`<button class="btn btn-primary">Embed</button>`).appendTo($wrpGeneric);
 			$btnAddGeneric.on("click", () => {
 				let url = $iptUrlGeneric.val().trim();
 				if (url) {
 					this.menu.pnl.doPopulate_GenericEmbed(url);
 					this.menu.doClose();
 				} else {
-					alert(`Please enter a URL`);
+					JqueryUtil.doToast({
+						content: `Please enter a URL!`,
+						type: "danger"
+					});
 				}
 			});
 
@@ -2188,10 +2451,10 @@ class AddMenuImageTab extends AddMenuTab {
 
 	render () {
 		if (!this.$tab) {
-			const $tab = $(`<div class="panel-tab-list-wrapper underline-tabs" id="${this.tabId}"/>`);
+			const $tab = $(`<div class="ui-search__wrp-output underline-tabs" id="${this.tabId}"/>`);
 
-			const $wrpImgur = $(`<div class="tab-body-row"/>`).appendTo($tab);
-			$(`<span>Imgur (Anonymous Upload) <i class="text-muted">(accepts <a href="https://help.imgur.com/hc/articles/115000083326" target="_blank">imgur-friendly formats</a>)</i></span>`).appendTo($wrpImgur);
+			const $wrpImgur = $(`<div class="ui-modal__row"/>`).appendTo($tab);
+			$(`<span>Imgur (Anonymous Upload) <i class="text-muted">(accepts <a href="https://help.imgur.com/hc/articles/115000083326" target="_blank" rel="noopener">imgur-friendly formats</a>)</i></span>`).appendTo($wrpImgur);
 			const $iptFile = $(`<input type="file" class="hidden">`).on("change", (evt) => {
 				const input = evt.target;
 				const reader = new FileReader();
@@ -2213,12 +2476,16 @@ class AddMenuImageTab extends AddMenuTab {
 						},
 						error: (error) => {
 							try {
-								alert(`Failed to upload: ${JSON.parse(error.responseText).data.error}`);
-							} catch (e) {
-								alert("Failed to upload: Unknown error");
-								setTimeout(() => {
-									throw e
+								JqueryUtil.doToast({
+									content: `Failed to upload: ${JSON.parse(error.responseText).data.error}`,
+									type: "danger"
 								});
+							} catch (e) {
+								JqueryUtil.doToast({
+									content: "Failed to upload: Unknown error",
+									type: "danger"
+								});
+								setTimeout(() => { throw e });
 							}
 							this.menu.pnl.doPopulate_Empty(ix);
 						}
@@ -2232,22 +2499,29 @@ class AddMenuImageTab extends AddMenuTab {
 				const ix = this.menu.pnl.doPopulate_Loading("Uploading"); // will be null if not in tabbed mode
 				this.menu.doClose();
 			}).appendTo($tab);
-			const $btnAdd = $(`<div class="btn btn-primary">Upload</div>`).appendTo($wrpImgur);
+			const $btnAdd = $(`<button class="btn btn-primary">Upload</button>`).appendTo($wrpImgur);
 			$btnAdd.on("click", () => {
 				$iptFile.click();
 			});
-			$(`<hr class="tab-body-row-sep"/>`).appendTo($tab);
+			$(`<hr class="ui-modal__row-sep"/>`).appendTo($tab);
 
-			const $wrpUtl = $(`<div class="tab-body-row"/>`).appendTo($tab);
-			const $iptUrl = $(`<input class="form-control" placeholder="Paste image URL">`).appendTo($wrpUtl);
-			const $btnAddUrl = $(`<div class="btn btn-primary">Add</div>`).appendTo($wrpUtl);
+			const $wrpUtl = $(`<div class="ui-modal__row"/>`).appendTo($tab);
+			const $iptUrl = $(`<input class="form-control" placeholder="Paste image URL">`)
+				.on("keydown", (e) => {
+					if (e.which === 13) $btnAddUrl.click();
+				})
+				.appendTo($wrpUtl);
+			const $btnAddUrl = $(`<button class="btn btn-primary">Add</button>`).appendTo($wrpUtl);
 			$btnAddUrl.on("click", () => {
 				let url = $iptUrl.val().trim();
 				if (url) {
 					this.menu.pnl.doPopulate_Image(url);
 					this.menu.doClose();
 				} else {
-					alert(`Please enter a URL`);
+					JqueryUtil.doToast({
+						content: `Please enter a URL!`,
+						type: "danger"
+					});
 				}
 			});
 
@@ -2264,38 +2538,69 @@ class AddMenuSpecialTab extends AddMenuTab {
 
 	render () {
 		if (!this.$tab) {
-			const $tab = $(`<div class="panel-tab-list-wrapper underline-tabs" id="${this.tabId}"/>`);
+			const $tab = $(`<div class="ui-search__wrp-output underline-tabs" id="${this.tabId}"/>`);
 
-			const $wrpRoller = $(`<div class="tab-body-row"><span>Dice Roller <i class="text-muted">(pins the existing dice roller to a panel)</i></span></div>`).appendTo($tab);
-			const $btnRoller = $(`<div class="btn btn-primary">Pin</div>`).appendTo($wrpRoller);
+			const $wrpRoller = $(`<div class="ui-modal__row"><span>Dice Roller <i class="text-muted">(pins the existing dice roller to a panel)</i></span></div>`).appendTo($tab);
+			const $btnRoller = $(`<button class="btn btn-primary">Pin</button>`).appendTo($wrpRoller);
 			$btnRoller.on("click", () => {
-				EntryRenderer.dice.bindDmScreenPanel(this.menu.pnl);
+				Renderer.dice.bindDmScreenPanel(this.menu.pnl);
 				this.menu.doClose();
 			});
-			$(`<hr class="tab-body-row-sep"/>`).appendTo($tab);
+			$(`<hr class="ui-modal__row-sep"/>`).appendTo($tab);
 
-			const $wrpTracker = $(`<div class="tab-body-row"><span>Initiative Tracker</span></div>`).appendTo($tab);
-			const $btnTracker = $(`<div class="btn btn-primary">Add</div>`).appendTo($wrpTracker);
+			const $wrpTracker = $(`<div class="ui-modal__row"><span>Initiative Tracker</span></div>`).appendTo($tab);
+			const $btnTracker = $(`<button class="btn btn-primary">Add</button>`).appendTo($wrpTracker);
 			$btnTracker.on("click", () => {
 				this.menu.pnl.doPopulate_InitiativeTracker();
 				this.menu.doClose();
 			});
-			$(`<hr class="tab-body-row-sep"/>`).appendTo($tab);
 
-			const $wrpText = $(`<div class="tab-body-row"><span>Basic Text Box <i class="text-muted">(for a feature-rich editor, embed a Google Doc or similar)</i></span></div>`).appendTo($tab);
-			const $btnText = $(`<div class="btn btn-primary">Add</div>`).appendTo($wrpText);
+			const $btnPlayertracker = $(`<button class="btn btn-primary">Add</button>`)
+				.click(() => {
+					this.menu.pnl.doPopulate_InitiativeTrackerPlayer();
+					this.menu.doClose();
+				});
+
+			$$`<div class="ui-modal__row">
+			<span>Initiative Tracker Player View</span>
+			${$btnPlayertracker}
+			</div>`.appendTo($tab);
+
+			$(`<hr class="ui-modal__row-sep"/>`).appendTo($tab);
+
+			const $wrpText = $(`<div class="ui-modal__row"><span>Basic Text Box <i class="text-muted">(for a feature-rich editor, embed a Google Doc or similar)</i></span></div>`).appendTo($tab);
+			const $btnText = $(`<button class="btn btn-primary">Add</button>`).appendTo($wrpText);
 			$btnText.on("click", () => {
 				this.menu.pnl.doPopulate_TextBox();
 				this.menu.doClose();
 			});
-			$(`<hr class="tab-body-row-sep"/>`).appendTo($tab);
+			$(`<hr class="ui-modal__row-sep"/>`).appendTo($tab);
 
-			const $wrpConverter = $(`<div class="tab-body-row"><span>Imperial-Metric Unit Converter</span></div>`).appendTo($tab);
-			const $btnConverter = $(`<div class="btn btn-primary">Add</div>`).appendTo($wrpConverter);
-			$btnConverter.on("click", () => {
+			const $wrpUnitConverter = $(`<div class="ui-modal__row"><span>Imperial-Metric Unit Converter</span></div>`).appendTo($tab);
+			const $btnUnitConverter = $(`<button class="btn btn-primary">Add</button>`).appendTo($wrpUnitConverter);
+			$btnUnitConverter.on("click", () => {
 				this.menu.pnl.doPopulate_UnitConverter();
 				this.menu.doClose();
 			});
+
+			const $wrpMoneyConverter = $(`<div class="ui-modal__row"><span>Coin Converter</span></div>`).appendTo($tab);
+			const $btnMoneyConverter = $(`<button class="btn btn-primary">Add</button>`).appendTo($wrpMoneyConverter);
+			$btnMoneyConverter.on("click", () => {
+				this.menu.pnl.doPopulate_MoneyConverter();
+				this.menu.doClose();
+			});
+
+			// TODO enable this
+			/*
+			$(`<hr class="ui-modal__row-sep"/>`).appendTo($tab);
+
+			const $wrpSundial = $(`<div class="ui-modal__row"><span>In-Game Clock</span></div>`).appendTo($tab);
+			const $btnSundial = $(`<button class="btn btn-primary">Add</button>`).appendTo($wrpSundial);
+			$btnSundial.on("click", () => {
+				this.menu.pnl.doPopulate_Sundial();
+				this.menu.doClose();
+			});
+			*/
 
 			this.$tab = $tab;
 		}
@@ -2313,8 +2618,8 @@ class AddMenuListTab extends AddMenuTab {
 
 	render () {
 		if (!this.$tab) {
-			const $tab = $(`<div class="panel-tab-list-wrapper" id="${this.tabId}"/>`);
-			const $srch = $(`<input class="panel-tab-search search form-control" autocomplete="off" placeholder="Search list...">`).appendTo($tab);
+			const $tab = $(`<div class="ui-search__wrp-output" id="${this.tabId}"/>`);
+			const $srch = $(`<input class="ui-search__ipt-search search form-control" autocomplete="off" placeholder="Search list...">`).appendTo($tab);
 			const $list = $(`<div class="list panel-tab-list"/>`).appendTo($tab);
 			let temp = "";
 			this.content.forEach(d => {
@@ -2341,9 +2646,19 @@ class AddMenuListTab extends AddMenuTab {
 }
 
 class AddMenuSearchTab extends AddMenuTab {
+	static _getTitle (subType) {
+		switch (subType) {
+			case "content": return "Content";
+			case "rules": return "Rules";
+			case "adventures": return "Adventures";
+			case "books": return "Books";
+			default: throw new Error(`Unhandled search tab subtype: "${subType}"`);
+		}
+	}
+
 	constructor (indexes, subType = "content") {
-		super(subType === "content" ? "Content" : "Rules");
-		this.tabId = this.genTabId(subType === "content" ? "content" : "rules");
+		super(AddMenuSearchTab._getTitle(subType));
+		this.tabId = this.genTabId(subType);
 		this.indexes = indexes;
 		this.cat = "ALL";
 		this.subType = subType;
@@ -2355,6 +2670,82 @@ class AddMenuSearchTab extends AddMenuTab {
 		this.doSearch = null;
 	}
 
+	_getSearchOptions () {
+		switch (this.subType) {
+			case "content": return {
+				fields: {
+					n: {boost: 5, expand: true},
+					s: {expand: true}
+				},
+				bool: "AND",
+				expand: true
+			};
+			case "rules": return {
+				fields: {
+					h: {boost: 5, expand: true},
+					s: {expand: true}
+				},
+				bool: "AND",
+				expand: true
+			};
+			case "adventures":
+			case "books": return {
+				fields: {
+					c: {boost: 5, expand: true},
+					n: {expand: true}
+				},
+				bool: "AND",
+				expand: true
+			};
+			default: throw new Error(`Unhandled search tab subtype: "${this.subType}"`);
+		}
+	}
+
+	_get$Row (r) {
+		switch (this.subType) {
+			case "content": return $(`
+				<div class="ui-search__row">
+					<span>${r.doc.n}</span>
+					<span>${r.doc.s ? `<i title="${Parser.sourceJsonToFull(r.doc.s)}">${Parser.sourceJsonToAbv(r.doc.s)}${r.doc.p ? ` p${r.doc.p}` : ""}</i>` : ""}</span>
+				</div>
+			`);
+			case "rules": return $(`
+				<div class="ui-search__row">
+					<span>${r.doc.h}</span>
+					<span><i>${r.doc.n}, ${r.doc.s}</i></span>
+				</div>
+			`);
+			case "adventures":
+			case "books": return $(`
+				<div class="ui-search__row">
+					<span>${r.doc.c}</span>
+					<span><i>${r.doc.n}${r.doc.o ? `, ${r.doc.o}` : ""}</i></span>
+				</div>
+			`);
+			default: throw new Error(`Unhandled search tab subtype: "${this.subType}"`);
+		}
+	}
+
+	_getAllTitle () {
+		switch (this.subType) {
+			case "content": return "All Categories";
+			case "rules": return "All Categories";
+			case "adventures": return "All Adventures";
+			case "books": return "All Books";
+			default: throw new Error(`Unhandled search tab subtype: "${this.subType}"`);
+		}
+	}
+
+	_getCatOptionText (it) {
+		switch (this.subType) {
+			case "content": return it;
+			case "rules": return it;
+			case "adventures":
+			case "books": return Parser.sourceJsonToFull(it);
+			default: throw new Error(`Unhandled search tab subtype: "${this.subType}"`);
+		}
+	}
+
 	render () {
 		const flags = {
 			doClickFirst: false,
@@ -2363,76 +2754,54 @@ class AddMenuSearchTab extends AddMenuTab {
 
 		this.showMsgIpt = () => {
 			flags.isWait = true;
-			this.$results.empty().append(DmScreenUtil.getSearchEnter());
+			this.$results.empty().append(UiUtil.getSearchEnter());
 		};
 
 		const showMsgDots = () => {
-			this.$results.empty().append(DmScreenUtil.getSearchLoading());
+			this.$results.empty().append(UiUtil.getSearchLoading());
 		};
 
 		const showNoResults = () => {
 			flags.isWait = true;
-			this.$results.empty().append(DmScreenUtil.getSearchEnter());
+			this.$results.empty().append(UiUtil.getSearchEnter());
 		};
 
 		this.doSearch = () => {
 			const srch = this.$srch.val().trim();
-			const MAX_RESULTS = 75; // hard cap results
 
-			const searchOptions = this.subType === "content"
-				? {
-					fields: {
-						n: {boost: 5, expand: true},
-						s: {expand: true}
-					},
-					bool: "AND",
-					expand: true
-				}
-				: {
-					fields: {
-						h: {boost: 5, expand: true},
-						s: {expand: true}
-					},
-					bool: "AND",
-					expand: true
-				};
-
+			const searchOptions = this._getSearchOptions();
 			const index = this.indexes[this.cat];
 			const results = index.search(srch, searchOptions);
 			const resultCount = results.length ? results.length : index.documentStore.length;
-			const toProcess = results.length ? results : Object.values(index.documentStore.docs).slice(0, 75).map(it => ({doc: it}));
+			const toProcess = results.length ? results : Object.values(index.documentStore.docs).slice(0, UiUtil.SEARCH_RESULTS_CAP).map(it => ({doc: it}));
 
 			this.$results.empty();
 			if (toProcess.length) {
 				const handleClick = (r) => {
-					if (this.subType === "content") {
-						const page = UrlUtil.categoryToPage(r.doc.c);
-						const source = r.doc.s;
-						const hash = r.doc.u;
+					switch (this.subType) {
+						case "content": {
+							const page = UrlUtil.categoryToPage(r.doc.c);
+							const source = r.doc.s;
+							const hash = r.doc.u;
 
-						this.menu.pnl.doPopulate_Stats(page, source, hash);
-					} else {
-						this.menu.pnl.doPopulate_Rules(r.doc.b, r.doc.p, r.doc.h);
+							this.menu.pnl.doPopulate_Stats(page, source, hash);
+							break;
+						}
+						case "rules": {
+							this.menu.pnl.doPopulate_Rules(r.doc.b, r.doc.p, r.doc.h);
+							break;
+						}
+						case "adventures": {
+							this.menu.pnl.doPopulate_Adventures(r.doc.a, r.doc.p);
+							break;
+						}
+						case "books": {
+							this.menu.pnl.doPopulate_Books(r.doc.b, r.doc.p);
+							break;
+						}
+						default: throw new Error(`Unhandled search tab subtype: "${this.subType}"`);
 					}
 					this.menu.doClose();
-				};
-
-				const get$Row = (r) => {
-					if (this.subType === "content") {
-						return $(`
-							<div class="panel-tab-results-row">
-								<span>${r.doc.n}</span>
-								<span>${r.doc.s ? `<i title="${Parser.sourceJsonToFull(r.doc.s)}">${Parser.sourceJsonToAbv(r.doc.s)}${r.doc.p ? ` p${r.doc.p}` : ""}</i>` : ""}</span>
-							</div>
-						`);
-					} else {
-						return $(`
-							<div class="panel-tab-results-row">
-								<span>${r.doc.h}</span>
-								<span><i>${r.doc.n}, ${r.doc.s}</i></span>
-							</div>
-						`);
-					}
 				};
 
 				if (flags.doClickFirst) {
@@ -2441,15 +2810,15 @@ class AddMenuSearchTab extends AddMenuTab {
 					return;
 				}
 
-				const res = toProcess.slice(0, MAX_RESULTS); // hard cap at 75 results
+				const res = toProcess.slice(0, UiUtil.SEARCH_RESULTS_CAP);
 
 				res.forEach(r => {
-					get$Row(r).on("click", () => handleClick(r)).appendTo(this.$results);
+					this._get$Row(r).on("click", () => handleClick(r)).appendTo(this.$results);
 				});
 
-				if (resultCount > MAX_RESULTS) {
-					const diff = resultCount - MAX_RESULTS;
-					this.$results.append(`<div class="panel-tab-results-row panel-tab-results-row-display-only">...${diff} more result${diff === 1 ? " was" : "s were"} hidden. Refine your search!</div>`);
+				if (resultCount > UiUtil.SEARCH_RESULTS_CAP) {
+					const diff = resultCount - UiUtil.SEARCH_RESULTS_CAP;
+					this.$results.append(`<div class="ui-search__row ui-search__row--readonly">...${diff} more result${diff === 1 ? " was" : "s were"} hidden. Refine your search!</div>`);
 				}
 			} else {
 				if (!srch.trim()) this.showMsgIpt();
@@ -2458,24 +2827,26 @@ class AddMenuSearchTab extends AddMenuTab {
 		};
 
 		if (!this.$tab) {
-			const $tab = $(`<div class="panel-tab-list-wrapper" id="${this.tabId}"/>`);
-			const $wrpCtrls = $(`<div class="panel-tab-controls"/>`).appendTo($tab);
+			const $tab = $(`<div class="ui-search__wrp-output" id="${this.tabId}"/>`);
+			const $wrpCtrls = $(`<div class="ui-search__wrp-controls ui-search__wrp-controls--in-tabs"/>`).appendTo($tab);
 
 			const $selCat = $(`
-				<select class="form-control panel-tab-cat">
-					<option value="ALL">All Categories</option>
+				<select class="form-control ui-search__sel-category">
+					<option value="ALL">${this._getAllTitle()}</option>
 				</select>
-			`).appendTo($wrpCtrls);
-			Object.keys(this.indexes).sort().filter(it => it !== "ALL").forEach(it => $selCat.append(`<option value="${it}">${it}</option>`));
+			`).appendTo($wrpCtrls).toggle(Object.keys(this.indexes).length !== 1);
+			Object.keys(this.indexes).sort().filter(it => it !== "ALL").forEach(it => {
+				$selCat.append(`<option value="${it}">${this._getCatOptionText(it)}</option>`)
+			});
 			$selCat.on("change", () => {
 				this.cat = $selCat.val();
 				this.doSearch();
 			});
 
-			const $srch = $(`<input class="panel-tab-search search form-control" autocomplete="off" placeholder="Search...">`).appendTo($wrpCtrls);
-			const $results = $(`<div class="panel-tab-results"/>`).appendTo($tab);
+			const $srch = $(`<input class="ui-search__ipt-search search form-control" autocomplete="off" placeholder="Search...">`).appendTo($wrpCtrls);
+			const $results = $(`<div class="ui-search__wrp-results"/>`).appendTo($tab);
 
-			DmScreenUtil.bindAutoSearch($srch, {
+			UiUtil.bindAutoSearch($srch, {
 				flags: flags,
 				search: this.doSearch,
 				showWait: showMsgDots
@@ -2497,23 +2868,21 @@ class AddMenuSearchTab extends AddMenuTab {
 }
 
 class RuleLoader {
-	static pFill (book) {
-		return DataUtil.loadJSON(`data/generated/${book}.json`).then(data => new Promise((resolve) => {
-			const $$$ = RuleLoader.cache;
+	static async pFill (book) {
+		const $$$ = RuleLoader.cache;
+		if ($$$[book]) return $$$[book];
 
-			Object.keys(data.data).forEach(b => {
-				const ref = data.data[b];
-				if (!$$$[b]) $$$[b] = {};
-				ref.forEach((c, i) => {
-					if (!$$$[b][i]) $$$[b][i] = {};
-					c.entries.forEach(s => {
-						$$$[b][i][s.name] = s;
-					});
-				})
+		const data = await DataUtil.loadJSON(`data/generated/${book}.json`);
+		Object.keys(data.data).forEach(b => {
+			const ref = data.data[b];
+			if (!$$$[b]) $$$[b] = {};
+			ref.forEach((c, i) => {
+				if (!$$$[b][i]) $$$[b][i] = {};
+				c.entries.forEach(s => {
+					$$$[b][i][s.name] = s;
+				});
 			});
-
-			resolve();
-		}));
+		});
 	}
 
 	static getFromCache (book, chapter, header) {
@@ -2522,650 +2891,45 @@ class RuleLoader {
 }
 RuleLoader.cache = {};
 
-class InitiativeTracker {
-	static getConditions () {
-		return [
-			{
-				name: "Blinded",
-				color: "#434343"
-			},
-			{
-				name: "Charmed",
-				color: "#f01789"
-			},
-			{
-				name: "Concentrating",
-				color: "#009f7a",
-				condName: null
-			},
-			{
-				name: "Deafened",
-				color: "#c7d0d3"
-			},
-			{
-				name: "Drunk",
-				color: "#ffcc00"
-			},
-			{
-				name: "Exhausted",
-				color: "#947a47",
-				condName: "Exhaustion"
-			},
-			{
-				name: "Frightened",
-				color: "#c9ca18"
-			},
-			{
-				name: "Grappled",
-				color: "#8784a0"
-			},
-			{
-				name: "Incapacitated",
-				color: "#3165a0"
-			},
-			{
-				name: "Invisible",
-				color: "#7ad2d6"
-			},
-			{
-				name: "!!On Fire!!",
-				color: "#ff6800",
-				condName: null
-			},
-			{
-				name: "Paralyzed",
-				color: "#c00900"
-			},
-			{
-				name: "Petrified",
-				color: "#a0a0a0"
-			},
-			{
-				name: "Poisoned",
-				color: "#4dc200"
-			},
-			{
-				name: "Prone",
-				color: "#5e60a0"
-			},
-			{
-				name: "Restrained",
-				color: "#d98000"
-			},
-			{
-				name: "Stunned",
-				color: "#a23bcb"
-			},
-			{
-				name: "Unconscious",
-				color: "#1c2383"
-			}
-		];
+class AdventureOrBookLoader {
+	constructor (type) {
+		this._type = type;
+		this._cache = {};
 	}
 
-	static make$Tracker (board, state) {
-		const ALPHA = "ALPHA";
-		const NUM = "NUMBER";
-		const ASC = "ASC";
-		const DESC = "DESC";
-
-		let sort = state.s || NUM;
-		let dir = state.d || DESC;
-		let isLocked = false;
-
-		const $wrpTracker = $(`<div class="dm-init"/>`);
-
-		const $wrpTop = $(`<div style="display: flex; flex-direction: column;"/>`).appendTo($wrpTracker);
-		const $wrpHeader = $(`
-			<div class="dm-init-wrp-header">
-				<div class="dm-init-header">Creature/Status</div>
-				<div class="dm-init-row-rhs" style="margin-right: 9px;">
-					<div class="dm-init-header" title="Hit Points">HP</div>
-					<div class="dm-init-header" title="Initiative Score">#</div>
-					<div style="width: 24px;"/>
-				</div>
-			</div>
-		`).appendTo($wrpTop);
-
-		const $wrpEntries = $(`<div class="dm-init-wrp-entries"/>`).appendTo($wrpTop);
-
-		const $wrpControls = $(`<div class="dm-init-wrp-controls"/>`).appendTo($wrpTracker);
-
-		const $wrpLock = $(`<div/>`).appendTo($wrpControls);
-		const $btnLock = $(`<div class="btn btn-danger" title="Lock Tracker"><span class="glyphicon glyphicon-lock"></span></div>`).appendTo($wrpLock);
-		$btnLock.on("click", () => {
-			if (isLocked) {
-				$btnLock.removeClass("btn-success").addClass("btn-danger");
-				$(".dm-init-lockable").toggleClass("disabled");
-				$("input.dm-init-lockable").prop('disabled', false);
-			} else {
-				$btnLock.removeClass("btn-danger").addClass("btn-success");
-				$(".dm-init-lockable").toggleClass("disabled");
-				$("input.dm-init-lockable").prop('disabled', true);
-			}
-			isLocked = !isLocked;
-		});
-
-		const $wrpAddNext = $(`<div/>`).appendTo($wrpControls);
-		const $btnAdd = $(`<div class="btn btn-primary dm-init-lockable" title="Add Player" style="margin-right: 7px;"><span class="glyphicon glyphicon-plus"></span></div>`).appendTo($wrpAddNext);
-		const $btnAddMonster = $(`<div class="btn btn-success dm-init-lockable" title="Add Monster" style="margin-right: 7px;"><span class="glyphicon glyphicon-print"></span></div>`).appendTo($wrpAddNext);
-		const $btnNext = $(`<div class="btn btn-default" title="Next Turn"><span class="glyphicon glyphicon-step-forward"></span></div>`).appendTo($wrpAddNext);
-		$btnNext.on("click", () => setNextActive());
-
-		const $wrpSort = $(`<div/>`).appendTo($wrpControls);
-		const $btnSortAlpha = $(`<div title="Sort Alphabetically" class="btn btn-default" style="margin-right: 7px;"><span class="glyphicon glyphicon-sort-by-alphabet"></span></div>`).appendTo($wrpSort);
-		$btnSortAlpha.on("click", () => {
-			if (sort === ALPHA) flipDir();
-			else sort = ALPHA;
-			doSort(ALPHA);
-		});
-		const $btnSortNum = $(`<div title="Sort Numerically" class="btn btn-default"><span class="glyphicon glyphicon-sort-by-order"></span></div>`).appendTo($wrpSort);
-		$btnSortNum.on("click", () => {
-			if (sort === NUM) flipDir();
-			else sort = NUM;
-			doSort(NUM);
-		});
-		const $btnReset = $(`<div title="Reset" class="btn btn-danger dm-init-lockable"><span class="glyphicon glyphicon-trash"></span></div>`).appendTo($wrpControls);
-		$btnReset.on("click", () => {
-			if (isLocked) return;
-			$wrpEntries.empty();
-			sort = NUM;
-			dir = DESC;
-		});
-
-		$btnAdd.on("click", () => {
-			if (isLocked) return;
-			makeRow();
-			doSort(sort);
-			checkSetFirstActive();
-		});
-
-		$btnAddMonster.on("click", () => {
-			if (isLocked) return;
-			const flags = {
-				doClickFirst: false,
-				isWait: false
-			};
-
-			const $menu = $(`<div class="panel-addmenu">`);
-			const $menuInner = $(`<div class="panel-addmenu-inner dropdown-menu">`).appendTo($menu);
-			const doClose = () => $menu.remove();
-			$menu.on("click", doClose);
-			$menuInner.on("click", (e) => e.stopPropagation());
-			$(`body`).append($menu);
-
-			const $controls = $(`<div class="split" style="flex-shrink: 0"/>`).appendTo($menuInner);
-			const $srch = $(`<input class="panel-tab-search search form-control" autocomplete="off" placeholder="Search...">`).appendTo($controls);
-			const $wrpCount = $(`
-				<div class="panel-tab-search-sub-wrp" style="padding-right: 0;"> 
-					<div style="margin-right: 7px;">Add</div>
-					<label class="panel-tab-search-sub-lbl"><input type="radio" name="mon-count" class="panel-tab-search-sub-ipt" value="1" checked> 1</label>
-					<label class="panel-tab-search-sub-lbl"><input type="radio" name="mon-count" class="panel-tab-search-sub-ipt" value="2"> 2</label>
-					<label class="panel-tab-search-sub-lbl"><input type="radio" name="mon-count" class="panel-tab-search-sub-ipt" value="3"> 3</label>
-					<label class="panel-tab-search-sub-lbl"><input type="radio" name="mon-count" class="panel-tab-search-sub-ipt" value="5"> 5</label>
-					<label class="panel-tab-search-sub-lbl"><input type="radio" name="mon-count" class="panel-tab-search-sub-ipt" value="8"> 8</label>
-					<label class="panel-tab-search-sub-lbl"><input type="radio" name="mon-count" class="panel-tab-search-sub-ipt" value="-1"> <input type="number" class="form-control panel-tab-search-sub-ipt-custom" value="13" min="1"></label>
-				</div>
-			`).appendTo($controls);
-			$wrpCount.find(`.panel-tab-search-sub-ipt-custom`).click(function () {
-				$wrpCount.find(`.panel-tab-search-sub-ipt[value=-1]`).prop("checked", true);
-				$(this).select();
-			});
-			const getCount = () => {
-				const val = $wrpCount.find(`[name="mon-count"]`).filter(":checked").val();
-				if (val === "-1") return Number($wrpCount.find(`.panel-tab-search-sub-ipt-custom`).val());
-				return Number(val);
-			};
-
-			const $wrpCbRoll = $(`<label class="panel-tab-search-sub-wrp"> Roll HP</label>`).appendTo($controls);
-			const $cbRoll = $(`<input type="checkbox">`).prop("checked", InitiativeTracker._uiRollHp).on("change", () => InitiativeTracker._uiRollHp = $cbRoll.prop("checked")).prependTo($wrpCbRoll);
-			const $results = $(`<div class="panel-tab-results"/>`).appendTo($menuInner);
-
-			this.showMsgIpt = () => {
-				flags.isWait = true;
-				$results.empty().append(DmScreenUtil.getSearchEnter());
-			};
-
-			const showMsgDots = () => $results.empty().append(DmScreenUtil.getSearchLoading());
-
-			const showNoResults = () => {
-				flags.isWait = true;
-				$results.empty().append(DmScreenUtil.getSearchNoResults());
-			};
-
-			const doSearch = () => {
-				const srch = $srch.val().trim();
-				const MAX_RESULTS = 75; // hard cap results
-
-				const index = board.availContent["Creature"];
-				const results = index.search(srch, {
-					fields: {
-						n: {boost: 5, expand: true},
-						s: {expand: true}
-					},
-					bool: "AND",
-					expand: true
-				});
-				const resultCount = results.length ? results.length : index.documentStore.length;
-				const toProcess = results.length ? results : Object.values(index.documentStore.docs).slice(0, 75).map(it => ({doc: it}));
-
-				$results.empty();
-				if (toProcess.length) {
-					const handleClick = (r) => {
-						const name = r.doc.n;
-						const source = r.doc.s;
-						const count = getCount();
-						if (isNaN(count) || count < 1) return;
-
-						const $row = makeRow(name, undefined, undefined, false, source, undefined, $cbRoll.prop("checked"));
-						if (count > 1) {
-							for (let i = 1; i < count; ++i) makeRow(name, undefined, undefined, false, source, undefined, $cbRoll.prop("checked"));
-						}
-						doSort(sort);
-						checkSetFirstActive();
-						doClose();
-					};
-
-					const get$Row = (r) => {
-						return $(`
-							<div class="panel-tab-results-row">
-								<span>${r.doc.n}</span>
-								<span>${r.doc.s ? `<i title="${Parser.sourceJsonToFull(r.doc.s)}">${Parser.sourceJsonToAbv(r.doc.s)}${r.doc.p ? ` p${r.doc.p}` : ""}</i>` : ""}</span>
-							</div>
-						`);
-					};
-
-					if (flags.doClickFirst) {
-						handleClick(toProcess[0]);
-						flags.doClickFirst = false;
-						return;
-					}
-
-					const res = toProcess.slice(0, MAX_RESULTS); // hard cap at 75 results
-
-					res.forEach(r => get$Row(r).on("click", () => handleClick(r)).appendTo($results));
-
-					if (resultCount > MAX_RESULTS) {
-						const diff = resultCount - MAX_RESULTS;
-						$results.append(`<div class="panel-tab-results-row panel-tab-results-row-display-only">...${diff} more result${diff === 1 ? " was" : "s were"} hidden. Refine your search!</div>`);
-					}
-				} else {
-					if (!srch.trim()) showMsgIpt();
-					else showNoResults();
-				}
-			};
-
-			DmScreenUtil.bindAutoSearch($srch, {
-				flags: flags,
-				search: doSearch,
-				showWait: showMsgDots
-			});
-
-			$srch.focus();
-			doSearch();
-		});
-
-		$wrpTracker.data("getState", () => {
-			const rows = $wrpEntries.find(`.dm-init-row`).map((i, e) => {
-				const $conds = $(e).find(`.dm-init-cond`);
-				return {
-					n: $(e).find(`input.name`).val(),
-					h: $(e).find(`input.hp`).val(),
-					i: $(e).find(`input.score`).val(),
-					a: 0 + $(e).hasClass(`dm-init-row-active`),
-					s: $(e).find(`input.source`).val(),
-					c: $conds.length ? $conds.map((i, e) => $(e).data("getState")()).get() : []
-				}
-			}).get();
-			return {
-				r: rows,
-				s: sort,
-				d: dir,
-				m: InitiativeTracker._uiRollHp
-			};
-		});
-
-		InitiativeTracker._uiRollHp = !!state.m;
-		(state.r || []).forEach(r => {
-			makeRow(r.n, r.h, r.i, r.a, r.s, r.c);
-		});
-		checkSetFirstActive();
-
-		function setNextActive () {
-			const $rows = $wrpEntries.find(`.dm-init-row`);
-
-			const $rowsActive = $rows.filter(`.dm-init-row-active`).each((i, e) => {
-				const $e = $(e);
-
-				// tick down any conditions
-				const $conds = $e.find(`.dm-init-cond`);
-				if ($conds.length) $conds.each((i, e) => $(e).data("doTickDown")());
-
-				$e.removeClass(`dm-init-row-active`);
-			});
-
-			let ix = $rows.index($rowsActive.get($rowsActive.length - 1)) + 1;
-
-			const nxt = $rows.get(ix++);
-			if (nxt) {
-				const $nxt = $(nxt);
-				let $curr = $nxt;
-				do {
-					// if names and initiatives are the same, skip forwards (groups of monsters)
-					if ($curr.find(`input.name`).val() === $nxt.find(`input.name`).val() &&
-						$curr.find(`input.score`).val() === $nxt.find(`input.score`).val()) {
-						$curr.addClass(`dm-init-row-active`);
-						const curr = $rows.get(ix++);
-						if (curr) $curr = $(curr);
-						else $curr = null;
-					} else break;
-				} while ($curr);
-			} else checkSetFirstActive();
+	_getJsonPath (bookOrAdventure) {
+		switch (this._type) {
+			case "adventure": return `data/adventure/adventure-${bookOrAdventure.toLowerCase()}.json`
+			case "book": return `data/book/book-${bookOrAdventure.toLowerCase()}.json`
+			default: throw new Error(`Unknown loader type "${this._type}"`)
 		}
+	}
 
-		function makeRow (name = "", hp = "", init = "", isActive, source, conditions = [], rollHp = false) {
-			const isMon = !!source;
+	async pFill (bookOrAdventure) {
+		if (this._cache[bookOrAdventure]) return this._cache[bookOrAdventure];
 
-			const $wrpRow = $(`<div class="dm-init-row ${isActive ? "dm-init-row-active" : ""}"/>`);
+		const data = await DataUtil.loadJSON(this._getJsonPath(bookOrAdventure));
+		this._cache[bookOrAdventure] = {};
+		data.data.forEach((chap, i) => this._cache[bookOrAdventure][i] = chap);
+	}
 
-			const $wrpLhs = $(`<div class="dm-init-row-lhs"/>`).appendTo($wrpRow);
-			const $iptName = $(`<input class="form-control input-sm name dm-init-lockable ${isMon ? "hidden" : ""}" placeholder="Name" value="${name}">`).appendTo($wrpLhs);
-			$iptName.on("change", () => doSort(ALPHA));
-			if (isMon) {
-				const $rows = $wrpEntries.find(`.dm-init-row`);
-				const curMon = $rows.find(".init-wrp-creature").filter((i, e) => $(e).parent().find(`input.name`).val() === name && $(e).parent().find(`input.source`).val() === source);
-				let monNum = null;
-				if (curMon.length) {
-					if (curMon.length === 1) {
-						const r = $(curMon.get(0));
-						r.find(`.init-wrp-creature-link`).append(` <span data-number="1">(1)</span>`);
-						monNum = 2;
-					} else {
-						monNum = curMon.map((i, e) => $(e).find(`span[data-number]`).data("number")).get().reduce((a, b) => Math.max(Number(a), Number(b)), 0) + 1;
-					}
-				}
-
-				const $monName = $(`
-					<div class="init-wrp-creature split">
-						<span class="init-wrp-creature-link">
-							${EntryRenderer.getDefaultRenderer().renderEntry(`{@creature ${name}|${source}}`)}
-							${monNum ? ` <span data-number="${monNum}">(${monNum})</span>` : ""}
-						</span>
-					</div>
-				`).appendTo($wrpLhs);
-				const $btnAnother = $(`<div class="btn btn-success btn-xs dm-init-lockable" title="Add Another (SHIFT for Roll New)"><span class="glyphicon glyphicon-plus"></span></div>`)
-					.click((evt) => {
-						if (isLocked) return;
-						makeRow(name, "", evt.shiftKey ? "" : $iptScore.val(), $wrpRow.hasClass("dm-init-row-active"), source, [], InitiativeTracker._uiRollHp);
-					}).appendTo($monName);
-				$(`<input class="source hidden" value="${source}">`).appendTo($wrpLhs);
-			}
-
-			function addCondition (name, color, turns) {
-				const state = {
-					name: name,
-					color: color,
-					turns: turns ? Number(turns) : null
-				};
-
-				const tickDown = (fromClick) => {
-					if (fromClick && state.turns == null) $cond.data("doRemove")(); // remove permanent conditions
-					if (state.turns == null) return;
-					else state.turns--;
-					if (state.turns <= 0) $cond.data("doRemove")();
-					else $cond.data("doRender")(fromClick);
-				};
-
-				const tickUp = (fromClick) => {
-					if (fromClick && state.turns == null) state.turns = 0; // convert permanent condition
-					if (state.turns == null) return;
-					else state.turns++;
-					$cond.data("doRender")(fromClick);
-				};
-
-				const render = (fromClick) => {
-					const turnsText = `${state.turns} turn${state.turns > 1 ? "s" : ""} remaining`;
-					const ttpText = state.name && state.turns ? `${state.name.escapeQuotes()} (${turnsText})` : state.name ? state.name.escapeQuotes() : state.turns ? turnsText : "";
-					const getBar = () => {
-						const style = state.turns == null || state.turns > 3
-							? `background-image: linear-gradient(45deg, ${state.color} 41.67%, transparent 41.67%, transparent 50%, ${state.color} 50%, ${state.color} 91.67%, transparent 91.67%, transparent 100%); background-size: 8.49px 8.49px;`
-							: `background: ${state.color};`;
-						return `<div class="dm-init-cond-bar" style="${style}"/>`
-					};
-					const inner = state.turns
-						? [...new Array(Math.min(state.turns, 3))].map(it => getBar()).join("")
-						: getBar();
-					$cond.attr("title", ttpText);
-
-					$cond.tooltip({trigger: "hover"});
-					if (ttpText) {
-						// update tooltips
-						$cond.tooltip("enable").tooltip("fixTitle");
-						if (fromClick) $cond.tooltip("show");
-					} else $cond.tooltip("disable");
-
-					$cond.html(inner);
-				};
-
-				const $cond = $(`<div class="dm-init-cond"/>`)
-					.data("doRender", render)
-					.data("doRemove", () => $cond.tooltip("destroy").remove())
-					.data("doTickDown", tickDown)
-					.data("doTickUp", tickUp)
-					.data("getState", () => JSON.parse(JSON.stringify(state)))
-					.on("contextmenu", (e) => e.ctrlKey || (e.preventDefault() || tickDown(true)))
-					.click(() => tickUp(true))
-					.appendTo($conds);
-				if (name) {
-					const cond = InitiativeTracker.getConditions().find(it => it.condName !== null && it.name.toLowerCase() === name.toLowerCase().trim());
-					if (cond) {
-						$cond.on("mouseover", (evt) => {
-							if (evt.shiftKey) {
-								evt.shiftKey = false;
-								EntryRenderer.hover.mouseOver(
-									evt,
-									$cond[0],
-									UrlUtil.PG_CONDITIONS_DISEASES,
-									SRC_PHB,
-									UrlUtil.URL_TO_HASH_BUILDER[UrlUtil.PG_CONDITIONS_DISEASES]({name: cond.condName || cond.name, source: SRC_PHB})
-								);
-							}
-						})
-					}
-				}
-				render();
-			}
-
-			const $wrpConds = $(`<div class="split"/>`).appendTo($wrpLhs);
-			const $conds = $(`<div class="dm-init-wrp-conds"/>`).appendTo($wrpConds);
-			const $btnCond = $(`<div class="btn btn-warning btn-xs dm-init-row-btn dm-init-row-btn-flag" title="Add Condition"><span class="glyphicon glyphicon-flag"/></div>`)
-				.appendTo($wrpConds)
-				.on("click", () => {
-					const $modal = $(`<div class="panel-addmenu-inner dropdown-menu" style="height: initial"/>`);
-					const $wrpModal = $(`<div class="panel-addmenu">`).appendTo($(`body`)).click(() => $wrpModal.remove());
-					$modal.appendTo($wrpModal);
-					const $modalInner = $(`<div class="modal-inner"/>`).appendTo($modal).click((evt) => evt.stopPropagation());
-
-					const $wrpRows = $(`<div class="dm-init-modal-wrp-rows"/>`).appendTo($modalInner);
-
-					const conds = InitiativeTracker.getConditions();
-					for (let i = 0; i < conds.length; i += 3) {
-						const $row = $(`<div class="row mb-2"/>`).appendTo($wrpRows);
-						const populateCol = (cond) => {
-							const $col = $(`<div class="col-xs-4 text-align-center"/>`).appendTo($row);
-							if (cond) {
-								const $btnCond = $(`<button class="btn btn-default btn-xs btn-dm-init-cond" style="background-color: ${cond.color} !important;">${cond.name}</button>`).appendTo($col).click(() => {
-									$iptName.val(cond.name);
-									$iptColor.val(cond.color);
-								});
-							}
-						};
-						[conds[i], conds[i + 1], conds[i + 2]].forEach(populateCol);
-					}
-
-					$wrpRows.append(`<hr>`);
-
-					$(`<div class="row mb-2">
-						<div class="col-xs-5">Name (optional)</div>
-						<div class="col-xs-2 text-align-center">Color</div>
-						<div class="col-xs-5">Duration (optional)</div>
-					</div>`).appendTo($wrpRows);
-					const $controls = $(`<div class="row mb-2"/>`).appendTo($wrpRows);
-					const [$wrpName, $wrpColor, $wrpTurns] = [...new Array(3)].map((it, i) => $(`<div class="col-xs-${i === 1 ? 2 : 5} text-align-center"/>`).appendTo($controls));
-					const $iptName = $(`<input class="form-control">`).appendTo($wrpName);
-					const $iptColor = $(`<input class="form-control" type="color" value="${MiscUtil.randomColor()}">`).appendTo($wrpColor);
-					const $iptTurns = $(`<input class="form-control" type="number" step="1" min="1" placeholder="Unlimited">`).appendTo($wrpTurns);
-					const $wrpAdd = $(`<div class="row">`).appendTo($wrpRows);
-					const $wrpAddInner = $(`<div class="col-xs-12 text-align-center">`).appendTo($wrpAdd);
-					const $btnAdd = $(`<button class="btn btn-primary">Set Condition</button>`)
-						.click(() => {
-							addCondition($iptName.val().trim(), $iptColor.val(), $iptTurns.val());
-							$wrpModal.remove();
-						})
-						.appendTo($wrpAddInner);
-				});
-
-			const $wrpRhs = $(`<div class="dm-init-row-rhs"/>`).appendTo($wrpRow);
-			let curHp = hp;
-
-			const $iptHp = $(`<input class="form-control input-sm hp" placeholder="HP" value="${curHp}">`)
-				.click(() => $iptHp.select())
-				.appendTo($wrpRhs);
-			const $iptScore = $(`<input class="form-control input-sm score dm-init-lockable" placeholder="#" type="number" value="${init}">`)
-				.on("change", () => doSort(NUM))
-				.click(() => $iptScore.select())
-				.appendTo($wrpRhs);
-
-			if (isMon && (curHp === "" || init === "")) {
-				const doUpdate = () => {
-					const m = EntryRenderer.hover._getFromCache(UrlUtil.PG_BESTIARY, source, hash);
-					const rollName = `Initiative Tracker \u2014 ${m.name}`;
-
-					// set or roll HP
-					if (!rollHp && m.hp.average) {
-						curHp = m.hp.average;
-						$iptHp.val(curHp);
-					} else if (rollHp && m.hp.formula) {
-						curHp = EntryRenderer.dice.roll2(m.hp.formula, {
-							user: false,
-							name: rollName,
-							label: "HP"
-						});
-						$iptHp.val(curHp);
-					}
-
-					// roll initiative
-					if (!init) {
-						const init = EntryRenderer.dice.roll2(`1d20${Parser.getAbilityModifier(m.dex)}`, {
-							user: false,
-							name: rollName,
-							label: "Initiative"
-						});
-
-						$iptScore.val(init);
-					}
-				};
-
-				const hash = UrlUtil.URL_TO_HASH_BUILDER[UrlUtil.PG_BESTIARY]({name: name, source: source});
-				if (EntryRenderer.hover._isCached(UrlUtil.PG_BESTIARY, source, hash)) doUpdate();
-				else {
-					EntryRenderer.hover._doFillThenCall(UrlUtil.PG_BESTIARY, source, hash, () => {
-						if (!curHp) doUpdate();
-					});
-				}
-			}
-
-			$iptHp.on("change", () => {
-				const nxt = $iptHp.val().trim();
-				if (nxt && /^[-+0-9]*$/.exec(curHp) && /^[-+0-9]*$/.exec(nxt)) {
-					const m = /^[+-]\d+/.exec(nxt);
-					const parts = nxt.split(/([+-]\d+)/).filter(it => it);
-					let temp = 0;
-					parts.forEach(p => temp += Number(p));
-					if (m) {
-						curHp = Number(curHp) + temp;
-					} else if (/[-+]/.exec(nxt)) {
-						curHp = temp;
-					} else {
-						curHp = Number(nxt);
-					}
-					$iptHp.val(curHp);
-				}
-			});
-
-			const $btnDel = $(`<div class="btn btn-danger btn-xs dm-init-row-btn dm-init-lockable" title="Delete"><span class="glyphicon glyphicon-trash"/></div>`)
-				.appendTo($wrpRhs)
-				.on("click", () => {
-					if (isLocked) return;
-					if ($wrpRow.hasClass(`dm-init-row-active`) && $wrpEntries.find(`.dm-init-row`).length > 1) setNextActive();
-					$wrpRow.remove();
-				});
-
-			conditions.forEach(c => addCondition(c.name, c.color, c.turns));
-			$wrpRow.appendTo($wrpEntries);
-
-			return $wrpRow;
-		}
-
-		function checkSetFirstActive () {
-			if ($wrpEntries.find(`.dm-init-row`).length && !$wrpEntries.find(`.dm-init-row-active`).length) {
-				const $rows = $wrpEntries.find(`.dm-init-row`);
-				const $first = $($rows.get(0));
-				$first.addClass(`dm-init-row-active`);
-				if ($rows.length > 1) {
-					for (let i = 1; i < $rows.length; ++i) {
-						const $nxt = $($rows.get(i));
-						if ($nxt.find(`input.name`).val() === $first.find(`input.name`).val() &&
-							$nxt.find(`input.score`).val() === $first.find(`input.score`).val()) {
-							$nxt.addClass(`dm-init-row-active`);
-						} else break;
-					}
-				}
-			}
-		}
-
-		function doSort (mode) {
-			if (sort !== mode) return;
-			const sorted = $wrpEntries.find(`.dm-init-row`).sort((a, b) => {
-				let aVal = $(a).find(`input.${sort === ALPHA ? "name" : "score"}`).val();
-				let bVal = $(b).find(`input.${sort === ALPHA ? "name" : "score"}`).val();
-				let first = 0;
-				let second = 0;
-				if (sort === NUM) {
-					aVal = Number(aVal);
-					bVal = Number(bVal);
-					first = dir === ASC ? SortUtil.ascSort(aVal, bVal) : SortUtil.ascSort(bVal, aVal);
-				} else {
-					let aVal2 = 0;
-					let bVal2 = 0;
-
-					const $aNum = $(a).find(`span[data-number]`);
-					if ($aNum.length) aVal2 = $aNum.data("number");
-					const $bNum = $(b).find(`span[data-number]`);
-					if ($bNum.length) bVal2 = $bNum.data("number");
-
-					first = dir === ASC ? SortUtil.ascSort(aVal, bVal) : SortUtil.ascSort(bVal, aVal);
-					second = dir === ASC ? SortUtil.ascSort(aVal2, bVal2) : SortUtil.ascSort(bVal2, aVal2);
-				}
-				return first || second;
-			});
-			$wrpEntries.append(sorted);
-		}
-
-		function flipDir () {
-			dir = dir === ASC ? DESC : ASC;
-		}
-
-		doSort(sort);
-
-		return $wrpTracker;
+	getFromCache (adventure, chapter) {
+		return this._cache[adventure][chapter];
 	}
 }
-InitiativeTracker._uiRollHp = false;
+
+class AdventureLoader extends AdventureOrBookLoader { constructor () { super("adventure"); } }
+class BookLoader extends AdventureOrBookLoader { constructor () { super("book"); } }
+
+const adventureLoader = new AdventureLoader();
+const bookLoader = new BookLoader();
 
 class NoteBox {
-	static make$Notebox (content) {
+	static make$Notebox (board, content) {
 		const $iptText = $(`<textarea class="panel-content-textarea" placeholder="Supports embedding (CTRL-click the text to activate the embed):\n • Clickable rollers,  [[1d20+2]]\n • Tags (as per the Demo page), {@creature goblin}">${content || ""}</textarea>`)
+			.on("keydown", () => {
+				board.doSaveStateDebounced();
+			})
 			.on("mousedown", (evt) => {
 				if (evt.ctrlKey) {
 					setTimeout(() => {
@@ -3227,7 +2991,7 @@ class NoteBox {
 							if (beltsAtPos === 2 && belts === 0) {
 								const str = beltStack.join("");
 								if (/^([1-9]\d*)?d([1-9]\d*)(\s?[+-]\s?\d+)?$/i.exec(str)) {
-									EntryRenderer.dice.roll2(str.replace(`[[`, "").replace(`]]`, ""), {
+									Renderer.dice.roll2(str.replace(`[[`, "").replace(`]]`, ""), {
 										user: false,
 										name: "DM Screen"
 									});
@@ -3236,8 +3000,8 @@ class NoteBox {
 							} else if (bracesAtPos === 1 && braces === 0) {
 								const str = braceStack.join("");
 								const tag = str.split(" ")[0].replace(/^@/, "");
-								if (EntryRenderer.HOVER_TAG_TO_PAGE[tag]) {
-									const r = EntryRenderer.getDefaultRenderer().renderEntry(`{${str}`);
+								if (Renderer.HOVER_TAG_TO_PAGE[tag]) {
+									const r = Renderer.get().render(`{${str}`);
 									evt.type = "mouseover";
 									evt.shiftKey = true;
 									$(r).trigger(evt);
@@ -3282,10 +3046,10 @@ class UnitConverter {
 				dirConv = 1;
 				updateDisplay();
 			};
-			$(`<td class="col-xs-3">${u.n1}</td>`).click(clickL).appendTo($tr);
-			$(`<td class="col-xs-3 code">×${u.x1.padStart(5)}</td>`).click(clickL).appendTo($tr);
-			$(`<td class="col-xs-3">${u.n2}</td>`).click(clickR).appendTo($tr);
-			$(`<td class="col-xs-3 code">×${u.x2.padStart(5)}</td>`).click(clickR).appendTo($tr);
+			$(`<td class="col-3">${u.n1}</td>`).click(clickL).appendTo($tr);
+			$(`<td class="col-3 code">×${u.x1.padStart(5)}</td>`).click(clickL).appendTo($tr);
+			$(`<td class="col-3">${u.n2}</td>`).click(clickR).appendTo($tr);
+			$(`<td class="col-3 code">×${u.x2.padStart(5)}</td>`).click(clickR).appendTo($tr);
 		});
 
 		const $wrpIpt = $(`<div class="split wrp-ipt"/>`).appendTo($wrpConverter);
@@ -3294,14 +3058,14 @@ class UnitConverter {
 		const $lblLeft = $(`<span class="bold"/>`).appendTo($wrpLeft);
 		const $iptLeft = $(`<textarea class="ipt form-control">${state.i || ""}</textarea>`).appendTo($wrpLeft);
 
-		const $btnSwitch = $(`<div class="btn btn-primary btn-switch">⇆</div>`).click(() => {
+		const $btnSwitch = $(`<button class="btn btn-primary btn-switch">⇆</button>`).click(() => {
 			dirConv = Number(!dirConv);
 			updateDisplay();
 		}).appendTo($wrpIpt);
 
 		const $wrpRight = $(`<div class="split-column wrp-ipt-inner"/>`).appendTo($wrpIpt);
 		const $lblRight = $(`<span class="bold"/>`).appendTo($wrpRight);
-		const $iptRight = $(`<textarea class="ipt form-control" disabled/>`).appendTo($wrpRight);
+		const $iptRight = $(`<textarea class="ipt form-control" disabled style="background: #0000"/>`).appendTo($wrpRight);
 
 		const updateDisplay = () => {
 			const it = units[ixConv];
@@ -3321,8 +3085,8 @@ class UnitConverter {
 				$iptLeft.removeClass(`ipt-invalid`);
 			};
 
-			const val = $iptLeft.val();
-			if (!val && !val.trim()) {
+			const val = ($iptLeft.val() || "").trim();
+			if (!val) {
 				showValid();
 				$iptRight.val("");
 			} else if (mMaths.exec(val)) {
@@ -3339,9 +3103,10 @@ class UnitConverter {
 					$iptRight.val("")
 				}
 			} else showInvalid();
+			board.doSaveStateDebounced();
 		};
 
-		DmScreenUtil.bindTypingEnd($iptLeft, handleInput);
+		UiUtil.bindTypingEnd($iptLeft, handleInput);
 
 		updateDisplay();
 
@@ -3366,77 +3131,98 @@ class UnitConverterUnit {
 	}
 }
 
-class DmScreenUtil {
-	static getSearchNoResults () {
-		return `<div class="panel-tab-message"><i>No results.</i></div>`;
-	}
+// TODO
+// a simple time keeping tool
+class Sundial {
+	static make$Sundail (board, state) {
+		const $wrpConverter = $(`<div class="dm_sundial"/>`);
 
-	static getSearchLoading () {
-		return `<div class="panel-tab-message"><i>\u2022\u2022\u2022</i></div>`;
-	}
+		$wrpConverter.data("getState", () => {
+			return {};
+		});
 
-	static getSearchEnter () {
-		return `<div class="panel-tab-message"><i>Enter a search.</i></div>`;
-	}
-
-	/**
-	 * @param $srch input element
-	 * @param opt should contain:
-	 *  `search` -- function which runs search
-	 *  `flags` -- object which contains:
-	 *    `isWait` -- flag tracking "waiting for user to stop typing"
-	 *    `doClickFirst` -- flag tracking "should first result get clicked"
-	 *  `showWait` -- function which displays loading dots
-	 */
-	static bindAutoSearch ($srch, opt) {
-		DmScreenUtil.bindTypingEnd(
-			$srch,
-			() => {
-				opt.search();
-			},
-			(e) => {
-				if (e.which === 13) {
-					opt.flags.doClickFirst = true;
-					opt.search();
-				}
-			},
-			() => {
-				if (opt.flags.isWait) {
-					opt.flags.isWait = false;
-					opt.showWait();
-				}
-			},
-			() => {
-				if ($srch.val() && $srch.val().trim().length) opt.search();
-			}
-		);
-	}
-
-	static bindTypingEnd ($ipt, fnKeyup, fnKeypress, fnKeydown, fnClick) {
-		let typeTimer;
-		$ipt.on("keyup", (e) => {
-			clearTimeout(typeTimer);
-			typeTimer = setTimeout(() => {
-				fnKeyup(e);
-			}, DmScreenUtil.TYPE_TIMEOUT_MS);
-		});
-		$ipt.on("keypress", (e) => {
-			if (fnKeypress) fnKeypress(e);
-		});
-		$ipt.on("keydown", (e) => {
-			if (fnKeydown) fnKeydown(e);
-			clearTimeout(typeTimer);
-		});
-		$ipt.on("click", () => {
-			if (fnClick) fnClick();
-		});
+		return $wrpConverter;
 	}
 }
-DmScreenUtil.TYPE_TIMEOUT_MS = 100; // auto-search after 100ms
+
+class AdventureOrBookView {
+	constructor (type, panel, loader, tabIx, state) {
+		this._type = type;
+		this._panel = panel;
+		this._loader = loader;
+		this._tabIx = tabIx;
+		this._state = state;
+
+		this._$wrpContent = null;
+		this._$wrpContentOuter = null;
+		this._$titlePrev = null;
+		this._$titleNext = null;
+	}
+
+	$getEle () {
+		this._$titlePrev = $(`<div class="dm-book__controls-title text-right"/>`);
+		this._$titleNext = $(`<div class="dm-book__controls-title"/>`);
+
+		const $btnPrev = $(`<button class="btn btn-xs btn-default mr-2" title="Previous Chapter"><span class="glyphicon glyphicon-chevron-left"/></button>`)
+			.click(() => this._handleButtonClick(-1));
+		const $btnNext = $(`<button class="btn btn-xs btn-default" title="Next Chapter"><span class="glyphicon glyphicon-chevron-right"/></button>`)
+			.click(() => this._handleButtonClick(1));
+
+		this._$wrpContent = $(`<div class="full-height"/>`);
+		this._$wrpContentOuter = $$`<div class="full-height dm-book__wrp-content">
+			<table class="stats stats-book stats-book--hover"><tr class="text"><td colspan="6">${this._$wrpContent}</td></tr></table>
+		</div>`;
+
+		const $wrp = $$`<div class="flex-col full-height">
+		${this._$wrpContentOuter}
+		<div class="flex no-shrink dm-book__wrp-controls">${this._$titlePrev}${$btnPrev}${$btnNext}${this._$titleNext}</div>
+		</div>`;
+
+		// assumes the data has already been loaded/cached
+		this._render();
+
+		$wrp.data("getState", () => this._state);
+
+		return $wrp;
+	}
+
+	_handleButtonClick (direction) {
+		this._state.chapter += direction;
+		const renderedData = this._render();
+		if (!renderedData) this._state.chapter -= direction;
+		else {
+			this._$wrpContentOuter.scrollTop(0);
+			this._panel.setTabTitle(this._tabIx, renderedData.name);
+		}
+	}
+
+	_getData (chapter) {
+		return this._loader.getFromCache(this._state[this._type], chapter);
+	}
+
+	_render () {
+		const data = this._getData(this._state.chapter);
+		if (!data) return null;
+		this._$wrpContent.empty().append(Renderer.get().setFirstSection(true).render(data));
+
+		const dataPrev = this._getData(this._state.chapter - 1);
+		const dataNext = this._getData(this._state.chapter + 1);
+		this._$titlePrev.text(dataPrev ? dataPrev.name : "").attr("title", dataPrev ? dataPrev.name : "");
+		this._$titleNext.text(dataNext ? dataNext.name : "").attr("title", dataNext ? dataNext.name : "");
+
+		return data;
+	}
+}
 
 window.addEventListener("load", () => {
+	ExcludeUtil.pInitialise(); // don't await, as this is only used for search
 	// expose it for dbg purposes
 	window.DM_SCREEN = new Board();
-	EntryRenderer.hover.bindDmScreen(window.DM_SCREEN);
-	window.DM_SCREEN.initialise();
+	Renderer.hover.bindDmScreen(window.DM_SCREEN);
+	window.DM_SCREEN.pInitialise()
+		.catch(err => {
+			JqueryUtil.doToast({content: `Failed to load with error "${err.message}". See the console for details.`, type: "danger"});
+			$(`.dm-screen-loading`).find(`.initial-message`).text("Failed!");
+			setTimeout(() => { throw err; });
+		});
 });

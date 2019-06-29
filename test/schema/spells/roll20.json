@@ -1,5 +1,5 @@
 {
-	"$schema": "http://json-schema.org/draft-06/schema#",
+	"$schema": "http://json-schema.org/draft-07/schema#",
 	"version": "1.0.1",
 	"title": "SpellMetaArray",
 	"type": "object",
@@ -14,6 +14,7 @@
 					"type": "string"
 				},
 				"data": {
+					"description": "Based on the Roll20 data, available e.g. here: https://app.roll20.net/compendium/dnd5e/Spells:Fireball.json",
 					"type": "object",
 					"properties": {
 						"Save": {

@@ -546,7 +546,7 @@
 				"Damage": "8d8",
 				"Damage Type": "Same as that of the ammunition or weapon",
 				"Save Success": "Half damage",
-				"Target": "Each creature in a 40-foot-radius. 20-foot-high cylinder centered on a point within range"
+				"Target": "Each creature in a 40-foot-radius, 20-foot-high cylinder centered on a point within range"
 			},
 			"shapedData": {
 				"primaryDamageCondition": "save"
@@ -753,7 +753,7 @@
 				"Save": "Dexterity",
 				"Damage": "10d6 + 40",
 				"Damage Type": "Force",
-				"Save Success": "Half damage",
+				"Save Success": "No damage",
 				"Higher Spell Slot Die": "d6",
 				"Higher Spell Slot Dice": "3"
 			},

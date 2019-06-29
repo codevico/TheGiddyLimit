@@ -159,7 +159,7 @@
 								"Item"
 							],
 							"colStyles": [
-								"col-xs-1 text-align-center",
+								"col-1 text-center",
 								""
 							],
 							"rows": [
@@ -269,7 +269,7 @@
 								"Objective"
 							],
 							"colStyles": [
-								"col-xs-1 text-align-center",
+								"col-1 text-center",
 								""
 							],
 							"rows": [
@@ -315,7 +315,7 @@
 								"Secret"
 							],
 							"colStyles": [
-								"col-xs-1 text-align-center",
+								"col-1 text-center",
 								""
 							],
 							"rows": [
@@ -366,7 +366,9 @@
 										"type": "internal",
 										"path": "adventure/TftYP/DiTDurnan.jpg"
 									},
-									"title": "Durnan"
+									"title": "Durnan",
+									"width": 452,
+									"height": 600
 								},
 								{
 									"type": "entries",
@@ -411,7 +413,7 @@
 										"Denizen"
 									],
 									"colStyles": [
-										"col-xs-1 text-align-center",
+										"col-1 text-center",
 										""
 									],
 									"rows": [
@@ -532,7 +534,9 @@
 										"type": "internal",
 										"path": "adventure/TftYP/DiTOriginal-Cover.jpg"
 									},
-									"title": "Original Cover"
+									"title": "Original Cover",
+									"width": 631,
+									"height": 800
 								},
 								"{@i Featuring an immense and lethal dungeon, the adventure is a tribute to Tomb of Horrors, Ruins of Undermountain, and other killer dungeons from the game's history.}"
 							]
@@ -550,7 +554,9 @@
 								"type": "internal",
 								"path": "adventure/TftYP/DiTDM-Map-The-Doomvault.jpg"
 							},
-							"title": "DM Map The Doomvault"
+							"title": "DM Map The Doomvault",
+							"width": 1200,
+							"height": 1714
 						},
 						"Because of Szass Tam's suspicious nature, and the existential threat that discovery of the Phylactery Vault would pose, movement within the Doomvault is regulated with what one might call excessive precautions.",
 						{
@@ -818,11 +824,11 @@
 									"type": "table",
 									"caption": "Encounter Type",
 									"colLabels": [
-										"d4+d4",
+										"{@dice 2d4 + #$prompt_number:title=Enter Alert Level$#}",
 										"Encounter"
 									],
 									"colStyles": [
-										"col-xs-1 text-align-center",
+										"col-1 text-center",
 										""
 									],
 									"rows": [
@@ -847,8 +853,94 @@
 											"Sector Encounter"
 										],
 										[
-											"11-12",
+											"11+",
 											"Special Encounter"
+										]
+									]
+								},
+								{
+									"type": "table",
+									"caption": "Minor Encounter",
+									"colLabels": [
+										"d4",
+										"Encounter"
+									],
+									"colStyles": [
+										"col-2 text-center",
+										"col-10"
+									],
+									"rows": [
+										[
+											"1",
+											"1 {@creature Thayan apprentice|tftyp} (B), 4 {@creature Thayan warrior|tftyp|Thayan warriors} (B), and {@dice 2d4} prisoners ({@creature commoner|mm|commoners})"
+										],
+										[
+											"2\u20133",
+											"1 {@creature wight}"
+										],
+										[
+											"4",
+											"1 {@creature wight} and {@dice 2d4} {@creature skeleton|mm|skeletons} or {@creature zombie|mm|zombies}"
+										]
+									]
+								},
+								{
+									"type": "table",
+									"caption": "Dread Legion Patrol",
+									"colLabels": [
+										"d4",
+										"Encounter"
+									],
+									"colStyles": [
+										"col-2 text-center",
+										"col-10"
+									],
+									"rows": [
+										[
+											"1",
+											"{@dice 2d4} {@creature gnoll|MM|gnolls}"
+										],
+										[
+											"2",
+											"1 {@creature dread warrior|tftyp} (B) and {@dice 2d6} {@creature zombie|MM|zombies}"
+										],
+										[
+											"3",
+											"{@dice 2d4} {@creature orc|MM|orcs}"
+										],
+										[
+											"4",
+											"1 {@creature troll}"
+										]
+									]
+								},
+								{
+									"type": "table",
+									"caption": "Thayan Patrol",
+									"colLabels": [
+										"2d4",
+										"Encounter"
+									],
+									"colStyles": [
+										"col-2 text-center",
+										"col-10"
+									],
+									"rows": [
+										[
+											"2",
+											"1 {@creature deathlock wight|tftyp} (B), {@dice 2d4} {@creature Thayan warrior|tftyp|Thayan warriors} (B), and {@dice 2d4} prisoners ({@creature commoner|MM|commoners})"
+										],
+										[
+											"3\u20134",
+											"1 {@creature deathlock wight|tftyp} (B), {@dice 1d3} {@creature Thayan apprentice|tftyp|Thayan apprentices} (B), and {@dice 2d4} {@creature Thayan warrior|tftyp|Thayan warriors} (B)"
+										],
+										[
+											"5\u20136",
+											"1 Red Wizard {@creature evoker|vgm} (B), 1 {@creature Thayan apprentice|tftyp} (B), and {@dice 1d4} {@creature dread warrior|tftyp|dread warriors} (B)"
+										],
+										[
+											"7\u20138",
+											"1 {@creature wight} and {@dice 1d4} {@creature dread warrior|tftyp|dread warriors} (B)"
 										]
 									]
 								}
@@ -868,8 +960,8 @@
 										"Encounter"
 									],
 									"colStyles": [
-										"col-xs-1 text-align-center",
-										""
+										"col-2 text-center",
+										"col-10"
 									],
 									"rows": [
 										[
@@ -898,7 +990,7 @@
 										"Encounter"
 									],
 									"colStyles": [
-										"col-xs-1 text-align-center",
+										"col-1 text-center",
 										""
 									],
 									"rows": [
@@ -928,7 +1020,7 @@
 										"Encounter"
 									],
 									"colStyles": [
-										"col-xs-1 text-align-center",
+										"col-1 text-center",
 										""
 									],
 									"rows": [
@@ -950,7 +1042,7 @@
 										"Encounter"
 									],
 									"colStyles": [
-										"col-xs-1 text-align-center",
+										"col-1 text-center",
 										""
 									],
 									"rows": [
@@ -980,7 +1072,7 @@
 										"Encounter"
 									],
 									"colStyles": [
-										"col-xs-1 text-align-center",
+										"col-1 text-center",
 										""
 									],
 									"rows": [
@@ -1010,7 +1102,7 @@
 										"Encounter"
 									],
 									"colStyles": [
-										"col-xs-1 text-align-center",
+										"col-1 text-center",
 										""
 									],
 									"rows": [
@@ -1036,7 +1128,7 @@
 										"Encounter"
 									],
 									"colStyles": [
-										"col-xs-1 text-align-center",
+										"col-1 text-center",
 										""
 									],
 									"rows": [
@@ -1066,7 +1158,7 @@
 										"Encounter"
 									],
 									"colStyles": [
-										"col-xs-1 text-align-center",
+										"col-1 text-center",
 										""
 									],
 									"rows": [
@@ -1123,7 +1215,7 @@
 										"Potion"
 									],
 									"colStyles": [
-										"col-xs-1 text-align-center",
+										"col-1 text-center",
 										""
 									],
 									"rows": [
@@ -1167,7 +1259,7 @@
 										"Result"
 									],
 									"colStyles": [
-										"col-xs-1 text-align-center",
+										"col-1 text-center",
 										""
 									],
 									"rows": [
@@ -1321,7 +1413,9 @@
 										"type": "internal",
 										"path": "adventure/TftYP/DiTDM-Map-The-Doomvault.jpg"
 									},
-									"title": "DM Map The Doomvault"
+									"title": "DM Map The Doomvault",
+									"width": 1200,
+									"height": 1714
 								}
 							]
 						}
@@ -1418,7 +1512,9 @@
 						"type": "internal",
 						"path": "adventure/TftYP/DiTThe-Doomvault-Players.jpg"
 					},
-					"title": "The Doomvault Players"
+					"title": "The Doomvault Players",
+					"width": 1556,
+					"height": 2000
 				},
 				"Give the characters the Glyph Key corresponding to the start area chosen."
 			]
@@ -1520,7 +1616,9 @@
 								"type": "internal",
 								"path": "adventure/TftYP/DiTShalendra.jpg"
 							},
-							"title": "Shalendra"
+							"title": "Shalendra",
+							"width": 536,
+							"height": 800
 						},
 						{
 							"type": "entries",
@@ -1644,7 +1742,9 @@
 								"type": "internal",
 								"path": "adventure/TftYP/DiTPencheska.jpg"
 							},
-							"title": "Pencheska"
+							"title": "Pencheska",
+							"width": 457,
+							"height": 800
 						},
 						{
 							"type": "entries",
@@ -1735,7 +1835,7 @@
 								"Dmage"
 							],
 							"colStyles": [
-								"col-xs-1 text-align-center",
+								"col-1 text-center",
 								""
 							],
 							"rows": [
@@ -1862,7 +1962,9 @@
 								"type": "internal",
 								"path": "adventure/TftYP/DiTTarul-Var.jpg"
 							},
-							"title": "Tarul Var"
+							"title": "Tarul Var",
+							"width": 528,
+							"height": 800
 						},
 						{
 							"type": "entries",
@@ -1889,7 +1991,7 @@
 								"A search of the desk reveals several drafts of a letter to Szass Tam in which Var begs for another chance to bring the Sword Coast under Thayan domination. Inside the desk's several drawers are a {@item potion of mind reading|DMG} and a duplicate of the steel key that Var carries."
 							]
 						},
-						"The largest drawer of the desk is held closed with an {@spell arcane lock|PHB} spell (requiring a successful DC 25 Strength check to break). Inside is a flat box of black wood (see the next subsection) and a gold coffer wrought to look like a sleeping dragon with violet garnet eyes (worth 1,000 gp). The coffer holds 200 pp and a dark, smooth river rock ({@i a loadstone}.)",
+						"The largest drawer of the desk is held closed with an {@spell arcane lock|PHB} spell (requiring a successful DC 25 Strength check to break). Inside is a flat box of black wood (see the next subsection) and a gold coffer wrought to look like a sleeping dragon with violet garnet eyes (worth 1,000 gp). The coffer holds 200 pp and a dark, smooth river rock (a {@item loadstone|tftyp}.)",
 						{
 							"type": "entries",
 							"name": "True Name Box",
@@ -2970,7 +3072,9 @@
 								"type": "internal",
 								"path": "adventure/TftYP/DiTLahnis.jpg"
 							},
-							"title": "Lahnis"
+							"title": "Lahnis",
+							"width": 555,
+							"height": 800
 						},
 						{
 							"type": "entries",
@@ -3030,7 +3134,9 @@
 								"type": "internal",
 								"path": "adventure/TftYP/DiTPhaia.jpg"
 							},
-							"title": "Phaia"
+							"title": "Phaia",
+							"width": 525,
+							"height": 800
 						},
 						{
 							"type": "entries",
@@ -3045,7 +3151,9 @@
 								"type": "internal",
 								"path": "adventure/TftYP/DiTKelson.jpg"
 							},
-							"title": "Kelson"
+							"title": "Kelson",
+							"width": 531,
+							"height": 800
 						},
 						"A {@creature deathlock wight|TftYP} on a nearby table is a Red Wizard in the process of being raised as undead. Also nearby, two reduced-threat {@creature wight|MM|wights} are being raised as warrior undead. These wights are only partially animated, so they respond only to Phaia when she orders an attack. One of them tries to throw an urn at a character each round (+4 to hit, range 10 feet/20 feet; one creature). A hit deals 3 (1d6) bludgeoning damage, and the target must make saving throws as noted in the \"Urns\" section. Phaia stays for a round or two to assess the party's capabilities and then moves to {@area 4>32} or uses the black gate in the room.",
 						"As a faithful servant of Szass Tam, Phaia follows the lich lord's philosophy that no magic is too dangerous and no experiment too dark if it promises power. Lawful evil, Phaia is as opportunistic as she is wicked.",
@@ -3489,7 +3597,7 @@
 								"Effect"
 							],
 							"colStyles": [
-								"col-xs-1 text-align-center",
+								"col-1 text-center",
 								""
 							],
 							"rows": [
@@ -4375,7 +4483,7 @@
 								"Check"
 							],
 							"colStyles": [
-								"col-xs-1 text-align-center",
+								"col-1 text-center",
 								""
 							],
 							"rows": [
@@ -4397,7 +4505,7 @@
 								"Escaping Ooze"
 							],
 							"colStyles": [
-								"col-xs-1 text-align-center",
+								"col-1 text-center",
 								""
 							],
 							"rows": [
@@ -4433,7 +4541,7 @@
 							"type": "entries",
 							"name": "Treasure",
 							"entries": [
-								"Sarkalla's table and shelves contain two pieces of lore, four spell scrolls (two each of {@i dispel magi} c and {@spell greater restoration|PHB} ), a {@item potion of greater healing|DMG}, a {@item potion of heroism|DMG}, and six valuable tomes on underground exploration and natural history (worth 120 gp each)."
+								"Sarkalla's table and shelves contain two pieces of lore, four spell scrolls (two each of {@i dispel magi} c and {@spell greater restoration|PHB}), a {@item potion of greater healing|DMG}, a {@item potion of heroism|DMG}, and six valuable tomes on underground exploration and natural history (worth 120 gp each)."
 							]
 						},
 						{
@@ -5844,7 +5952,9 @@
 								"type": "internal",
 								"path": "adventure/TftYP/DiTLumalia.jpg"
 							},
-							"title": "Lumalia"
+							"title": "Lumalia",
+							"width": 534,
+							"height": 800
 						},
 						"The last gargoyle to appear uses its initial action to touch the statue, which ends the curse that holds the creature in stasis. This deva's name is Lumalia. After she is freed, the walls shed bright light instead of dim. The deva shrieks, unable to act until her turn, at which point she attacks the nearest creatures. (The gargoyles avoid her.)",
 						"A character who succeeds on a DC 13 Wisdom (Insight) check understands that the deva is crazed from captivity. The characters can try to influence her to direct her attacks against the gargoyles, but doing so takes a successful DC 15 Charisma (Persuasion) check to calm her and refocus her attention. Once she is lucid and able to talk to the characters, she vows to aid them by sowing chaos through the Doomvault on her own.",
@@ -6165,7 +6275,7 @@
 					"type": "entries",
 					"name": "Reaching the Phylactery Vault",
 					"entries": [
-						"Once a Shrine of Binding has been disabled, a character who closely examines the shrine and succeeds on a DC 15 Intelligence (Arcana) check discerns how these shrines and the black gates in this sector work together to shield the Phylactery Vault. The character understands that if the black gates in the Temples of Extraction can be overloaded, those gates will attune themselves to the location where the power of the Chosen is being directed- the vault itself."
+						"Once a Shrine of Binding has been disabled, a character who closely examines the shrine and succeeds on a DC 15 Intelligence (Arcana) check discerns how these shrines and the black gates in this sector work together to shield the Phylactery Vault. The character understands that if the black gates in the Temples of Extraction can be overloaded, those gates will attune themselves to the location where the power of the Chosen is being directed\u2014the vault itself."
 					]
 				},
 				"In order to create that overload, six black gates in other sectors must be disrupted simultaneously (as described at the beginning of this adventure). Once that is accomplished, any glyph key can be used on any of the black gates in the Temples of Extraction, and the user will be taken to the Phylactery Vault.",
@@ -6249,7 +6359,9 @@
 								"type": "internal",
 								"path": "adventure/TftYP/DiTMennek.jpg"
 							},
-							"title": "Mennek"
+							"title": "Mennek",
+							"width": 527,
+							"height": 800
 						},
 						{
 							"type": "entries",
@@ -6714,7 +6826,9 @@
 								"type": "internal",
 								"path": "adventure/TftYP/DiTPhylactery-One-DM.jpg"
 							},
-							"title": "Phylactery One DM"
+							"title": "Phylactery One DM",
+							"width": 622,
+							"height": 800
 						},
 						{
 							"type": "image",
@@ -6722,7 +6836,9 @@
 								"type": "internal",
 								"path": "adventure/TftYP/DiTPhylactery-Two-DM.jpg"
 							},
-							"title": "Phylactery Two DM"
+							"title": "Phylactery Two DM",
+							"width": 622,
+							"height": 800
 						},
 						{
 							"type": "image",
@@ -6730,7 +6846,9 @@
 								"type": "internal",
 								"path": "adventure/TftYP/DiTPhylactery-One-Players.jpg"
 							},
-							"title": "Phylactery One Players"
+							"title": "Phylactery One Players",
+							"width": 1950,
+							"height": 2500
 						},
 						{
 							"type": "image",
@@ -6738,7 +6856,9 @@
 								"type": "internal",
 								"path": "adventure/TftYP/DiTPhylactery-Two-Players.jpg"
 							},
-							"title": "Phylactery Two Players"
+							"title": "Phylactery Two Players",
+							"width": 1950,
+							"height": 2500
 						},
 						"Begin by describing the area:",
 						{

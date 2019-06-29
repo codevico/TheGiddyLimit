@@ -1,6 +1,6 @@
 {
-	"$schema": "http://json-schema.org/draft-06/schema#",
-	"version": "1.0.1",
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"version": "1.0.2",
 	"type": "object",
 	"properties": {
 		"book": {
@@ -12,6 +12,9 @@
 						"type": "string"
 					},
 					"id": {
+						"type": "string"
+					},
+					"source": {
 						"type": "string"
 					},
 					"author": {
@@ -34,7 +37,25 @@
 								"headers": {
 									"type": "array",
 									"items": {
-										"type": "string"
+										"oneOf": [
+											{
+												"type": "string"
+											},
+											{
+												"type": "object",
+												"properties": {
+													"depth": {
+														"type": "integer"
+													},
+													"header": {
+														"type": "string"
+													}
+												},
+												"required": [
+													"depth", "header"
+												]
+											}
+										]
 									}
 								},
 								"ordinal": {
@@ -42,7 +63,7 @@
 									"properties": {
 										"type": {
 											"type": "string",
-											"enum": ["chapter", "appendix", "part", "episode"]
+											"enum": ["chapter", "appendix", "part", "episode", "level"]
 										},
 										"identifier": {
 											"type": ["integer", "string"]
@@ -66,6 +87,7 @@
 				"required": [
 					"name",
 					"id",
+					"source",
 					"contents"
 				]
 			}

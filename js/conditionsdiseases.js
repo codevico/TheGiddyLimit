@@ -1,8 +1,10 @@
 "use strict";
+
 const JSON_URL = "data/conditionsdiseases.json";
-const entryRenderer = EntryRenderer.getDefaultRenderer();
+const entryRenderer = Renderer.get();
 
 window.onload = function load () {
+	ExcludeUtil.pInitialise(); // don't await, as this is only used for search
 	SortUtil.initHandleFilterButtonClicks();
 	DataUtil.loadJSON(JSON_URL).then(onJsonLoad);
 };
@@ -14,9 +16,9 @@ function conditionDiseaseTypeToFull (type) {
 const sourceFilter = getSourceFilter();
 let filterBox;
 let list;
-function onJsonLoad (data) {
+async function onJsonLoad (data) {
 	list = ListUtil.search({
-		valueNames: ["name", "source", "type"],
+		valueNames: ["name", "source", "type", "uniqueid"],
 		listClass: "conditions"
 	});
 
@@ -26,13 +28,16 @@ function onJsonLoad (data) {
 		displayFn: conditionDiseaseTypeToFull,
 		deselFn: (it) => it === "d"
 	});
-	filterBox = initFilterBox(
-		sourceFilter,
-		typeFilter
-	);
+	filterBox = await pInitFilterBox({
+		filters: [
+			sourceFilter,
+			typeFilter
+		]
+	});
 
+	const $outVisibleResults = $(`.lst__wrp-search-visible`);
 	list.on("updated", () => {
-		filterBox.setCount(list.visibleItems.length, list.items.length);
+		$outVisibleResults.html(`${list.visibleItems.length}/${list.items.length}`);
 	});
 
 	// filtering function
@@ -51,15 +56,17 @@ function onJsonLoad (data) {
 	addConditions(data);
 	BrewUtil.pAddBrewData()
 		.then(handleBrew)
-		.then(BrewUtil.pAddLocalBrewData)
-		.catch(BrewUtil.purgeBrew)
-		.then(() => {
+		.then(() => BrewUtil.bind({list}))
+		.then(() => BrewUtil.pAddLocalBrewData())
+		.catch(BrewUtil.pPurgeBrew)
+		.then(async () => {
 			BrewUtil.makeBrewButton("manage-brew");
-			BrewUtil.bind({list, filterBox, sourceFilter});
-			ListUtil.loadState();
+			BrewUtil.bind({filterBox, sourceFilter});
+			await ListUtil.pLoadState();
+			RollerUtil.addListRollButton();
+			ListUtil.addListShowHide();
 
 			History.init(true);
-			RollerUtil.addListRollButton();
 		});
 }
 
@@ -86,20 +93,19 @@ function addConditions (data) {
 		tempString += `
 			<li class="row" ${FLTR_ID}="${cdI}" onclick="ListUtil.toggleSelected(event, this)" oncontextmenu="ListUtil.openContextMenu(event, this)">
 				<a id='${cdI}' href='#${UrlUtil.autoEncodeHash(it)}' title="${it.name}">
-					<span class="type col-xs-3 text-align-center">${conditionDiseaseTypeToFull(it._type)}</span>
-					<span class='name col-xs-7'>${it.name}</span>
-					<span class='source col-xs-2 ${Parser.sourceJsonToColor(it.source)}' title="${Parser.sourceJsonToFull(it.source)}">${Parser.sourceJsonToAbv(it.source)}</span>
+					<span class="type col-3 text-center pl-0">${conditionDiseaseTypeToFull(it._type)}</span>
+					<span class="name col-7">${it.name}</span>
+					<span class="source col-2 text-center ${Parser.sourceJsonToColor(it.source)} pr-0" title="${Parser.sourceJsonToFull(it.source)}" ${BrewUtil.sourceJsonToStyle(it.source)}>${Parser.sourceJsonToAbv(it.source)}</span>
+					
+					<span class="uniqueid hidden">${it.uniqueId ? it.uniqueId : cdI}</span>
 				</a>
 			</li>`;
 
 		// populate filters
-		sourceFilter.addIfAbsent(it.source);
+		sourceFilter.addItem(it.source);
 	}
 	const lastSearch = ListUtil.getSearchTermAndReset(list);
 	condTable.append(tempString);
-
-	// sort filters
-	sourceFilter.items.sort(SortUtil.ascSort);
 
 	list.reIndex();
 	if (lastSearch) list.search(lastSearch);
@@ -113,7 +119,7 @@ function addConditions (data) {
 		primaryLists: [list]
 	});
 	ListUtil.bindPinButton();
-	EntryRenderer.hover.bindPopoutButton(conditionList);
+	Renderer.hover.bindPopoutButton(conditionList);
 	UrlUtil.bindLinkExportButton(filterBox);
 	ListUtil.bindDownloadButton();
 	ListUtil.bindUploadButton();
@@ -123,7 +129,7 @@ function getSublistItem (cond, pinId) {
 	return `
 		<li class="row" ${FLTR_ID}="${pinId}" oncontextmenu="ListUtil.openSubContextMenu(event, this)">
 			<a href="#${UrlUtil.autoEncodeHash(cond)}">
-				<span class="name col-xs-12">${cond.name}</span>
+				<span class="name col-12 px-0">${cond.name}</span>
 				<span class="id hidden">${pinId}</span>
 			</a>
 		</li>
@@ -141,24 +147,29 @@ function handleFilterChange () {
 			it._type
 		);
 	});
-	FilterBox.nextIfHidden(conditionList);
+	FilterBox.selectFirstVisible(conditionList);
 }
 
-function loadhash (id) {
+function loadHash (id) {
 	entryRenderer.setFirstSection(true);
 	const $content = $("#pagecontent").empty();
 	const it = conditionList[id];
 	const entryList = {type: "entries", entries: it.entries};
 	const textStack = [];
-	entryRenderer.recursiveEntryRender(entryList, textStack);
+	entryRenderer.recursiveRender(entryList, textStack);
 	$content.append(`
-		${EntryRenderer.utils.getBorderTr()}
-		${EntryRenderer.utils.getNameTr(it)}
+		${Renderer.utils.getBorderTr()}
+		${Renderer.utils.getNameTr(it)}
 		<tr><td class="divider" colspan="6"><div></div></td></tr>
 		<tr class='text'><td colspan='6'>${textStack.join("")}</td></tr>
-		${EntryRenderer.utils.getPageTr(it)}
-		${EntryRenderer.utils.getBorderTr()}
+		${Renderer.utils.getPageTr(it)}
+		${Renderer.utils.getBorderTr()}
 	`);
 
 	ListUtil.updateSelected();
+}
+
+function loadSubHash (sub) {
+	sub = filterBox.setFromSubHashes(sub);
+	ListUtil.setFromSubHashes(sub);
 }

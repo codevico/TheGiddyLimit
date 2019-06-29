@@ -1,5 +1,5 @@
 "use strict";
-const HASH_FEATURE = "f:";
+
 const HASH_HIDE_FEATURES = "hideclassfs:";
 const HASH_SHOW_FLUFF = "showfluff:";
 const HASH_SOURCES = "sources:";
@@ -33,31 +33,25 @@ const ATB_DATA_FEATURE_ID = "data-flink-id";
 const ATB_DATA_SC_LIST = "data-subclass-list";
 
 let subclassComparisonView;
+let filterBox;
 
 // Exported to history.js, gets called on hash change
-function loadhash (id) {
-	HashLoad.loadhash(id);
+function loadHash (id) {
+	HashLoad.loadHash(id);
 }
 
 // Exported to history.js
-function loadsub (sub) {
-	SubClassLoader.loadsub(sub);
+function loadSubHash (sub) {
+	sub = filterBox.setFromSubHashes(sub);
+	SubClassLoader.loadSubHash(sub);
 }
 
-// Exported to utils.js
-function addClassData (data) {
-	ClassData.addClassData(data);
-}
-
-// Exported to utils.js
-function addSubclassData (data) {
-	ClassData.addSubclassData(data)
-}
-
-class ClassDisplay {
-
-}
+class ClassDisplay {}
 ClassDisplay.curClass = null;
+
+function _isNonStandardSource (entry) {
+	return !entry._isStandardSource && SourceUtil.isNonstandardSource(entry.source);
+}
 
 class FeatureTable {
 	/**
@@ -105,20 +99,24 @@ class ClassList {
 			const curClass = newClasses[i];
 			if (ExcludeUtil.isExcluded(curClass.name, "class", curClass.source)) continue;
 
-			curClass._fSource = BrewUtil.hasSourceJson(curClass.source) ? "Homebrew" : SourceUtil.isNonstandardSource(curClass.source) ? "Others" : "Core";
-			sourceFilter.addIfAbsent(curClass._fSource);
+			if (curClass.source === SRC_UASIK) curClass._fSource = "Sidekicks";
+			else if (BrewUtil.hasSourceJson(curClass.source)) curClass._fSource = "Homebrew";
+			else if (curClass._isStandardSource) curClass._fSource = "Core";
+			else if (SourceUtil.isNonstandardSource(curClass.source)) curClass._fSource = "Others";
+			else curClass._fSource = "Core";
+
+			sourceFilter.addItem(curClass._fSource);
 			const id = i + previousClassAmount;
 			tempString += ClassList._renderClass(curClass, id);
 		}
-		sourceFilter.items.sort(SortUtil.ascSort);
 		$classTable.append(tempString);
 	}
 
 	static _renderClass (classToRender, id) {
 		return `<li class="row" ${FLTR_ID}="${id}" ${classToRender.uniqueId ? `data-unique-id="${classToRender.uniqueId}"` : ""}>
-				<a id='${id}' href="${HashLoad.getClassHash(classToRender)}" title="${classToRender.name}">
-					<span class='name col-xs-8'>${classToRender.name}</span>
-					<span class='source col-xs-4 text-align-center ${Parser.sourceJsonToColor(classToRender.source)}' title="${Parser.sourceJsonToFull(classToRender.source)}">
+				<a id="${id}" href="${HashLoad.getClassHash(classToRender)}" title="${classToRender.name}">
+					<span class="name col-8 pl-0">${classToRender.name}</span>
+					<span class="source col-4 text-center ${Parser.sourceJsonToColor(classToRender.source)}" title="${Parser.sourceJsonToFull(classToRender.source)} pr-0" ${BrewUtil.sourceJsonToStyle(classToRender.source)}>
 						${Parser.sourceJsonToAbv(classToRender.source)}
 					</span>
 					<span class="uniqueid hidden">${classToRender.uniqueId ? classToRender.uniqueId : id}</span>
@@ -133,16 +131,30 @@ class ClassData {
 		const newClasses = data.class;
 		if (!newClasses || !newClasses.length) return;
 
+		newClasses.forEach(c => {
+			c.subclasses = c.subclasses || [];
+			c.subclasses.forEach(sc => {
+				sc.source = sc.source || c.source; // default subclasses to same source as parent
+				sc.shortName = sc.shortName || sc.name; // ensure shortName
+			});
+		});
 		ClassData.sortSubclasses(newClasses);
 
 		newClasses.filter(c => SourceUtil.isNonstandardSource(c.source) || BrewUtil.hasSourceJson(c.source))
-			.forEach(ClassData.markSameSourceSubclassesAsForceStandard);
+			.forEach(ClassData.markSameSourceSubclassesAndFluffAsForceStandard);
 
 		ClassData.classes = ClassData.classes.concat(newClasses);
 
 		ClassList.addClasses(newClasses);
 
-		History.hashChange();
+		if (!History.initialLoad) {
+			if (data.class.some(c => c.uniqueId)) {
+				const filterVals = filterBox.getValues();
+				filterVals.Source.Homebrew = 1;
+				filterBox.setFromValues({Source: filterVals.Source});
+			}
+			History.hashChange();
+		}
 	}
 
 	static addSubclassData (data) {
@@ -151,9 +163,12 @@ class ClassData {
 		const scData = data.subclass;
 		scData.forEach(subClass => {
 			// get the class
-			const c = ClassData.classes.find(c => c.name.toLowerCase() === subClass.class.toLowerCase() && (c.source.source || c.source).toLowerCase() === (subClass.classSource || SRC_PHB).toLowerCase());
+			const c = ClassData.classes.find(c => c.name.toLowerCase() === subClass.class.toLowerCase() && c.source.toLowerCase() === (subClass.classSource || SRC_PHB).toLowerCase());
 			if (!c) {
-				alert(`Could not add subclass; could not find class with name: ${subClass.class}`);
+				JqueryUtil.doToast({
+					content: `Could not add subclass; could not find class with name: ${subClass.class}`,
+					type: "danger"
+				});
 				return;
 			}
 
@@ -161,30 +176,26 @@ class ClassData {
 
 			ClassData.sortSubclasses([c]);
 		});
-		History.hashChange(true);
+		if (!History.initialLoad) History.hashChange(true);
 	}
 
 	/**
 	 * Sorts subclasses of the classes given
-	 *
 	 * @param classes an Array of classes
 	 */
 	static sortSubclasses (classes) {
 		for (const c of classes) {
-			c.subclasses = c.subclasses.sort((a, b) => SortUtil.ascSort(a.name, b.name));
+			if (c.subclasses) c.subclasses = c.subclasses.sort((a, b) => SortUtil.ascSort(a.name, b.name));
 		}
 	}
 
-	static markSameSourceSubclassesAsForceStandard (clazz) {
-		clazz.subclasses.filter(subClass => subClass.source === clazz.source).forEach(subClass => subClass.source = {"source": subClass.source, "forceStandard": true});
+	static markSameSourceSubclassesAndFluffAsForceStandard (clazz) {
+		if (clazz.fluff) clazz.fluff.filter(f => f.source === clazz.source).forEach(f => f._isStandardSource = true);
+		clazz.subclasses.filter(subClass => subClass.source === clazz.source).forEach(subClass => subClass._isStandardSource = true);
 	}
 
 	static cleanScSource (source) {
 		return Parser._getSourceStringFromSource(source);
-	}
-
-	static getSubclassFromPill ($pill) {
-		return ClassDisplay.curClass.subclasses.find(sc => sc.name === $pill.data("subclass") && (sc.source.source || sc.source) === $pill.data("source"));
 	}
 }
 ClassData.classes = [];
@@ -192,7 +203,7 @@ ClassData.classes = [];
 class FeatureDescription {
 	static getSubclassStyles (sc) {
 		const styleClasses = [CLSS_SUBCLASS_FEATURE];
-		const nonStandard = SourceUtil.isNonstandardSource(sc.source) || SourceUtil.hasBeenReprinted(sc.shortName, sc.source) || (sc.source.source || sc.source) === SRC_DMG;
+		const nonStandard = _isNonStandardSource(sc) || SourceUtil.hasBeenReprinted(sc.shortName, sc.source) || sc.source === SRC_DMG;
 		if (nonStandard) styleClasses.push(CLSS_NON_STANDARD_SOURCE);
 		if (FeatureDescription.subclassIsFreshUa(sc)) styleClasses.push(CLSS_FRESH_UA);
 		if (BrewUtil.hasSourceJson(ClassData.cleanScSource(sc.source))) styleClasses.push(CLSS_HOMEBREW_SOURCE);
@@ -201,7 +212,7 @@ class FeatureDescription {
 
 	static subclassIsFreshUa (sc) {
 		// only tag reprinted UA
-		if (SourceUtil.isNonstandardSource(sc.source) || SourceUtil.hasBeenReprinted(sc.shortName, sc.source)) {
+		if (_isNonStandardSource(sc) || SourceUtil.hasBeenReprinted(sc.shortName, sc.source)) {
 			// special cases
 			if (sc.name === "Knowledge Domain (PSA)" && sc.source === SRC_PSA) return false;
 			if (sc.name === "Deep Stalker (UA)" && sc.source === SRC_UALDR) return false;
@@ -209,7 +220,7 @@ class FeatureDescription {
 			if (sc.name === "Shadow (UA)" && sc.source === SRC_UALDR) return false;
 			if (sc.name === "The Undying Light (UA)" && sc.source === SRC_UALDR) return false;
 
-			const nonUa = ClassDisplay.curClass.subclasses.find(pub => !SourceUtil.isNonstandardSource(pub.source) && sc.name.replace(/(v\d+)?\s*\((UA|SCAG|PSA|Livestream)\)/, "").trim() === pub.name);
+			const nonUa = ClassDisplay.curClass.subclasses.find(it => !_isNonStandardSource(it) && it.name.replace(/(v\d+)?\s*\((UA|SCAG|PSA|Livestream)\)/, "").trim() === sc.name);
 			if (nonUa) return false;
 		}
 		return true;
@@ -217,7 +228,7 @@ class FeatureDescription {
 }
 
 class HashLoad {
-	static loadhash (id) {
+	static loadHash (id) {
 		renderer.setFirstSection(true);
 
 		$("#pagecontent").html(tableDefault);
@@ -233,8 +244,18 @@ class HashLoad {
 		ClassDisplay.curClass = ClassData.classes[id];
 
 		// name
+		const $btnShowHideSidebar = $(`<div class="cls__btn-toggle-sidebar">[\u2012]</div>`)
+			.click(() => {
+				const nxtShow = $btnShowHideSidebar.text().includes("+");
+				$(`.cls__sidebar-visible`).toggle(nxtShow);
+				$btnShowHideSidebar.text(`[${nxtShow ? "\u2012" : "+"}]`);
+			});
+
 		$("th#nameTable").html(ClassDisplay.curClass.name);
-		$("th#nameSummary").html(ClassDisplay.curClass.name);
+		$("th#nameSummary").empty().append($$`<div class="split flex-v-center">
+			<div>${ClassDisplay.curClass.name}</div>
+			<div>${$btnShowHideSidebar}</div>
+		</div>`);
 		if (ClassDisplay.curClass.authors) {
 			$("th#author").html(`By ${ClassDisplay.curClass.authors.join(", ")}`).show();
 		} else {
@@ -243,68 +264,172 @@ class HashLoad {
 
 		// SUMMARY SIDEBAR =================================================================================================
 		// hit dice and HP
-		const hdEntry = {toRoll: `${ClassDisplay.curClass.hd.number}d${ClassDisplay.curClass.hd.faces}`, rollable: true};
-		$("td#hp div#hitdice span").html(EntryRenderer.getEntryDice(hdEntry, "Hit die"));
-		$("td#hp div#hp1stlevel span").html(ClassDisplay.curClass.hd.faces + " + your Constitution modifier");
-		$("td#hp div#hphigherlevels span").html(`${EntryRenderer.getEntryDice(hdEntry, "Hit die")} (or ${
-			(ClassDisplay.curClass.hd.faces / 2 + 1)}) + your Constitution modifier per ${ClassDisplay.curClass.name} level after 1st`);
+		if (ClassDisplay.curClass.hd) {
+			$("td#hp").show();
+			const hdEntry = {toRoll: `${ClassDisplay.curClass.hd.number}d${ClassDisplay.curClass.hd.faces}`, rollable: true};
+			$("td#hp div#hitdice span").html(Renderer.getEntryDice(hdEntry, "Hit die"));
+			$("td#hp div#hp1stlevel span").html(ClassDisplay.curClass.hd.faces + " + your Constitution modifier");
+			$("td#hp div#hphigherlevels span").html(`${Renderer.getEntryDice(hdEntry, "Hit die")} (or ${
+				(ClassDisplay.curClass.hd.faces / 2 + 1)}) + your Constitution modifier per ${ClassDisplay.curClass.name} level after 1st`);
+		} else {
+			$("td#hp").hide();
+		}
 
 		// save proficiency
-		$("td#prof div#saves span").html(ClassDisplay.curClass.proficiency.map(p => Parser.attAbvToFull(p)).join(", "));
+		if (ClassDisplay.curClass.proficiency) {
+			$("td#prof div#saves span").html(ClassDisplay.curClass.proficiency.map(p => Parser.attAbvToFull(p)).join(", "));
+		}
 
 		// starting proficiencies
+		const renderArmorProfs = (armorProfs) => armorProfs.map(a => a === "light" || a === "medium" || a === "heavy" ? a + " armor" : a).join(", ");
+		const renderWeaponsProfs = (weaponProfs) => weaponProfs.map(w => w === "simple" || w === "martial" ? w + " weapons" : w).join(", ");
+		const renderToolsProfs = (toolProfs) => toolProfs.join(", ");
+		const renderSkillsProfs = (skillProfs) => getSkillProfString(skillProfs);
+
 		const sProfs = ClassDisplay.curClass.startingProficiencies;
-		const profSel = $("td#prof");
-		profSel.find("div#armor span")
-			.html(sProfs.armor === undefined ? STR_PROF_NONE : sProfs.armor.map(a => a === "light" || a === "medium" || a === "heavy" ? a + " armor" : a).join(", "));
-		profSel.find("div#weapons span")
-			.html(sProfs.weapons === undefined ? STR_PROF_NONE : sProfs.weapons.map(w => w === "simple" || w === "martial" ? w + " weapons" : w).join(", "));
-		profSel.find("div#tools span").html(sProfs.tools === undefined ? STR_PROF_NONE : sProfs.tools.join(", "));
-		profSel.find("div#skills span").html(sProfs.skills === undefined ? STR_PROF_NONE : getSkillProfString(sProfs.skills));
+		if (sProfs) {
+			const profSel = $("td#prof");
+			profSel.find("div#armor span").html(sProfs.armor === undefined ? STR_PROF_NONE : renderArmorProfs(sProfs.armor));
+			profSel.find("div#weapons span").html(sProfs.weapons === undefined ? STR_PROF_NONE : renderWeaponsProfs(sProfs.weapons));
+			profSel.find("div#tools span").html(sProfs.tools === undefined ? STR_PROF_NONE : renderToolsProfs(sProfs.tools));
+			profSel.find("div#skills span").html(sProfs.skills === undefined ? STR_PROF_NONE : renderSkillsProfs(sProfs.skills));
+		}
+		$("td#prof").toggle(!!(ClassDisplay.curClass.proficiency || sProfs));
 
 		function getSkillProfString (skills) {
 			const numString = Parser.numberToString(skills.choose);
-			return skills.from.length === 18 ? `Choose any ${numString}.` : `Choose ${numString} from ${skills.from.map(it => EntryRenderer.getDefaultRenderer().renderEntry(`{@skill ${it}}`)).joinConjunct(", ", " and ")}.`
+			return skills.from.length === 18 ? `Choose any ${numString}.` : `Choose ${numString} from ${skills.from.map(it => Renderer.get().render(`{@skill ${it}}`)).joinConjunct(", ", " and ")}.`
 		}
 
 		// starting equipment
-		const sEquip = ClassDisplay.curClass.startingEquipment;
-		const fromBackground = sEquip.additionalFromBackground ? "<p>You start with the following items, plus anything provided by your background.</p>" : "";
-		const defList = sEquip.default.length === 0 ? "" : `<ul><li>${sEquip.default.map(it => EntryRenderer.getDefaultRenderer().renderEntry(it)).join("</li><li>")}</ul>`;
-		const goldAlt = sEquip.goldAlternative === undefined ? "" : `<p>Alternatively, you may start with ${EntryRenderer.getDefaultRenderer().renderEntry(sEquip.goldAlternative)} gp to buy your own equipment.</p>`;
-		$("#equipment").find("div").html(`${fromBackground}${defList}${goldAlt}`);
+		if (ClassDisplay.curClass.startingEquipment) {
+			const $equipment = $("#equipment").show();
+			const sEquip = ClassDisplay.curClass.startingEquipment;
+			const fromBackground = sEquip.additionalFromBackground ? "<p>You start with the following items, plus anything provided by your background.</p>" : "";
+			const defList = sEquip.default.length === 0 ? "" : `<ul><li>${sEquip.default.map(it => Renderer.get().render(it)).join("</li><li>")}</ul>`;
+			const goldAlt = sEquip.goldAlternative === undefined ? "" : `<p>Alternatively, you may start with ${Renderer.get().render(sEquip.goldAlternative)} gp to buy your own equipment.</p>`;
+			$equipment.find("div").html(`${fromBackground}${defList}${goldAlt}`);
+		} else {
+			$("#equipment").hide();
+		}
+
+		// multiclassing requirements and proficiencies
+		if (ClassDisplay.curClass.multiclassing) {
+			const mc = ClassDisplay.curClass.multiclassing;
+			const $div = $("#multiclassing").show().find("#multiclassing_prereqs");
+			if (mc.requirements) {
+				const renderPart = (obj, joiner = ", ") => Object.keys(obj).filter(k => k !== "or").sort(SortUtil.ascSortAtts).map(k => `${Parser.attAbvToFull(k)} ${obj[k]}`).join(joiner);
+				const orPart = mc.requirements.or ? mc.requirements.or.map(obj => renderPart(obj, " or ")).join("; ") : "";
+				const basePart = renderPart(mc.requirements);
+				$div
+					.append(`<div>To qualify for a new class, you must meet the ability score prerequisites for both your current class and your new one.</div>`)
+					.append(`<strong>Ability Score Minimum:</strong> <span>${[orPart, basePart].filter(Boolean).join("; ")}</span>`);
+			}
+			if (mc.proficienciesGained) {
+				$(`#multiclassing_profs`).html(`<div ${mc.requirements ? `style="margin-top: 1.7em;"` : ""}>When you gain a level in a class other than your first, you gain only some of that class's starting proficiencies.</div>`);
+				const $mcProfArmor = $(`#multiclassing_profs_armor`).toggle(mc.proficienciesGained.armor != null).find("span").html(mc.proficienciesGained.armor ? renderArmorProfs(mc.proficienciesGained.armor) : "");
+				const $mcProfWeapons = $(`#multiclassing_profs_weapons`).toggle(mc.proficienciesGained.weapons != null).find("span").html(mc.proficienciesGained.weapons ? renderWeaponsProfs(mc.proficienciesGained.weapons) : "");
+				const $mcProfTools = $(`#multiclassing_profs_tools`).toggle(mc.proficienciesGained.tools != null).find("span").html(mc.proficienciesGained.tools ? renderToolsProfs(mc.proficienciesGained.tools) : "");
+				const $mcProfSkills = $(`#multiclassing_profs_skills`).toggle(mc.proficienciesGained.skills != null).find("span").html(mc.proficienciesGained.skills ? renderSkillsProfs(mc.proficienciesGained.skills) : "");
+			} else {
+				$(`#multiclassing_profs`).hide();
+				$(`#multiclassing_profs_armor`).hide();
+				$(`#multiclassing_profs_weapons`).hide();
+				$(`#multiclassing_profs_tools`).hide();
+				$(`#multiclassing_profs_skills`).hide();
+			}
+		} else {
+			$("#multiclassing").hide();
+		}
+
+		$(`#statsprof_divider`).toggle(!!(ClassDisplay.curClass.hd ||
+			ClassDisplay.curClass.proficiency ||
+			ClassDisplay.curClass.startingProficiencies ||
+			ClassDisplay.curClass.startingEquipment ||
+			ClassDisplay.curClass.multiclassing));
 
 		// FEATURE TABLE ===================================================================================================
 		renderer.resetHeaderIndex();
-		const tData = ClassDisplay.curClass.classTableGroups;
+		const tData = (ClassDisplay.curClass.classTableGroups || []).filter(tg => tg.subclasses == null);
+
+		const tgSourcesMap = new Map();
+
+		const addToSourceMap = function (tg, source) {
+			const tgString = JSON.stringify(tg);
+			if (!tgSourcesMap.has(tgString)) tgSourcesMap.set(tgString, []);
+			tgSourcesMap.get(tgString).push(source);
+		};
+
+		(ClassDisplay.curClass.classTableGroups || [])
+			.filter(tg => tg.subclasses != null)
+			.map(tg => {
+				const {subclasses, ...tgData} = tg;
+				tg.subclasses.map(s => addToSourceMap(tgData, s));
+			});
+
+		ClassDisplay.curClass.subclasses
+			.filter(s => s.subclassTableGroups != null)
+			.map(s => {
+				const sSource = {"name": s.name, "source": s.source};
+				s.subclassTableGroups.map(tg => addToSourceMap(tg, sSource));
+			});
+
+		tgSourcesMap.forEach((value, key) => {
+			const tgObj = JSON.parse(key);
+			tgObj.subclasses = value;
+			tData.push(tgObj);
+		});
+
 		const groupHeaders = $("#groupHeaders");
 		const colHeaders = $("#colHeaders");
-		const levelTrs = [];
-		for (let i = 0; i < tData.length; i++) {
-			const tGroup = tData[i];
+		const $levelTrs = [];
 
-			const hasTitle = tGroup.title !== undefined;
-			let subclassData = "";
-			if (tGroup.subclasses !== undefined) {
-				subclassData =
-					`${ATB_DATA_SC_LIST}="${tGroup.subclasses.map(s => FeatureTable.getTableDataScData(s.name, ClassData.cleanScSource(s.source))).join(ATB_DATA_LIST_SEP)}"`;
+		// support for more than (or less than) 20 levels
+		(() => {
+			let i = 0;
+			let $ele;
+			while (($ele = $(`#level${i++ + 1}`)).length) $levelTrs.push($ele);
+			const lenDiff = ClassDisplay.curClass.classFeatures.length - $levelTrs.length;
+			if (lenDiff > 0) {
+				let addCount = 1;
+				[...new Array(lenDiff)].forEach(() => {
+					const level = $levelTrs.length + addCount++;
+					$levelTrs.push($(`<tr id="level${level}">
+						<td class="level">${Parser.getOrdinalForm(level)}</td>
+						<td class="pb">+6</td>
+						<td class="features"></td>
+					</tr>`).insertAfter($levelTrs.last()));
+				});
+			} else if (lenDiff < 0) {
+				[...new Array(-lenDiff)].forEach(() => $levelTrs.pop().remove());
 			}
-			groupHeaders.append(`<th ${hasTitle ? `class="colGroupTitle"` : ""} colspan="${tGroup.colLabels.length}" ${subclassData}>${hasTitle ? tGroup.title : ""}</th>`);
+		})();
 
-			for (let j = 0; j < tGroup.colLabels.length; j++) {
-				let lbl = renderer.renderEntry(tGroup.colLabels[j]);
-				colHeaders.append(`<th class="centred-col" ${subclassData}>${lbl}</th>`)
-			}
+		if (tData) {
+			for (let i = 0; i < tData.length; i++) {
+				const tGroup = tData[i];
 
-			for (let j = 0; j < tGroup.rows.length; j++) {
-				const tr = $(`#level${j + 1}`);
-				levelTrs[j] = tr;
-				for (let k = 0; k < tGroup.rows[j].length; k++) {
-					let entry = tGroup.rows[j][k];
-					if (entry === 0) entry = "\u2014";
-					const stack = [];
-					renderer.recursiveEntryRender(entry, stack);
-					tr.append(`<td class="centred-col" ${subclassData}>${stack.join("")}</td>`)
+				const hasTitle = tGroup.title !== undefined;
+				let subclassData = "";
+				if (tGroup.subclasses !== undefined) {
+					subclassData =
+						`${ATB_DATA_SC_LIST}="${tGroup.subclasses.map(s => FeatureTable.getTableDataScData(s.name, ClassData.cleanScSource(s.source))).join(ATB_DATA_LIST_SEP)}"`;
+				}
+				groupHeaders.append(`<th ${hasTitle ? `class="colGroupTitle"` : ""} colspan="${tGroup.colLabels.length}" ${subclassData}>${hasTitle ? tGroup.title : ""}</th>`);
+
+				for (let j = 0; j < tGroup.colLabels.length; j++) {
+					let lbl = `<div class="cls__squash_header">${renderer.render(tGroup.colLabels[j])}</div>`;
+					colHeaders.append(`<th class="centred-col" ${subclassData}>${lbl}</th>`)
+				}
+
+				for (let j = 0; j < tGroup.rows.length; j++) {
+					for (let k = 0; k < tGroup.rows[j].length; k++) {
+						let entry = tGroup.rows[j][k];
+						if (entry === 0) entry = "\u2014";
+						const stack = [];
+						renderer.recursiveRender(entry, stack);
+						$levelTrs[j].append(`<td class="centred-col" ${subclassData}>${stack.join("")}</td>`)
+					}
 				}
 			}
 		}
@@ -316,15 +441,25 @@ class HashLoad {
 
 		// FLUFF
 		if (ClassDisplay.curClass.fluff) {
-			renderer.recursiveEntryRender({type: "section", name: ClassDisplay.curClass.name, entries: ClassDisplay.curClass.fluff}, renderStack, 0,
-				{prefix: `<tr class="text ${CLSS_CLASS_FLUFF}"><td colspan="6">`, suffix: `</td></tr>`, forcePrefixSuffix: true});
+			renderStack.push(`<tr class="text ${CLSS_CLASS_FLUFF}"><td colspan="6">`);
+			ClassDisplay.curClass.fluff.forEach((f, i) => {
+				const toRender = Object.assign({}, f);
+				toRender.type = toRender.type || "section";
+				if (i === 0 && !toRender.name) toRender.name = ClassDisplay.curClass.name;
+				if (f.source && f.source !== SRC_PHB && toRender.entries) {
+					toRender.entries = MiscUtil.copy(toRender.entries);
+					toRender.entries.unshift(`{@note The following information is from ${Parser.sourceJsonToFull(f.source)}${f.page > 0 ? `, page ${f.page}` : ""}.}`)
+				}
+				renderer.recursiveRender(toRender, renderStack);
+			});
+			renderStack.push(`</td></tr>`);
 		}
 
 		// FEATURE DESCRIPTIONS
 		let subclassIndex = 0; // the subclass array is not 20 elements
-		for (let i = 0; i < levelTrs.length; i++) {
+		for (let i = 0; i < $levelTrs.length; i++) {
 			// track class table feature names
-			const tblLvlFeatures = levelTrs[i].find(".features");
+			const tblLvlFeatures = $levelTrs[i].find(".features");
 			// used to build class table
 			const featureLinks = [];
 
@@ -333,9 +468,9 @@ class HashLoad {
 			for (let j = 0; j < lvlFeatureList.length; j++) {
 				const feature = lvlFeatureList[j];
 				const idLevelPart = UrlUtil.encodeForHash(` ${i + 1}`);
-				const featureId = `${HASH_FEATURE}${UrlUtil.encodeForHash(feature.name)}${idLevelPart}`;
+				const featureId = `${CLSS_HASH_FEATURE}${UrlUtil.encodeForHash(feature.name)}${idLevelPart}`;
 
-				const featureLinkPart = `${HASH_FEATURE}${UrlUtil.encodeForHash(feature.name)}${idLevelPart}`;
+				const featureLinkPart = `${CLSS_HASH_FEATURE}${UrlUtil.encodeForHash(feature.name)}${idLevelPart}`;
 				const featureLink = $(`<a href="${HashLoad.getClassHash(
 					ClassDisplay.curClass)}${HASH_PART_SEP}${featureLinkPart}" class="${CLSS_FEATURE_LINK}" ${ATB_DATA_FEATURE_LINK}="${featureLinkPart}" ${ATB_DATA_FEATURE_ID}="${featureId}">${feature.name}</a>`);
 				featureLink.click(function () {
@@ -353,7 +488,9 @@ class HashLoad {
 				const styleClasses = [CLSS_CLASS_FEATURE, "linked-titles--classes"];
 				if (feature.gainSubclassFeature) styleClasses.push(CLSS_GAIN_SUBCLASS_FEATURE);
 
-				renderer.recursiveEntryRender(feature, renderStack, 0, {prefix: `<tr id="${featureId}" class="${styleClasses.join(" ")}"><td colspan="6">`, suffix: `</td></tr>`, forcePrefixSuffix: true});
+				renderStack.push(`<tr id="${featureId}" class="${styleClasses.join(" ")}"><td colspan="6">`);
+				renderer.recursiveRender(feature, renderStack);
+				renderStack.push(`</td></tr>`);
 
 				// add subclass features to render stack if appropriate
 				if (feature.gainSubclassFeature) {
@@ -377,12 +514,9 @@ class HashLoad {
 							}
 
 							const styleClasses = FeatureDescription.getSubclassStyles(subClass);
-							renderer.recursiveEntryRender(subFeature, renderStack, 0, {
-								prefix: `<tr class="text ${styleClasses.join(" ")}" ${ATB_DATA_SC}="${subClass.name}" ${ATB_DATA_SRC}="${
-									ClassData.cleanScSource(subClass.source)}"><td colspan="6">`,
-								suffix: `</td></tr>`,
-								forcePrefixSuffix: true
-							});
+							renderStack.push(`<tr class="text ${styleClasses.join(" ")}" ${ATB_DATA_SC}="${subClass.name}" ${ATB_DATA_SRC}="${ClassData.cleanScSource(subClass.source)}"><td colspan="6">`);
+							renderer.recursiveRender(subFeature, renderStack);
+							renderStack.push(`</td></tr>`);
 						}
 					}
 					subclassIndex++;
@@ -411,7 +545,7 @@ class HashLoad {
 
 		// show/hide class features pill
 		HashLoad.makeGenericTogglePill("Class Features", CLSS_CLASS_FEATURES_ACTIVE, ID_CLASS_FEATURES_TOGGLE, HASH_HIDE_FEATURES, true, "Toggle class features");
-		if (ClassDisplay.curClass.fluff) HashLoad.makeGenericTogglePill("Info", CLSS_FLUFF_ACTIVE, ID_FLUFF_TOGGLE, HASH_SHOW_FLUFF, false, "Toggle class detail information (Source: Xanathar's Guide to Everything)");
+		if (ClassDisplay.curClass.fluff) HashLoad.makeGenericTogglePill("Info", CLSS_FLUFF_ACTIVE, ID_FLUFF_TOGGLE, HASH_SHOW_FLUFF, false, "Toggle class detail information");
 
 		// show/hide UA/other sources
 		HashLoad.makeSourceCyclePill();
@@ -422,27 +556,28 @@ class HashLoad {
 		// subclass pills
 		const subClasses = ClassDisplay.curClass.subclasses
 			.filter(sc => !ExcludeUtil.isExcluded(sc.name, "subclass", sc.source))
-			.map(sc => ({name: sc.name, source: sc.source, shortName: sc.shortName}))
-			.sort(function (a, b) {
-				return SortUtil.ascSort(a.shortName, b.shortName)
-			});
+			.sort((a, b) => SortUtil.ascSort(a.shortName, b.shortName));
 		for (let i = 0; i < subClasses.length; i++) {
-			const subClass = subClasses[i];
-			const nonStandardSource = SourceUtil.isNonstandardSource(subClass.source) || SourceUtil.hasBeenReprinted(subClass.shortName, subClass.source) || (subClass.source.source || subClass.source) === SRC_DMG;
+			const sc = subClasses[i];
+			const nonStandardSource = _isNonStandardSource(sc) || SourceUtil.hasBeenReprinted(sc.shortName, sc.source) || sc.source === SRC_DMG;
 			const styleClasses = [CLSS_ACTIVE, CLSS_SUBCLASS_PILL, "sc_pill"];
 			if (nonStandardSource) styleClasses.push(CLSS_NON_STANDARD_SOURCE);
-			if (FeatureDescription.subclassIsFreshUa(subClass)) styleClasses.push(CLSS_FRESH_UA);
-			if (BrewUtil.hasSourceJson(ClassData.cleanScSource(subClass.source))) styleClasses.push(CLSS_HOMEBREW_SOURCE);
-			const reprinted = SourceUtil.hasBeenReprinted(subClass.shortName, subClass.source);
-			const pillText = reprinted ? `${subClass.shortName} (${Parser.sourceJsonToAbv(subClass.source)})` : subClass.shortName;
-			const pillPostText = reprinted || SourceUtil.isNonstandardSource(subClass.source) ? "" : ` (${Parser.sourceJsonToAbv(subClass.source)})`;
-			const pill = $(`<span class="${styleClasses.join(" ")}" ${ATB_DATA_SC}="${subClass.name}" ${ATB_DATA_SRC}="${
-				ClassData.cleanScSource(subClass.source)}" title="Source: ${Parser.sourceJsonToFull(subClass.source)}"><span>${pillText}<span class="sc_pill__source_suffix">${pillPostText}</span></span></span>`);
-			pill.click(function () {
-				HashLoad.handleSubclassClick($(this).hasClass(CLSS_ACTIVE), subClasses[i].name, ClassData.cleanScSource(subClasses[i].source));
-			});
-			if (nonStandardSource) pill.hide();
-			HashLoad.subclassPillWrapper.append(pill);
+			if (FeatureDescription.subclassIsFreshUa(sc)) styleClasses.push(CLSS_FRESH_UA);
+			if (BrewUtil.hasSourceJson(ClassData.cleanScSource(sc.source))) styleClasses.push(CLSS_HOMEBREW_SOURCE);
+			const reprinted = SourceUtil.hasBeenReprinted(sc.shortName, sc.source);
+			const pillText = reprinted ? `${sc.shortName} (${Parser.sourceJsonToAbv(sc.source)})` : sc.shortName;
+			const pillPostText = reprinted || _isNonStandardSource(sc) ? "" : ` (${Parser.sourceJsonToAbv(sc.source)})`;
+			const $pill = $(`<span class="${styleClasses.join(" ")}" ${ATB_DATA_SC}="${sc.name}" ${ATB_DATA_SRC}="${
+				ClassData.cleanScSource(sc.source)}" title="Source: ${Parser.sourceJsonToFull(sc.source)}"><span>${pillText}<span class="sc_pill__source_suffix">${pillPostText}</span></span></span>`);
+			const handlePillClick = () => HashLoad.handleSubclassClick($pill.hasClass(CLSS_ACTIVE), subClasses[i].name, ClassData.cleanScSource(subClasses[i].source));
+			$pill.click(handlePillClick)
+				.contextmenu(evt => {
+					if (evt.ctrlKey) return;
+					evt.preventDefault();
+					handlePillClick();
+				});
+			if (nonStandardSource) $pill.hide();
+			HashLoad.subclassPillWrapper.append($pill);
 		}
 
 		// spacer before "Feeling Lucky" pill
@@ -451,8 +586,8 @@ class HashLoad {
 		HashLoad.makeToggleSourcesPill();
 		HashLoad.makeResetPill();
 
-		// call loadsub with a blank sub-hash, to ensure the right content is displayed
-		loadsub([]);
+		// call loadSubHash with a blank sub-hash, to ensure the right content is displayed
+		loadSubHash([]);
 	}
 
 	static makeSourceCyclePill () {
@@ -465,6 +600,14 @@ class HashLoad {
 			$pill.attr("data-state", state);
 			$pill.find(`span`).text(STRS_SOURCE_STATES[state]);
 			HashLoad.setSourceState(state);
+		}).contextmenu(evt => {
+			if (evt.ctrlKey) return;
+			evt.preventDefault();
+			let state = Number($pill.attr("data-state"));
+			if (--state < 0) state = STRS_SOURCE_STATES.length - 1;
+			$pill.attr("data-state", state);
+			$pill.find(`span`).text(STRS_SOURCE_STATES[state]);
+			HashLoad.setSourceState(state);
 		});
 	}
 
@@ -473,11 +616,14 @@ class HashLoad {
 		const pill = $(`<span title="${title}" id="${pillId}" class="sc_pill"><span>${pillText}</span></span>`);
 		if (defaultActive) pill.addClass(pillActiveClass);
 		HashLoad.subclassPillWrapper.append(pill);
-		pill.click(function () {
+		const onPillClick = function (evt) {
+			if (evt.ctrlKey) return;
+			evt.preventDefault();
 			let active = $(this).hasClass(pillActiveClass);
 			if (!defaultActive) active = !active;
 			handleToggleFeaturesClicks(active)
-		});
+		};
+		pill.click(onPillClick).contextmenu(onPillClick);
 		return pill;
 
 		function handleToggleFeaturesClicks (isPillActive) {
@@ -626,7 +772,9 @@ class HashLoad {
 HashLoad.subclassPillWrapper = undefined;
 
 class SubClassLoader {
-	static loadsub (sub) {
+	static loadSubHash (sub) {
+		const $pgContent = $(`#pagecontent`);
+
 		let subclasses = null;
 		let feature = null;
 		let hideClassFeatures = null;
@@ -646,7 +794,7 @@ class SubClassLoader {
 			const hashPart = sub[i];
 
 			if (hashPart.startsWith(HASH_SUBCLASS)) subclasses = hashPart.slice(HASH_SUBCLASS.length).split(HASH_LIST_SEP);
-			if (hashPart.startsWith(HASH_FEATURE)) feature = hashPart;
+			if (hashPart.startsWith(CLSS_HASH_FEATURE)) feature = hashPart;
 			if (hashPart.startsWith(HASH_HIDE_FEATURES)) hideClassFeatures = sliceTrue(hashPart, HASH_HIDE_FEATURES);
 			if (hashPart.startsWith(HASH_SHOW_FLUFF)) showFluff = sliceTrue(hashPart, HASH_SHOW_FLUFF);
 			if (hashPart.startsWith(HASH_SOURCES)) sources = hashPart.slice(HASH_SOURCES.length);
@@ -722,16 +870,16 @@ class SubClassLoader {
 			if ($toShow.length === 0) {
 				SubClassLoader.hideAllSubclasses(sub, hideAllSources);
 			} else {
-				const otherSrcSubFeat = $(`#pagecontent`).find(`div.${CLSS_NON_STANDARD_SOURCE}`);
+				const $otherSrcSubFeat = $pgContent.find(`div.${CLSS_NON_STANDARD_SOURCE}`);
 				const shownInTable = [];
 
 				$.each($toShow, function (i, v) {
 					v.addClass(CLSS_ACTIVE);
 					$(`.${CLSS_SUBCLASS_FEATURE}[${ATB_DATA_SC}="${v.attr(ATB_DATA_SC)}"][${ATB_DATA_SRC}="${v.attr(ATB_DATA_SRC)}"]`).show();
 					if (hideAllSources || hideSomeSources) {
-						otherSrcSubFeat.filter(`[${ATB_DATA_SC}="${v.attr(ATB_DATA_SC)}"][${ATB_DATA_SRC}="${v.attr(ATB_DATA_SRC)}"]`).hide();
+						$otherSrcSubFeat.filter(`[${ATB_DATA_SC}="${v.attr(ATB_DATA_SC)}"][${ATB_DATA_SRC}="${v.attr(ATB_DATA_SRC)}"]`).hide();
 					} else {
-						otherSrcSubFeat.filter(`[${ATB_DATA_SC}="${v.attr(ATB_DATA_SC)}"][${ATB_DATA_SRC}="${v.attr(ATB_DATA_SRC)}"]`).show();
+						$otherSrcSubFeat.filter(`[${ATB_DATA_SC}="${v.attr(ATB_DATA_SC)}"][${ATB_DATA_SRC}="${v.attr(ATB_DATA_SRC)}"]`).show();
 					}
 
 					const asInTable = FeatureTable.getTableDataScData(v.attr(ATB_DATA_SC), v.attr(ATB_DATA_SRC));
@@ -742,14 +890,14 @@ class SubClassLoader {
 				$.each($toHide, function (i, v) {
 					v.removeClass(CLSS_ACTIVE);
 					$(`.${CLSS_SUBCLASS_FEATURE}[${ATB_DATA_SC}="${v.attr(ATB_DATA_SC)}"][${ATB_DATA_SRC}="${v.attr(ATB_DATA_SRC)}"]`).hide();
-					otherSrcSubFeat.filter(`[${ATB_DATA_SC}="${v.attr(ATB_DATA_SC)}"][${ATB_DATA_SRC}="${v.attr(ATB_DATA_SRC)}"]`).hide();
+					$otherSrcSubFeat.filter(`[${ATB_DATA_SC}="${v.attr(ATB_DATA_SC)}"][${ATB_DATA_SRC}="${v.attr(ATB_DATA_SRC)}"]`).hide();
 
 					const asInTable = FeatureTable.getTableDataScData(v.attr(ATB_DATA_SC), v.attr(ATB_DATA_SRC));
 					SubClassLoader.handleTableGroups(shownInTable, asInTable, false);
 				});
 
-				const $spicy_NotScFeature_NoSubclassNoSource = otherSrcSubFeat.not(`.${CLSS_SUBCLASS_FEATURE}`).filter(`:not([${ATB_DATA_SC}]):not([${ATB_DATA_SRC}])`);
-				const $spicy_NotScFeature_NoneSubclassNoneSource = otherSrcSubFeat.not(`.${CLSS_SUBCLASS_FEATURE}`).filter(`[${ATB_DATA_SC}="${EntryRenderer.DATA_NONE}"][${ATB_DATA_SRC}="${EntryRenderer.DATA_NONE}"]`);
+				const $spicy_NotScFeature_NoSubclassNoSource = $otherSrcSubFeat.not(`.${CLSS_SUBCLASS_FEATURE}`).filter(`:not([${ATB_DATA_SC}]):not([${ATB_DATA_SRC}])`);
+				const $spicy_NotScFeature_NoneSubclassNoneSource = $otherSrcSubFeat.not(`.${CLSS_SUBCLASS_FEATURE}`).filter(`[${ATB_DATA_SC}="${Renderer.DATA_NONE}"][${ATB_DATA_SRC}="${Renderer.DATA_NONE}"]`);
 				if (hideAllSources) {
 					$spicy_NotScFeature_NoSubclassNoSource.hide();
 					$spicy_NotScFeature_NoneSubclassNoneSource.hide();
@@ -760,67 +908,74 @@ class SubClassLoader {
 			}
 
 			// show subclass prefixes if we're displaying more than 1 subclass
-			if ($toShow.length !== 1) {
-				$(`.${CLSS_SUBCLASS_PREFIX}`).show();
-			} else {
-				$(`.${CLSS_SUBCLASS_PREFIX}`).hide();
-			}
+			$(`.${CLSS_SUBCLASS_PREFIX}`).toggle($toShow.length > 1);
 		} else {
 			SubClassLoader.hideAllSubclasses(sub, hideAllSources);
 			ClassBookView.updateVisible([], $(`.${CLSS_SUBCLASS_PILL}`).map((i, e) => $(e)).get());
 		}
 
 		// hide class features as required
-		const cfToggle = $(`#${ID_CLASS_FEATURES_TOGGLE}`);
-		const allCf = $(`#pagecontent`).find(`.${CLSS_CLASS_FEATURE}`);
-		const toToggleCf = allCf.not(`.${CLSS_GAIN_SUBCLASS_FEATURE}`);
+		const $cfToggle = $(`#${ID_CLASS_FEATURES_TOGGLE}`);
+		const $allCf = $pgContent.find(`.${CLSS_CLASS_FEATURE}`);
+		const $toToggleCf = $allCf.not(`.${CLSS_GAIN_SUBCLASS_FEATURE}`);
 		const isHideClassFeatures = hideClassFeatures !== null && hideClassFeatures;
 		// if showing no subclass and hiding class features, hide the "gain a feature at this level" labels
 		if (isHideClassFeatures && subclasses === null) {
-			allCf.hide();
+			$allCf.hide();
 			if (!showFluff) {
 				$(`#please-select-message`).addClass("showing");
 			} else {
 				$(`#please-select-message`).removeClass("showing");
 			}
 		} else {
-			allCf.show();
+			$allCf.show();
 			$(`#please-select-message`).removeClass("showing");
 		}
 		if (isHideClassFeatures) {
-			cfToggle.removeClass(CLSS_CLASS_FEATURES_ACTIVE);
-			toToggleCf.hide();
+			$cfToggle.removeClass(CLSS_CLASS_FEATURES_ACTIVE);
+			$toToggleCf.hide();
 		} else {
-			cfToggle.addClass(CLSS_CLASS_FEATURES_ACTIVE);
-			toToggleCf.show();
+			$cfToggle.addClass(CLSS_CLASS_FEATURES_ACTIVE);
+			$toToggleCf.show();
 		}
 
 		// show fluff as required
-		const fluffToggle = $(`#${ID_FLUFF_TOGGLE}`);
-		const fluff = $(`#pagecontent`).find(`.${CLSS_CLASS_FLUFF}`);
+		const $fluffToggle = $(`#${ID_FLUFF_TOGGLE}`);
+		const $fluff = $pgContent.find(`.${CLSS_CLASS_FLUFF}`);
 		if (!showFluff) {
-			fluffToggle.removeClass(CLSS_FLUFF_ACTIVE);
-			fluff.hide();
+			ClassList.classList.items.forEach(it => {
+				const $e = $(it.elm).find("a");
+				const nuHref = $e.attr("href").split(HASH_PART_SEP)[0];
+				$e.attr("href", nuHref);
+			});
+			$fluffToggle.removeClass(CLSS_FLUFF_ACTIVE);
+			$fluff.hide();
 		} else {
-			fluffToggle.addClass(CLSS_FLUFF_ACTIVE);
-			fluff.show();
+			ClassList.classList.items.forEach(it => {
+				const $e = $(it.elm).find("a");
+				const nuHrefBase = $e.attr("href").split(HASH_PART_SEP)[0];
+				const nuHref = [nuHrefBase, `${HASH_SHOW_FLUFF}${true}`].join(HASH_PART_SEP);
+				$e.attr("href", nuHref);
+			});
+			$fluffToggle.addClass(CLSS_FLUFF_ACTIVE);
+			$fluff.show();
 		}
 
 		// show UA/etc pills as required
-		const srcToggle = $(`#${ID_OTHER_SOURCES_TOGGLE}`);
-		const toToggleSrc = $(`.${CLSS_SUBCLASS_PILL}.${CLSS_NON_STANDARD_SOURCE}`).not(`.${CLSS_PANEL_LINK}`);
+		const $btnToggleSrcMode = $(`#${ID_OTHER_SOURCES_TOGGLE}`);
+		const $elesToToggle = $(`.${CLSS_SUBCLASS_PILL}.${CLSS_NON_STANDARD_SOURCE}`).not(`.${CLSS_PANEL_LINK}`);
 		if (hideAllSources) {
-			srcToggle.find(`span`).text(STRS_SOURCE_STATES[0]);
-			srcToggle.attr("data-state", STR_SOURCES_OFFICIAL);
-			toToggleSrc.hide();
+			$btnToggleSrcMode.find(`span`).text(STRS_SOURCE_STATES[0]);
+			$btnToggleSrcMode.attr("data-state", STR_SOURCES_OFFICIAL);
+			$elesToToggle.hide();
 		} else if (hideSomeSources) {
-			srcToggle.find(`span`).text(STRS_SOURCE_STATES[1]);
-			srcToggle.attr("data-state", STR_SOURCES_MIXED);
-			toToggleSrc.show().not(`.${CLSS_FRESH_UA}`).hide();
+			$btnToggleSrcMode.find(`span`).text(STRS_SOURCE_STATES[1]);
+			$btnToggleSrcMode.attr("data-state", STR_SOURCES_MIXED);
+			$elesToToggle.show().not(`.${CLSS_FRESH_UA}`).hide();
 		} else {
-			srcToggle.find(`span`).text(STRS_SOURCE_STATES[2]);
-			srcToggle.attr("data-state", STR_SOURCES_ALL);
-			toToggleSrc.show();
+			$btnToggleSrcMode.find(`span`).text(STRS_SOURCE_STATES[2]);
+			$btnToggleSrcMode.attr("data-state", STR_SOURCES_ALL);
+			$elesToToggle.show();
 		}
 
 		// scroll to the linked feature if required
@@ -832,17 +987,11 @@ class SubClassLoader {
 		SubClassLoader.updateClassTableLinks();
 		SubClassLoader.updateNavLinks(sub);
 
-		if (bookView) {
-			ClassBookView.open();
-		} else {
-			ClassBookView.teardown();
-		}
+		if (bookView) ClassBookView.open();
+		else ClassBookView.teardown();
 
-		if (comparisonView && subclassComparisonView) {
-			subclassComparisonView.open();
-		} else if (subclassComparisonView) {
-			subclassComparisonView.teardown();
-		}
+		if (comparisonView && subclassComparisonView) subclassComparisonView.open();
+		else if (subclassComparisonView) subclassComparisonView.teardown();
 
 		$(`.sc_pill__source_suffix`).toggle(!!showPillSources);
 		$(`.sc_pill__source`).toggleClass(CLSS_ACTIVE, !!showPillSources);
@@ -867,11 +1016,7 @@ class SubClassLoader {
 				for (let i = 0; i < scs.length; i++) {
 					const sc = scs[i];
 					if (sc === tableDataTag) {
-						if (show) {
-							$this.show();
-						} else {
-							$this.hide();
-						}
+						$this.toggle(!!show);
 						break;
 					}
 				}
@@ -886,7 +1031,7 @@ class SubClassLoader {
 			SubClassLoader.partCache = [];
 			for (let i = 0; i < hashParts.length; i++) {
 				const part = hashParts[i];
-				if (!part.startsWith(HASH_FEATURE)) SubClassLoader.partCache.push(part);
+				if (!part.startsWith(CLSS_HASH_FEATURE)) SubClassLoader.partCache.push(part);
 			}
 		}
 		return HASH_START + SubClassLoader.partCache.join(HASH_PART_SEP) + HASH_PART_SEP + featurePart;
@@ -924,23 +1069,21 @@ class SubClassLoader {
 	}
 
 	static updateNavLinks (sub) {
-		function makeScroller ($nav, idTr, parentTr, idClass, displayText, scrollTo) {
-			let navClass;
-			switch (idClass) {
-				case "statsBlockSectionHead":
-					navClass = "n1";
-					break;
-				case "statsBlockHead":
-					navClass = "n2";
-					break;
-				case "statsBlockSubHead":
-					navClass = "n3";
-					break;
-			}
-			if (typeof navClass !== "undefined") {
+		function makeScroller ($nav, $ele, idTr, parentTr, idClasses, displayText, scrollTo) {
+			const navClass = idClasses.split(" ").map(idClass => {
+				switch (idClass) {
+					case Renderer.HEAD_NEG_1: return "n1";
+					case Renderer.HEAD_0: return "n2";
+					case Renderer.HEAD_1: return "n3";
+				}
+			}).filter(Boolean)[0];
+			if (navClass != null) {
 				const subClass = parentTr.length ? parentTr.hasClass("subclass-feature") : false;
-				const ua = parentTr.length ? parentTr.hasClass("spicy-sauce") : false;
-				const brew = parentTr.length ? parentTr.hasClass("refreshing-brew") : false;
+				// either the element itself or the root feature can be a special colour
+				const ua = $ele.parent().hasClass("spicy-sauce") ? true
+					: parentTr.length ? parentTr.hasClass("spicy-sauce") : false;
+				const brew = $ele.parent().hasClass("refreshing-brew") ? true
+					: parentTr.length ? parentTr.hasClass("refreshing-brew") : false;
 				$(`<div class="nav-item ${navClass} ${brew ? "purple" : ua ? "green" : subClass ? "blue" : ""}">${displayText}</div>`).on("click", () => {
 					if (idTr.length) {
 						window.location.hash = SubClassLoader.getFeatureLink(idTr.attr("id"))
@@ -952,33 +1095,33 @@ class SubClassLoader {
 			}
 		}
 
-		if (!CollectionUtil.arrayEq(SubClassLoader.prevSub, sub)) { // checking array equality is faster than hitting the DOM
+		if (!(SubClassLoader.prevSub === sub && SubClassLoader.prevSub.equals(sub))) { // checking array equality is faster than hitting the DOM
 			setTimeout(() => {
 				const $nav = $(`#sticky-nav`);
 				const $hr = $nav.find(`hr`);
 				const $navBody = $nav.find(`.nav-body`).empty();
 				const $navHead = $nav.find(`.nav-head`);
-				$navHead.find(`div`).off("click").on("click", () => {
+				$navHead.find(`.nav-outline`).off("click").on("click", () => {
 					$navBody.toggle();
 					$hr.toggle();
 					const nextState = Number(!Number($navHead.attr("data-state")));
 					$navHead.attr("data-state", nextState);
 				});
-				const $titles = $(`.entry-title`);
+				const $titles = $(`.rd__h`);
 				$titles.each((i, e) => {
 					const $e = $(e);
 					const pClass = $e.parent().attr("class").trim();
-					if (pClass === "statsInlineHead") return; // consider enabling these for e.g. maneuvers?
+					if (pClass.split(" ").includes(Renderer.HEAD_2)) return; // consider enabling these for e.g. maneuvers?
 					if (!$e.is(":visible")) return;
 					const idTr = $e.closest(`tr[id]`);
 					const pTr = $e.closest(`tr`);
 					const textNodes = $e.find(`.entry-title-inner`).contents().filter(function () {
-						return this.nodeType === 3;
+						return this.nodeType === 3 && this.nodeValue.trim();
 					});
 					if (!textNodes.length) return;
-					const displayText = textNodes[0].nodeValue.replace(/[:.]$/g, "");
+					const displayText = textNodes[0].nodeValue.trim().replace(/[:.]$/g, "");
 					const scrollTo = $e.data("title-index");
-					makeScroller($navBody, idTr, pTr, pClass, displayText, scrollTo);
+					makeScroller($navBody, $e, idTr, pTr, pClass, displayText, scrollTo);
 				});
 			}, 5); // delay hack to allow rendering to catch up
 		}
@@ -1000,7 +1143,7 @@ function initCompareMode () {
 				ClassDisplay.curClass.subclasses.filter(sc => !ExcludeUtil.isExcluded(sc.name, "subclass", sc.source)).forEach((sc, j) => {
 					renderStack.push(`<td class="subclass-features-${j} ${FeatureDescription.getSubclassStyles(sc).join(" ")}">`);
 					sc.subclassFeatures[i].forEach(f => {
-						renderer.recursiveEntryRender(f, renderStack);
+						renderer.recursiveRender(f, renderStack);
 					});
 					renderStack.push(`</td>`);
 				});
@@ -1011,12 +1154,10 @@ function initCompareMode () {
 
 			let numShown = 0;
 			ClassDisplay.curClass.subclasses.filter(sc => !ExcludeUtil.isExcluded(sc.name, "subclass", sc.source)).forEach((sc, i) => {
-				const $pill = $(`.${CLSS_SUBCLASS_PILL}[data-subclass="${sc.name}"][data-source="${sc.source.source || sc.source}"]`);
+				const $pill = $(`.${CLSS_SUBCLASS_PILL}[data-subclass="${sc.name}"][data-source="${sc.source}"]`);
 				if (!($pill.hasClass(CLSS_ACTIVE))) {
 					$tbl.find(`.subclass-features-${i}`).hide();
-				} else {
-					numShown++;
-				}
+				} else numShown++;
 			});
 
 			$tbl.find(`tr > td > div`).css("width", "400px");
@@ -1052,24 +1193,24 @@ class ClassBookView {
 
 		// main panel
 		const $pnlContent = $(`<div class="pnl-content"/>`);
-		const $bkTbl = $(`<table class="stats stats-book"/>`);
+		const $bkTbl = $(`<table class="stats stats-book stats-book--large"/>`);
 		ClassBookView._$bkTbl = $bkTbl;
 		const $brdTop = $(`<tr><th class="border close-border" colspan="6"><div/></th></tr>`);
 		const $btnClose = $(`<span class="delete-icon glyphicon glyphicon-remove"></span>`)
-			.on("click", () => {
-				hashTeardown();
-			});
+			.on("click", () => hashTeardown());
 		$brdTop.find(`div`).append($btnClose);
 		$bkTbl.append($brdTop);
 
 		const renderStack = [];
 		renderer.setFirstSection(true);
-		renderer.recursiveEntryRender({type: "section", name: ClassDisplay.curClass.name}, renderStack, 0, {prefix: `<tr><td colspan="6">`, suffix: `</td></tr>`, forcePrefixSuffix: true});
+		renderStack.push(`<tr><td colspan="6">`);
+		renderer.recursiveRender({type: "section", name: ClassDisplay.curClass.name}, renderStack);
+		renderStack.push(`</td></tr>`);
 
 		renderStack.push(`<tr class="text class-features"><td colspan="6">`);
 		ClassDisplay.curClass.classFeatures.forEach(lvl => {
 			lvl.forEach(cf => {
-				renderer.recursiveEntryRender(cf, renderStack);
+				renderer.recursiveRender(cf, renderStack);
 			});
 		});
 		renderStack.push(`</td></tr>`);
@@ -1078,12 +1219,12 @@ class ClassBookView {
 			renderStack.push(`<tr class="subclass-features-${i} ${FeatureDescription.getSubclassStyles(sc).join(" ")}"><td colspan="6">`);
 			sc.subclassFeatures.forEach(lvl => {
 				lvl.forEach(f => {
-					renderer.recursiveEntryRender(f, renderStack);
+					renderer.recursiveRender(f, renderStack);
 				});
 			});
 			renderStack.push(`</td></tr>`);
 		});
-		renderStack.push(EntryRenderer.utils.getBorderTr());
+		renderStack.push(Renderer.utils.getBorderTr());
 		$bkTbl.append(renderStack.join(""));
 		$pnlContent.append($bkTbl);
 
@@ -1105,10 +1246,10 @@ class ClassBookView {
 		ClassDisplay.curClass.subclasses.filter(sc => !ExcludeUtil.isExcluded(sc.name, "subclass", sc.source)).forEach((sc, i) => {
 			const name = SourceUtil.hasBeenReprinted(sc.shortName, sc.source) ? `${sc.shortName} (${Parser.sourceJsonToAbv(sc.source)})` : sc.shortName;
 			const styles = FeatureDescription.getSubclassStyles(sc);
-			const $pill = $(`.${CLSS_SUBCLASS_PILL}[data-subclass="${sc.name}"][data-source="${sc.source.source || sc.source}"]`);
+			const $pill = $(`.${CLSS_SUBCLASS_PILL}[data-subclass="${sc.name}"][data-source="${sc.source}"]`);
 
 			const $scToggle = $(`<span class="pnl-link active ${styles.join(" ")}" title="Source: ${Parser.sourceJsonToFull(sc.source)}" data-i="${i}" data-bk-subclass="${
-				sc.name}" data-bk-source="${sc.source.source || sc.source}">${name}</span>`).on("click", () => {
+				sc.name}" data-bk-source="${sc.source}">${name}</span>`).on("click", () => {
 				ClassBookView._toggleSubclass($bkTbl, $scToggle, i);
 				$pill.click();
 			});
@@ -1190,75 +1331,81 @@ ClassBookView._$scToggles = {};
 
 function initLinkGrabbers () {
 	const $body = $(`body`);
-	$body.on(`mousedown`, `.linked-titles--classes > td > * > .entry-title .entry-title-inner`, (evt) => evt.preventDefault());
-	$body.on(`click`, `.linked-titles--classes > td > * > .entry-title .entry-title-inner`, function (evt) {
+	$body.on(`mousedown`, `.linked-titles--classes > td > * > .rd__h .entry-title-inner`, (evt) => evt.preventDefault());
+	$body.on(`click`, `.linked-titles--classes > td > * > .rd__h .entry-title-inner`, async function (evt) {
 		const $this = $(this);
 
 		if (evt.shiftKey) {
-			copyText($this.text().replace(/\.$/, ""));
-			showCopiedEffect($this);
+			await MiscUtil.pCopyTextToClipboard($this.text().replace(/\.$/, ""));
+			JqueryUtil.showCopiedEffect($this);
 		} else {
 			const fTag = $this.closest(`tr`).attr("id");
 
 			const hash = `${window.location.hash.slice(1).split(HASH_PART_SEP)
-				.filter(it => !it.startsWith(HASH_FEATURE)).join(HASH_PART_SEP)}${HASH_PART_SEP}${fTag}`;
+				.filter(it => !it.startsWith(CLSS_HASH_FEATURE)).join(HASH_PART_SEP)}${HASH_PART_SEP}${fTag}`;
 
-			copyText(`${window.location.href.split("#")[0]}#${hash}`);
-			showCopiedEffect($this, "Copied link!");
+			await MiscUtil.pCopyTextToClipboard(`${window.location.href.split("#")[0]}#${hash}`);
+			JqueryUtil.showCopiedEffect($this, "Copied link!");
 		}
 	});
 }
 
-const renderer = EntryRenderer.getDefaultRenderer();
+const renderer = Renderer.get();
 
 const sourceFilter = new Filter({
 	header: FilterBox.SOURCE_HEADER,
-	minimalUI: true,
+	minimalUi: true,
 	items: ["Core", "Others"],
 	selFn: (it) => it === "Core" || it === "Homebrew"
 });
-
-const filterBox = initFilterBox(sourceFilter);
-// filtering function
-$(filterBox).on(
-	FilterBox.EVNT_VALCHANGE,
-	ClassList.handleFilterChange
-);
-
-ClassList.classList = ListUtil.search({
-	valueNames: ['name', 'source', 'uniqueid'],
-	listClass: "classes"
-});
-
-BrewUtil.makeBrewButton("manage-brew");
-BrewUtil.bind({list: ClassList.classList, filterBox, sourceFilter});
-
-initCompareMode();
-initLinkGrabbers();
-ClassBookView.initButton();
-ExcludeUtil.initialise();
-SortUtil.initHandleFilterButtonClicks();
 
 let tableDefault = $("#pagecontent").html();
 let statsProfDefault = $("#statsprof").html();
 let classTableDefault = $("#classtable").html();
 
-DataUtil.class.loadJSON().then((data) => {
-	addClassData(data);
-
-	BrewUtil.pAddBrewData()
-		.then(handleBrew)
-		.then(BrewUtil.pAddLocalBrewData)
-		.catch(BrewUtil.purgeBrew)
-		.then(() => {
-			RollerUtil.addListRollButton();
-			History.init(true);
-			ExcludeUtil.checkShowAllExcluded(ClassData.classes, $(`#pagecontent`));
-		});
-});
-
 function handleBrew (homebrew) {
-	addClassData(homebrew);
-	addSubclassData(homebrew);
+	ClassData.addClassData(homebrew);
+	ClassData.addSubclassData(homebrew);
 	return Promise.resolve();
 }
+
+async function doPageInit () {
+	filterBox = await pInitFilterBox({filters: [sourceFilter], isCompact: true});
+
+	// filtering function
+	$(filterBox).on(
+		FilterBox.EVNT_VALCHANGE,
+		ClassList.handleFilterChange
+	);
+
+	ClassList.classList = ListUtil.search({
+		valueNames: ["name", "source", "uniqueid"],
+		listClass: "classes"
+	});
+
+	BrewUtil.makeBrewButton("manage-brew");
+	BrewUtil.bind({list: ClassList.classList, filterBox, sourceFilter});
+
+	initCompareMode();
+	initLinkGrabbers();
+	ClassBookView.initButton();
+	await ExcludeUtil.pInitialise();
+	SortUtil.initHandleFilterButtonClicks();
+	Omnisearch.addScrollTopFloat();
+
+	DataUtil.class.loadJSON().then((data) => {
+		ClassData.addClassData(data);
+
+		BrewUtil.pAddBrewData()
+			.then(handleBrew)
+			.then(() => BrewUtil.pAddLocalBrewData())
+			.catch(BrewUtil.pPurgeBrew)
+			.then(() => {
+				RollerUtil.addListRollButton();
+				History.init(true);
+				ExcludeUtil.checkShowAllExcluded(ClassData.classes, $(`#pagecontent`));
+			});
+	});
+}
+
+window.addEventListener("load", () => doPageInit());

@@ -53,6 +53,12 @@
 			],
 			"conditionInflict": [
 				"frightened"
+			],
+			"areaTags": [
+				"ST"
+			],
+			"miscTags": [
+				"SGT"
 			]
 		},
 		{
@@ -115,7 +121,7 @@
 					"type": "entries",
 					"name": "Bless Water",
 					"entries": [
-						"You touch one vial of water and cause it to become holy water."
+						"You touch one {@item vial|phb} of water and cause it to become {@item Holy Water (flask)|phb|holy water}."
 					]
 				},
 				{
@@ -136,7 +142,7 @@
 					"type": "entries",
 					"name": "Funeral Rite",
 					"entries": [
-						"You bless one corpse within 5 feet of you. For the next 24 hours, the target can't become undead by any means short of a wish spell."
+						"You bless one corpse within 5 feet of you. For the next 24 hours, the target can't become undead by any means short of a {@spell wish} spell."
 					]
 				},
 				{
@@ -153,6 +159,9 @@
 						"You touch adult humanoids willing to be bonded together in marriage. For the next 24 hours, each target gains a +2 bonus to AC and saving throws while they are within 30 feet of each other. A creature can benefit from this ceremony just once."
 					]
 				}
+			],
+			"areaTags": [
+				"ST"
 			]
 		},
 		{
@@ -201,8 +210,8 @@
 						"Damage Type"
 					],
 					"colStyles": [
-						"col-xs-1 text-align-center",
-						"col-xs-11"
+						"col-1 text-center",
+						"col-11"
 					],
 					"rows": [
 						[
@@ -302,6 +311,9 @@
 			],
 			"spellAttack": [
 				"R"
+			],
+			"areaTags": [
+				"ST"
 			]
 		},
 		{
@@ -364,6 +376,9 @@
 				"You create a Tiny incorporeal hand of shimmering light in an unoccupied space you can see within range. The hand exists for the duration, but it disappears if you teleport or you travel to a different plane of existence.",
 				"When the hand appears, you name one major landmark, such as a city, mountain, castle, or battlefield on the same plane of existence as you. Someone in history must have visited the site and mapped it. If the landmark appears on no map in existence, the spell fails. Otherwise, whenever you move toward the hand, it moves away from you at the same speed you moved, and it moves in the direction of the landmark, always remaining 5 feet away from you.",
 				"If you don't move toward the hand, it remains in place until you do and beckons for you to follow once every {@dice 1d4} minutes."
+			],
+			"miscTags": [
+				"SGT"
 			]
 		},
 		{
@@ -404,7 +419,7 @@
 			},
 			"entries": [
 				"You raise your hand, and burning radiance erupts from it. Each creature of your choice that you can see within 5 feet of you must succeed on a Constitution saving throw or take {@dice 1d6} radiant damage.",
-				"The spell's damage increases by {@dice 1d6} when you reach 5th level ({@dice 2d6}), 11th level ({@dice 3d6}), and 17th level ({@dice 4d8})."
+				"The spell's damage increases by {@dice 1d6} when you reach 5th level ({@dice 2d6}), 11th level ({@dice 3d6}), and 17th level ({@dice 4d6})."
 			],
 			"damageInflict": [
 				"radiant"
@@ -412,7 +427,13 @@
 			"savingThrow": [
 				"constitution"
 			],
-			"scalingEffects": true
+			"areaTags": [
+				"S"
+			],
+			"miscTags": [
+				"SCL",
+				"SGT"
+			]
 		},
 		{
 			"name": "Healing Elixir (UA)",
@@ -462,7 +483,9 @@
 				"You create a healing elixir in a simple vial that appears in your hand. The elixir retains its potency for the duration or until it's consumed, at which point the vial vanishes.",
 				"As an action, a creature can drink the elixir or administer it to another creature. The drinker regains {@dice 2d4 + 2} hit points."
 			],
-			"isHeal": true
+			"miscTags": [
+				"HL"
+			]
 		},
 		{
 			"name": "Infestation (UA)",
@@ -523,7 +546,13 @@
 			"savingThrow": [
 				"constitution"
 			],
-			"scalingEffects": true
+			"areaTags": [
+				"ST"
+			],
+			"miscTags": [
+				"SCL",
+				"SGT"
+			]
 		},
 		{
 			"name": "Primal Savagery (UA)",
@@ -570,7 +599,12 @@
 			"spellAttack": [
 				"M"
 			],
-			"scalingEffects": true
+			"areaTags": [
+				"ST"
+			],
+			"miscTags": [
+				"SCL"
+			]
 		},
 		{
 			"name": "Puppet (UA)",
@@ -620,6 +654,12 @@
 			],
 			"savingThrow": [
 				"constitution"
+			],
+			"areaTags": [
+				"ST"
+			],
+			"miscTags": [
+				"SGT"
 			]
 		},
 		{
@@ -668,6 +708,12 @@
 			},
 			"entries": [
 				"You attune your senses to pick up the emotions of others for the duration. When you cast the spell, and as your action on each turn until the spell ends, you can focus your senses on one humanoid you can see within 30 feet of you. You instantly learn the target's prevailing emotion, whether it's love, anger, pain, fear, calm, or something else. If the target isn't actually humanoid or it is immune to being {@condition charmed}, you sense that it is calm."
+			],
+			"areaTags": [
+				"ST"
+			],
+			"miscTags": [
+				"SGT"
 			]
 		},
 		{
@@ -736,6 +782,9 @@
 			"conditionInflict": [
 				"prone",
 				"restrained"
+			],
+			"areaTags": [
+				"ST"
 			]
 		},
 		{
@@ -787,6 +836,9 @@
 			},
 			"entries": [
 				"Each sleeping creature you choose within range awakens, and then each {@condition prone} creature within range can stand up without expending any movement."
+			],
+			"areaTags": [
+				"MT"
 			]
 		},
 		{
@@ -839,7 +891,13 @@
 			"savingThrow": [
 				"wisdom"
 			],
-			"scalingEffects": true
+			"areaTags": [
+				"ST"
+			],
+			"miscTags": [
+				"SCL",
+				"SGT"
+			]
 		},
 		{
 			"name": "Unearthly Chorus (UA)",
@@ -887,6 +945,9 @@
 			],
 			"savingThrow": [
 				"charisma"
+			],
+			"areaTags": [
+				"S"
 			]
 		},
 		{
@@ -930,6 +991,9 @@
 			},
 			"entries": [
 				"You touch one creature, imbuing it with vitality. If the target has at least 1 hit point, it gains a number of temporary hit points equal to {@dice 1d4} + your spellcasting ability modifier. The temporary hit points are lost when the spell ends."
+			],
+			"areaTags": [
+				"ST"
 			]
 		},
 		{

@@ -1,6 +1,6 @@
 {
-	"$schema": "http://json-schema.org/draft-06/schema#",
-	"version": "1.0.1",
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"version": "1.0.2",
 	"type": "object",
 	"properties": {
 		"adventure": {
@@ -14,6 +14,34 @@
 					"id": {
 						"type": "string"
 					},
+					"source": {
+						"type": "string"
+					},
+					"alAveragePlayerLevel": {
+						"description": "Adventurers League APL; for use in homebrew.",
+						"type": "integer"
+					},
+					"alLength": {
+						"description": "Adventurers League length (in hours); for use in homebrew.",
+						"type": "object",
+						"oneOf": [
+							{
+								"properties": {
+									"min": {"type": "integer"},
+									"max": {"type": "integer"}
+								}
+							},
+							{
+								"properties": {
+									"exact": {"type": "integer"}
+								}
+							}
+						]
+					},
+					"alId": {
+						"description": "Adventurers League ID; for use in homebrew.",
+						"type": "string"
+					},
 					"contents": {
 						"type": "array",
 						"items": {
@@ -25,7 +53,25 @@
 								"headers": {
 									"type": "array",
 									"items": {
-										"type": "string"
+										"oneOf": [
+											{
+												"type": "string"
+											},
+											{
+												"type": "object",
+												"properties": {
+													"depth": {
+														"type": "integer"
+													},
+													"header": {
+														"type": "string"
+													}
+												},
+												"required": [
+													"depth", "header"
+												]
+											}
+										]
 									}
 								},
 								"ordinal": {
@@ -33,7 +79,7 @@
 									"properties": {
 										"type": {
 											"type": "string",
-											"enum": ["chapter", "appendix", "part", "episode"]
+											"enum": ["chapter", "appendix", "part", "episode", "level"]
 										},
 										"identifier": {
 											"type": ["integer", "string"]
@@ -99,7 +145,11 @@
 							"Storm King's Thunder",
 							"Tales from the Yawning Portal",
 							"Tomb of Annihilation",
-							"Waterdeep"
+							"Waterdeep",
+							"Ravnica",
+							"Extra Life",
+							"Ghosts of Saltmarsh",
+							"Acquisitions Incorporated"
 						]
 					}
 				},
@@ -107,6 +157,7 @@
 				"required": [
 					"name",
 					"id",
+					"source",
 					"contents",
 					"level",
 					"published",

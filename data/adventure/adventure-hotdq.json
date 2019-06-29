@@ -15,7 +15,9 @@
 						"type": "internal",
 						"path": "adventure/HotDQ/The Sword Coast.jpg"
 					},
-					"title": "The Sword Coast"
+					"title": "The Sword Coast",
+					"width": 1325,
+					"height": 1900
 				},
 				{
 					"type": "entries",
@@ -58,7 +60,9 @@
 						"type": "internal",
 						"path": "adventure/HotDQ/Episode 1 - Greenest in Flames.jpg"
 					},
-					"title": "Episode 1 - Greenest in Flames"
+					"title": "Episode 1 - Greenest in Flames",
+					"width": 1000,
+					"height": 629
 				},
 				"The adventurers might be on the road from one town to another or returning to their homes after a trip away. Alternatively, they could be accompanying a merchant or wealthy traveler as bodyguards. Many restless young people of Faerun have had their first taste of travel and adventure as caravan guards.",
 				"You can adapt Tyranny of Dragons to different regions of the Realms or to a different setting with a bit more preparation on your part. Change the names and locations to suit your campaign.",
@@ -68,7 +72,9 @@
 						"type": "internal",
 						"path": "adventure/HotDQ/Greenest.jpg"
 					},
-					"title": "Greenest"
+					"title": "Greenest",
+					"width": 1013,
+					"height": 750
 				},
 				{
 					"type": "image",
@@ -76,7 +82,9 @@
 						"type": "internal",
 						"path": "adventure/HotDQ/Greenest (Player).jpg"
 					},
-					"title": "Greenest (Player)"
+					"title": "Greenest (Player)",
+					"width": 8100,
+					"height": 6000
 				},
 				{
 					"type": "entries",
@@ -167,7 +175,7 @@
 								"Encounter"
 							],
 							"colStyles": [
-								"col-xs-1 text-align-center",
+								"col-1 text-center",
 								""
 							],
 							"rows": [
@@ -252,7 +260,7 @@
 								"Encounter"
 							],
 							"colStyles": [
-								"col-xs-1 text-align-center",
+								"col-1 text-center",
 								""
 							],
 							"rows": [
@@ -371,7 +379,7 @@
 							]
 						},
 						"All these groups together would overwhelm 1st-level characters, but characters can devise a plan that gets them inside the temple by dealing with one group.",
-						"Group A consists of one {@creature dragonclaw|RoT}, two {@creature cultist|MM|cultists}, and six {@creature kobold|MM|kobolds}. The cultists are handling the ram while the kobolds stand guard in case the town militia mounts a counterattack. The dragonclaw is in charge. The kobold guards are alert, but they are distracted when Group B passes in front of the temple.",
+						"Group A consists of one {@creature dragonclaw|HotDQ}, two {@creature cultist|MM|cultists}, and six {@creature kobold|MM|kobolds}. The cultists are handling the ram while the kobolds stand guard in case the town militia mounts a counterattack. The dragonclaw is in charge. The kobold guards are alert, but they are distracted when Group B passes in front of the temple.",
 						"Group B consists of three {@creature cultist|MM|cultists}, ten {@creature kobold|MM|kobolds}, and two {@creature ambush drake|HotDQ|ambush drakes} strung out in a mob that stretches 50 feet. This procession with leaping and whirling kobolds completes one circuit around the temple approximately every eight minutes (two minutes per side).",
 						"Group C consists of two {@creature cultist|MM|cultists} and six {@creature kobold|MM|kobolds} clustered tightly around the temple's back door. Their meager fire produces little flame, instead creating prodigious clouds of thick smoke that engulf the back of the temple and blanket the surrounding 30 feet of ground.",
 						"Everything in the smoke is lightly obscured, and objects or creatures that are seen through more than 15 feet of smoke are heavily obscured. Characters can sneak up on these raiders and gain a surprise round against them, as long as they avoid Group B in the process.",
@@ -444,7 +452,9 @@
 						"type": "internal",
 						"path": "adventure/HotDQ/Episode 2 - Raiders' Camp.jpg"
 					},
-					"title": "Episode 2 - Raiders' Camp"
+					"title": "Episode 2 - Raiders' Camp",
+					"width": 1050,
+					"height": 690
 				},
 				"Any gear or supplies the characters need for the trip are furnished by the town. As characters prepare to set off on this mission (or to leave town if they turn down the mission), though, an injured monk approaches.",
 				{
@@ -482,7 +492,9 @@
 										"type": "internal",
 										"path": "adventure/HotDQ/Stragglers (Player).jpg"
 									},
-									"title": "Stragglers (Player)"
+									"title": "Stragglers (Player)",
+									"width": 1024,
+									"height": 1024
 								},
 								"By observing for a few minutes, characters can discern that there are four human {@creature cultist|MM|cultists} and eight {@creature kobold|MM|kobolds} in the group. The kobolds and humans distrust each other, and although the cultists act as if they're the bosses, their leadership amounts to nothing more than ineffectual bullying. The humans' weapons are stacked against a rock, out of easy reach. The kobolds have their weapons on their belts.",
 								"If the group is left alone, the kobolds grab their share of the half-cooked lunch and move about fifty yards away to eat, while the humans continue squabbling over how to cook a hen and the uselessness of kobolds as allies. If characters choose to bypass this group, a detour can get them around it with no difficulty. They could run into these stragglers again on their way back to Greenest.",
@@ -509,7 +521,9 @@
 										"type": "internal",
 										"path": "adventure/HotDQ/Rearguard (Player).jpg"
 									},
-									"title": "Rearguard (Player)"
+									"title": "Rearguard (Player)",
+									"width": 1024,
+									"height": 1024
 								},
 								"The rearguard consists of one {@creature veteran|MM}, six {@creature cultist|MM|cultists}, and two {@creature acolyte|MM|acolytes}. The veteran and cultists have spears for both ranged and melee combat. They are positioned in an area where the trail winds through a gap between two outcrops. The ambushers are hidden in the rocks, 12 to 15 feet above ground level. Characters might detect the ambush, with the odds depending on what they know and how they approach the area.",
 								{
@@ -546,7 +560,9 @@
 								"type": "internal",
 								"path": "adventure/HotDQ/Raiders' Camp.jpg"
 							},
-							"title": "Raiders' Camp"
+							"title": "Raiders' Camp",
+							"width": 1013,
+							"height": 750
 						},
 						{
 							"type": "image",
@@ -554,7 +570,9 @@
 								"type": "internal",
 								"path": "adventure/HotDQ/Raiders' Camp (Player).jpg"
 							},
-							"title": "Raiders' Camp (Player)"
+							"title": "Raiders' Camp (Player)",
+							"width": 8100,
+							"height": 6000
 						},
 						{
 							"type": "entries",
@@ -592,7 +610,7 @@
 									"type": "entries",
 									"name": "Prisoners",
 									"entries": [
-										" The cultists' prisoners are kept at area 1. Currently, only eight prisoners are in the camp, not counting Leosin. During the day, they are put to work under guard by four {@creature dragonclaw|RoT|dragonclaws}. At night, they are shackled to a post in their hut to prevent escape. The shackles are secured by a single chain and lock that can be opened with a key carried by one of the guards or with thieves' tools and a successful DC 10 Dexterity check. The chain can be broken with a successful DC 20 Strength check. Five of the prisoners are from Greenest, and the other three are from earlier raids against hamlets and small farming villages to the south and east. There were more prisoners at one time, but many have died from overwork and mistreatment. If a situation develops where released prisoners must fight, use commoner stats for them."
+										" The cultists' prisoners are kept at area 1. Currently, only eight prisoners are in the camp, not counting Leosin. During the day, they are put to work under guard by four {@creature dragonclaw|HotDQ|dragonclaws}. At night, they are shackled to a post in their hut to prevent escape. The shackles are secured by a single chain and lock that can be opened with a key carried by one of the guards or with thieves' tools and a successful DC 10 Dexterity check. The chain can be broken with a successful DC 20 Strength check. Five of the prisoners are from Greenest, and the other three are from earlier raids against hamlets and small farming villages to the south and east. There were more prisoners at one time, but many have died from overwork and mistreatment. If a situation develops where released prisoners must fight, use commoner stats for them."
 									]
 								},
 								{
@@ -610,7 +628,7 @@
 										" The raiders live in circular huts made from closely spaced wooden or bone poles covered in hide, mud, and sod. Huts vary in diameter from 10 feet to 25 feet, and in height from 5 feet to 10 feet. (Symbols on the map represent clusters of tents.) Those in the mouth of the hollow (level 1 on the map) are crudely built and decorated with animal skulls. These are occupied by kobolds. Cultists occupy the huts on level 2, which are sturdier, cleaner, and decorated with painted designs representing dragons. A few tents on level 2 are set aside for prisoners."
 									]
 								},
-								"The large ten at area 2 is set apart from the others by an open space. It is reserved for Rezmir, Frulam Mondath, and Langdedrosa Cyanwrath. An honor guard of four {@creature guard|MM|guards} and four {@creature guard drake|RoT|guard drakes} (appendix B) keeps watch around this tent day and night. They don't sleep at their posts, they don't fall for tricks, and they don't listen to stories or pleas. Their job is to keep everyone away from their leaders' tent, and they are fanatical about it.",
+								"The large ten at area 2 is set apart from the others by an open space. It is reserved for Rezmir, Frulam Mondath, and Langdedrosa Cyanwrath. An honor guard of four {@creature guard|MM|guards} and four {@creature guard drake|HotDQ|guard drakes} (appendix B) keeps watch around this tent day and night. They don't sleep at their posts, they don't fall for tricks, and they don't listen to stories or pleas. Their job is to keep everyone away from their leaders' tent, and they are fanatical about it.",
 								"Only acolytes and adepts the guards know by sight and by voice are allowed to approach."
 							]
 						}
@@ -697,7 +715,7 @@
 								"For each piece of information listed under \"Exploring the Camp\" that characters learn on their own (not from Leosin): 25 XP per character."
 							]
 						},
-						"When the characters arrive safely back at Greenest- presumably with Leosin in tow-he can fill them in on any details they missed during their investigation of the cult's camp. The monks who accompanied him are delighted to see him alive, and the families of any other released prisoners are equally grateful for the return of their loved ones. Governor Nighthill pays the characters their promised 250 gp each and publicly praises their courage and daring."
+						"When the characters arrive safely back at Greenest\u2014presumably with Leosin in tow\u2014he can fill them in on any details they missed during their investigation of the cult's camp. The monks who accompanied him are delighted to see him alive, and the families of any other released prisoners are equally grateful for the return of their loved ones. Governor Nighthill pays the characters their promised 250 gp each and publicly praises their courage and daring."
 					]
 				}
 			]
@@ -713,7 +731,9 @@
 						"type": "internal",
 						"path": "adventure/HotDQ/Episode 3 - Dragon Hatchery.jpg"
 					},
-					"title": "Episode 3 - Dragon Hatchery"
+					"title": "Episode 3 - Dragon Hatchery",
+					"width": 1050,
+					"height": 690
 				},
 				{
 					"type": "inset",
@@ -730,7 +750,9 @@
 						"type": "internal",
 						"path": "adventure/HotDQ/Dragon Hatchery.jpg"
 					},
-					"title": "Dragon Hatchery"
+					"title": "Dragon Hatchery",
+					"width": 1013,
+					"height": 750
 				},
 				{
 					"type": "image",
@@ -738,7 +760,9 @@
 						"type": "internal",
 						"path": "adventure/HotDQ/Dragon Hatchery (Player).jpg"
 					},
-					"title": "Dragon Hatchery (Player)"
+					"title": "Dragon Hatchery (Player)",
+					"width": 1823,
+					"height": 1350
 				},
 				{
 					"type": "entries",
@@ -794,7 +818,7 @@
 								"Encounter"
 							],
 							"colStyles": [
-								"col-xs-1 text-align-center",
+								"col-1 text-center",
 								""
 							],
 							"rows": [
@@ -830,7 +854,7 @@
 					"type": "entries",
 					"name": "1. Cave Entrance",
 					"entries": [
-						"The entrance to the cave is broad and tall, but the ceiling quickly lowers to a height of 15 feet. Standing guard inside the entrance are two {@creature dragonclaw|RoT|dragonclaws}. They position themselves about 30 feet inside the cave and stay near the walls and the column, so that while they aren't hidden, they aren't conspicuous, either. Characters who observe the cave from a distance-from the area of the plateau where the steps ascend from level 1 to level 2, for example-spot one of the dragonclaws.",
+						"The entrance to the cave is broad and tall, but the ceiling quickly lowers to a height of 15 feet. Standing guard inside the entrance are two {@creature dragonclaw|HotDQ|dragonclaws}. They position themselves about 30 feet inside the cave and stay near the walls and the column, so that while they aren't hidden, they aren't conspicuous, either. Characters who observe the cave from a distance-from the area of the plateau where the steps ascend from level 1 to level 2, for example-spot one of the dragonclaws.",
 						"If characters approach openly through the camp, the dragonclaws spot them automatically and retreat toward {@area 3>2} in the cave, to set up an ambush. If characters approach the cave quietly from the sides, they won't be spotted. They then have a chance to surprise the dragon-claws, who have normal readiness."
 					]
 				},
@@ -926,7 +950,7 @@
 						"The short, wide passage between areas 4 and 7 is trapped. See \"Spike Trap\" below for details. Simple oil lamps provide dim, flickering light. This chamber contains four {@creature kobold|MM|kobolds} and one {@creature winged kobold|MM}. These creatures are in the upper part of the chamber.",
 						"The lower area is where cultists conducted the rituals to create their guard drakes and then housed the creatures. The ledge is a sharp 10-foot drop-off. Wooden stairs descend at the right end of the ledge. A stout cage made of iron bars surrounds these steps to a height of 10 feet to prevent untrained drakes from escaping up the steps. A key hangs on a peg at the top of the steps; it opens the locked gate at the bottom.",
 						"A rack along the southwest wall holds implements used in training the drakes: long poles with lassos at the end, used for snaring and controlling young drakes; leashes and collars; sharp prods; mock weapons made of wood; human-sized dummies stitched out of sailcloth and stuffed with straw, with ridiculous expressions painted on their faces.",
-						"The lower area is heavily shadowed. Currently it holds three {@creature guard drake|RoT|guard drakes} that are near the end of their training. Being not quite fully developed, they have the normal stats of a guard drake but only 33 hit points.",
+						"The lower area is heavily shadowed. Currently it holds three {@creature guard drake|HotDQ|guard drakes} that are near the end of their training. Being not quite fully developed, they have the normal stats of a guard drake but only 33 hit points.",
 						"Spotting these drakes from the ledge requires a successful DC 15 Wisdom (Perception) check; sweeping the pit with a bullseye lantern grants advantage on this check. If characters bring some raw meat to the ledge, the drakes think they're about to be fed and advance into the light. If characters enter the pit, either by descending the steps or climbing down the ledge, the drakes attack.",
 						"If the drakes are spotted and attacked by characters on the ledge, they set up a howl that draws six {@creature kobold|MM|kobolds} and three {@creature winged kobold|MM|winged kobolds} from {@area 3>8}. At least one of these try to get past the characters and unlock the gate at the bottom of the steps, letting the guard drakes join the battle as they've been trained to do.",
 						{
@@ -1001,7 +1025,7 @@
 								{
 									"type": "inset",
 									"entries": [
-										"You hear a snap from beneath the chest, followed by a hissing sound like dozens of angry snakes- or like liquid moving through open tubes. A moment later, liquid sprays out from dozens of tiny holes in the walls and ceiling. Wherever it splashes onto the floor, the moisture on the stone bubbles and smokes. Within moments, the chamber is filled with acidic mist."
+										"You hear a snap from beneath the chest, followed by a hissing sound like dozens of angry snakes\u2014or like liquid moving through open tubes. A moment later, liquid sprays out from dozens of tiny holes in the walls and ceiling. Wherever it splashes onto the floor, the moisture on the stone bubbles and smokes. Within moments, the chamber is filled with acidic mist."
 									]
 								},
 								"Everyone in the chamber must succeed on a DC 10 Dexterity saving throw or take 2d6 acid damage from the acid sprayed onto them (half as much damage on a successful saving throw). The real danger from the acid is not to the characters' skin, however, but to their lungs. Everyone must also succeed on a DC 10 Constitution saving throw or take 2d8 extra acid damage. Players who declare immediately that their characters are covering their faces and getting out of the chamber as quickly as possible, and are trying to not inhale the vapor, have advantage on their Constitution saving throws."
@@ -1036,8 +1060,8 @@
 					"name": "10A. Black Dragon Eggs",
 					"entries": [
 						"This area is warm and humid. After characters look closely at the floor, they can determine that the stains are blood, and some of them are fresh. They come from the meat the kobolds toss down here.",
-						"Huddled in the shadows at the far edges of the room or behind the natural columns are two {@creature guard drake|RoT|guard drakes} trained to protect the dragon eggs. They don't attack as soon as characters come through the gate but wait until the characters have moved into the chamber. The drakes' first priority is to protect the eggs. Their second priority is to get between the intruders and the steps to prevent them from escaping. Unless characters climb down into 10A without using the stairs, they trigger the kobolds' attack before exploring this area.",
-						"Mixed in among the stalactites near the southeast corner of the room is a unusual {@creature roper|MM} that can speak Common. It doesn't attack the kobolds or guard drakes because the kobolds feed it spoiled meat that the guard drakes won't eat. If attacked, it fights back (and it's very dangerous to 3rd-level characters!). It can reach anywhere in {@area 3>10} with its tentacles, and it can also move at speed 10. It is currently full and curious about strangers, however, so it's not averse to talking. Its only real concern is food. If told about the supply of meat in {@area 3>6} and brought some as proof, it lets the characters go about their business while it creeps away to investigate the larder.",
+						"Huddled in the shadows at the far edges of the room or behind the natural columns are two {@creature guard drake|HotDQ|guard drakes} trained to protect the dragon eggs. They don't attack as soon as characters come through the gate but wait until the characters have moved into the chamber. The drakes' first priority is to protect the eggs. Their second priority is to get between the intruders and the steps to prevent them from escaping. Unless characters climb down into 10A without using the stairs, they trigger the kobolds' attack before exploring this area.",
+						"Mixed in among the stalactites near the southeast corner of the room is an unusual {@creature roper|MM} that can speak Common. It doesn't attack the kobolds or guard drakes because the kobolds feed it spoiled meat that the guard drakes won't eat. If attacked, it fights back (and it's very dangerous to 3rd-level characters!). It can reach anywhere in {@area 3>10} with its tentacles, and it can also move at speed 10. It is currently full and curious about strangers, however, so it's not averse to talking. Its only real concern is food. If told about the supply of meat in {@area 3>6} and brought some as proof, it lets the characters go about their business while it creeps away to investigate the larder.",
 						"A total of three dragon eggs are spread throughout the area. Each is about three feet tall and weighs 150 pounds. Two of them are easy to spot just by walking through the room with a light source. The third is tucked into a pile of similar-colored stones behind one of the columns, making it easy to miss. When characters search the room, have everyone make a Wisdom (Perception) check. Only a character who rolls 15 or higher notices the egg in its camouflaged nest. Looking at a dragon egg, a character can determine the color of dragon with a successful DC 10 Intelligence (Nature) check.",
 						"If the eggs are left here, they hatch in less than a week. If they are taken away, whether they hatch depends on how they are stored and treated. Away from a warm, humid environment such as this chamber, their progress halts until they are again in a suitable incubator. The dragons can be killed easily if the eggs are smashed, crushed, or stabbed. If an egg is simply cracked open, the infant dragon struggles for breath, cries and squirms like a human baby for a few minutes, and then dies."
 					]
@@ -1141,7 +1165,9 @@
 						"type": "internal",
 						"path": "adventure/HotDQ/Episode 4 - On the Road.jpg"
 					},
-					"title": "Episode 4 - On the Road"
+					"title": "Episode 4 - On the Road",
+					"width": 1050,
+					"height": 690
 				},
 				"The characters should travel from the abandoned cult camp southeast of Greenest to the city of Elturel on the River Chionthar. Their route takes them back through Greenest, where they can return any stolen goods that they recovered from the cult and recuperate from their wounds. Nighthill greets the characters with delight and respect. He tells them that before Leosin Erlanthar left town, he bought horses and riding gear for the characters to speed their journey to Elturel. The horses are being kept at the dealer's stables until the characters are ready to leave for Elturel; all their costs are paid for.",
 				"On horseback, characters can travel the 200 miles from Greenest to Elturel in about six days. They make the journey without incident, unless you throw an encounter or two at them to spice up the trip or to increase their XP totals. Encounters with bandits, humanoid clans, and roving monsters are appropriate in the untamed expanses of the Greenfields.",
@@ -1219,7 +1245,7 @@
 										"Result"
 									],
 									"colStyles": [
-										"col-xs-1 text-align-center",
+										"col-1 text-center",
 										""
 									],
 									"rows": [
@@ -1236,7 +1262,7 @@
 											"Hired as a sergeant for 8 gp per tenday, plus food and living expenses on the road."
 										],
 										[
-											"16-30",
+											"16-20",
 											"Hired as a bodyguard for the merchant at 10 gp per tenday, plus food and living expenses on the road. All hires are for the journey to Waterdeep. Sergeants are expected to manage two to five other guards. Bodyguards are expected to stick close to their employer and protect him or her against harm."
 										]
 									]
@@ -1323,7 +1349,7 @@
 								"Event"
 							],
 							"colStyles": [
-								"col-xs-1 text-align-center",
+								"col-1 text-center",
 								""
 							],
 							"rows": [
@@ -1393,7 +1419,9 @@
 								"type": "internal",
 								"path": "adventure/HotDQ/Adventuring Life (Player).jpg"
 							},
-							"title": "Adventuring Life (Player)"
+							"title": "Adventuring Life (Player)",
+							"width": 1024,
+							"height": 1024
 						}
 					]
 				},
@@ -1408,7 +1436,9 @@
 								"type": "internal",
 								"path": "adventure/HotDQ/Highway (Player).jpg"
 							},
-							"title": "Highway (Player)"
+							"title": "Highway (Player)",
+							"width": 1024,
+							"height": 1024
 						}
 					]
 				},
@@ -1424,7 +1454,9 @@
 								"type": "internal",
 								"path": "adventure/HotDQ/Highway (Player).jpg"
 							},
-							"title": "Highway (Player)"
+							"title": "Highway (Player)",
+							"width": 1024,
+							"height": 1024
 						}
 					]
 				},
@@ -1441,7 +1473,9 @@
 								"type": "internal",
 								"path": "adventure/HotDQ/Contraband (Player).jpg"
 							},
-							"title": "Contraband (Player)"
+							"title": "Contraband (Player)",
+							"width": 1024,
+							"height": 1024
 						}
 					]
 				},
@@ -1464,7 +1498,9 @@
 								"type": "internal",
 								"path": "adventure/HotDQ/Fungus Humongous (Player).jpg"
 							},
-							"title": "Fungus Humongous (Player)"
+							"title": "Fungus Humongous (Player)",
+							"width": 1024,
+							"height": 1024
 						},
 						"When anyone steps on a mushroom (it's nearly impossible not to), it emits a puff of black spores and a moan of pain. These tiny shriekers sprout from an immense mycelium that has spread beneath the area from shallow caves. They can be identified with a successful DC 15 Intelligence (Nature) check, but if the roll is 10-14, the character misidentifies them and believes they are deadly poisonous (they aren't).",
 						"The merchants are terrified of the things and refuse to drive through them, fearing that they may be poisonous or worse. Besides that, the sounds spook the animals and make them impossible to control.",
@@ -1497,7 +1533,9 @@
 								"type": "internal",
 								"path": "adventure/HotDQ/Grasslands (Player).jpg"
 							},
-							"title": "Grasslands (Player)"
+							"title": "Grasslands (Player)",
+							"width": 1024,
+							"height": 1024
 						}
 					]
 				},
@@ -1516,11 +1554,13 @@
 								"type": "internal",
 								"path": "adventure/HotDQ/Highway (Player).jpg"
 							},
-							"title": "Highway (Player)"
+							"title": "Highway (Player)",
+							"width": 1024,
+							"height": 1024
 						},
 						"Publicly, Amoffel's story is that the oath he broke was a promise to marry a woman. He broke the engagement because he discovered that her father and brothers were all bandits and that he was expected to join them.",
 						"If any of the characters are Harpers and they reveal their association to Amoffel, he tells them the real story.",
-						"He was on exactly the same mission they are: tracking a shipment of stolen loot north. But the smugglers-he's sure they're members of the Cult of the Dragon- became suspicious of him. Amoffel passed information to another Harper at a roadside inn, and members of the caravan witnessed the meeting. The cultists manufactured a story that he was passing information to bandits.",
+						"He was on exactly the same mission they are: tracking a shipment of stolen loot north. But the smugglers\u2014he's sure they're members of the Cult of the Dragon\u2014became suspicious of him. Amoffel passed information to another Harper at a roadside inn, and members of the caravan witnessed the meeting. The cultists manufactured a story that he was passing information to bandits.",
 						"The merchants were unwilling to kill him outright, but they were willing to leave him buried in the road and \"let providence decide the man's fate.\" Amoffel has Harper contacts in Waterdeep and knows his way around the city. He can be a useful ally when this caravan reaches its destination."
 					]
 				},
@@ -1538,7 +1578,9 @@
 								"type": "internal",
 								"path": "adventure/HotDQ/No Room at the Inn (Player).jpg"
 							},
-							"title": "No Room at the Inn (Player)"
+							"title": "No Room at the Inn (Player)",
+							"width": 1024,
+							"height": 1024
 						}
 					]
 				},
@@ -1555,7 +1597,9 @@
 								"type": "internal",
 								"path": "adventure/HotDQ/Roadside Camp (Player).jpg"
 							},
-							"title": "Roadside Camp (Player)"
+							"title": "Roadside Camp (Player)",
+							"width": 1024,
+							"height": 1024
 						}
 					]
 				},
@@ -1572,7 +1616,9 @@
 								"type": "internal",
 								"path": "adventure/HotDQ/Spider Woods (Player).jpg"
 							},
-							"title": "Spider Woods (Player)"
+							"title": "Spider Woods (Player)",
+							"width": 1024,
+							"height": 1024
 						}
 					]
 				},
@@ -1590,7 +1636,9 @@
 								"type": "internal",
 								"path": "adventure/HotDQ/Stranded (Player).jpg"
 							},
-							"title": "Stranded (Player)"
+							"title": "Stranded (Player)",
+							"width": 1024,
+							"height": 1024
 						}
 					]
 				},
@@ -1682,7 +1730,9 @@
 						"type": "internal",
 						"path": "adventure/HotDQ/Episode 5 - Construction Ahead.jpg"
 					},
-					"title": "Episode 5 - Construction Ahead"
+					"title": "Episode 5 - Construction Ahead",
+					"width": 1050,
+					"height": 690
 				},
 				{
 					"type": "entries",
@@ -1715,11 +1765,11 @@
 									"type": "table",
 									"caption": "Encounters North of Waterdeep",
 									"colLabels": [
-										"d20",
+										"{@dice d20;d20 + 2}",
 										"Encounter"
 									],
 									"colStyles": [
-										"col-xs-1 text-align-center",
+										"col-1 text-center",
 										""
 									],
 									"rows": [
@@ -1786,7 +1836,9 @@
 										"type": "internal",
 										"path": "adventure/HotDQ/Carnath Roadhouse.jpg"
 									},
-									"title": "Carnath Roadhouse"
+									"title": "Carnath Roadhouse",
+									"width": 1013,
+									"height": 750
 								},
 								{
 									"type": "image",
@@ -1794,7 +1846,9 @@
 										"type": "internal",
 										"path": "adventure/HotDQ/Carnath Roadhouse (Player).jpg"
 									},
-									"title": "Carnath Roadhouse (Player)"
+									"title": "Carnath Roadhouse (Player)",
+									"width": 2173,
+									"height": 1609
 								}
 							]
 						},
@@ -1906,7 +1960,9 @@
 						"type": "internal",
 						"path": "adventure/HotDQ/Episode 6 - Castle Naerytar.jpg"
 					},
-					"title": "Episode 6 - Castle Naerytar"
+					"title": "Episode 6 - Castle Naerytar",
+					"width": 1000,
+					"height": 629
 				},
 				"As characters approach through the tunnel, any of them with a passive Wisdom (Perception) score of 10 or higher hears bestial voices ahead, growling and murmuring indistinctly in Draconic.",
 				"No one knows what became of them. Before the group's destruction, the members modified the castle by building an observatory into the top floor of the keep. Some of their magical viewing equipment is still there.",
@@ -1930,7 +1986,9 @@
 								"type": "internal",
 								"path": "adventure/HotDQ/Marshlands (Player).jpg"
 							},
-							"title": "Marshlands (Player)"
+							"title": "Marshlands (Player)",
+							"width": 1024,
+							"height": 1024
 						},
 						{
 							"type": "entries",
@@ -1945,7 +2003,9 @@
 								"type": "internal",
 								"path": "adventure/HotDQ/Marshland Campsite (Player).jpg"
 							},
-							"title": "Marshland Campsite (Player)"
+							"title": "Marshland Campsite (Player)",
+							"width": 1024,
+							"height": 1024
 						},
 						{
 							"type": "inset",
@@ -1985,45 +2045,45 @@
 										"Encounter"
 									],
 									"colStyles": [
-										"col-xs-1 text-align-center",
-										""
+										"col-2 text-center",
+										"col-10"
 									],
 									"rows": [
 										[
-											"1",
-											"2 Bullywugs (2 or 3 per character)"
+											"1-2",
+											"{@creature Bullywug|mm|Bullywugs} (2 or 3 per character)"
 										],
 										[
 											"3",
-											"Crocodiles (2 per character)"
+											"{@creature Crocodile|mm|Crocodiles} (2 per character)"
 										],
 										[
 											"4",
-											"Giant frogs (2 per character)"
+											"{@creature Giant frog|mm|Giant frogs} (2 per character)"
 										],
 										[
 											"5",
-											"Giant lizards (2 per character)"
+											"{@creature Giant lizard|mm|Giant lizards} (2 per character)"
 										],
 										[
 											"6",
-											"Giant spiders (1 per character)"
+											"{@creature Giant spider|mm|Giant spiders} (1 per character)"
 										],
 										[
-											"7",
-											"8 Lizardfolk (3 per 2 characters)"
+											"7-8",
+											"{@creature Lizardfolk} (3 per 2 characters)"
 										],
 										[
 											"9",
-											"Quicksand"
+											"{@hazard Quicksand}"
 										],
 										[
 											"10",
-											"Shambling mound"
+											"{@creature Shambling mound}"
 										],
 										[
 											"11",
-											"Will-o'-wisps (3)"
+											"{@creature Will-o'-wisp|mm|Will-o'-wisps} (3)"
 										],
 										[
 											"12",
@@ -2077,7 +2137,7 @@
 									"type": "entries",
 									"name": "Quicksand",
 									"entries": [
-										" A creature that steps into the quicksand must succeed on a DC 11 Dexterity saving throw or sink into the quicksand and be restrained. On its turn, as part of its movement, the trapped creature can escape by making a DC 15 Strength check. Another creature can attempt to pull the restrained creature out of the quicksand as an action but must succeed on a DC 15 Strength check to do so. As in a movie, the trapped creature is always more than 5 feet from the edge of the quicksand, so rescuers can't just grab the character; they must find a vine, a rope, or a pole and toss it to where the trapped character can reach it."
+										" A creature that steps into the quicksand must succeed on a DC 11 Dexterity saving throw or sink into the quicksand and be {@condition restrained}. On its turn, as part of its movement, the trapped creature can escape by making a DC 15 Strength check. Another creature can attempt to pull the restrained creature out of the quicksand as an action but must succeed on a DC 15 Strength check to do so. As in a movie, the trapped creature is always more than 5 feet from the edge of the quicksand, so rescuers can't just grab the character; they must find a vine, a rope, or a pole and toss it to where the trapped character can reach it."
 									]
 								},
 								{
@@ -2111,7 +2171,7 @@
 					"entries": [
 						"Over a century ago, a half-elf wizard built a castle at the edge of the Mere of Dead Men. He lived there a relatively short time before the growing swamp flowed past the castle on all sides and made the location too remote for even his taste. After the structure sat abandoned for years, a group of astrologers called the Academy of Stargazers claimed it. They built an observatory into the top level of the keep, where they installed a piece of magic equipment called the farseer of Illusk. But the astrologers vanished mysteriously after a few years.",
 						"After the disappearance of the astrologers, the castle again fell into disuse. It was built to withstand its cold, watery environment, so the encroaching water hasn't undermined the walls or flooded the dungeon. Over decades of abandonment, however, it filled with debris and attracted many unpleasant dwellers. Then Rezmir happened upon the castle on one of her trips into the mere to study and negotiate with the black dragon Voaraghamanthar. Rezmir suspected the castle could become a useful stronghold for her, being located so conveniently close to the lair of a black dragon. She explored the structure, cleared the giant spiders out of the tower, and forged an alliance with the nearby tribe of bullywugs.",
-						"During that time, the half-dragon was still thinking of the castle simply as a fortified hideout. When she discovered the portal in the dungeon and learned that it connected to an abandoned lodge in the Graypeak Mountains, a new thought took shape. Lugging large amounts of treasure fifteen miles through the mere would not be easy, but if it cut 700 miles of wagon transport out of the picture, it would be worth the difficulty- especially if bullywugs and lizardfolk did all the hard work. Rezmir laid claim to both structures, turned the Graypeak Mountain hunting lodge over to a trusted Cult of the Dragon associate (a half-elf named Talis who now despises Rezmir-see episode 7), and set about making Castle Naerytar an essential hub in the cult's treasure-amassing activity in the North.",
+						"During that time, the half-dragon was still thinking of the castle simply as a fortified hideout. When she discovered the portal in the dungeon and learned that it connected to an abandoned lodge in the Graypeak Mountains, a new thought took shape. Lugging large amounts of treasure fifteen miles through the mere would not be easy, but if it cut 700 miles of wagon transport out of the picture, it would be worth the difficulty\u2014especially if bullywugs and lizardfolk did all the hard work. Rezmir laid claim to both structures, turned the Graypeak Mountain hunting lodge over to a trusted Cult of the Dragon associate (a half-elf named Talis who now despises Rezmir-see episode 7), and set about making Castle Naerytar an essential hub in the cult's treasure-amassing activity in the North.",
 						"Through diplomacy and intimidation, and by leveraging the influence of Voaraghamanthar with the monstrous creatures of the mere, Rezmir created an uneasy alliance in the Mere of Dead Men and brought her vision into reality.",
 						{
 							"type": "entries",
@@ -2317,7 +2377,9 @@
 								"type": "internal",
 								"path": "adventure/HotDQ/Castle Naerytar - Ground Level.jpg"
 							},
-							"title": "Castle Naerytar - Ground Level"
+							"title": "Castle Naerytar - Ground Level",
+							"width": 1013,
+							"height": 750
 						},
 						{
 							"type": "image",
@@ -2325,7 +2387,9 @@
 								"type": "internal",
 								"path": "adventure/HotDQ/Castle Naerytar - Ground Level (Player).jpg"
 							},
-							"title": "Castle Naerytar - Ground Level (Player)"
+							"title": "Castle Naerytar - Ground Level (Player)",
+							"width": 6212,
+							"height": 4600
 						}
 					]
 				},
@@ -2358,7 +2422,7 @@
 					"type": "entries",
 					"name": "1D. Inner Ward",
 					"entries": [
-						"Originally, the passage between the outer and inner wards could be closed off with heavy wooden gates, but they have long since fallen apart and haven't been replaced. The inner ward is patrolled by three {@creature guard drake|RoT|guard drakes} at all hours of the day. They attack anyone they don't recognize or who isn't accompanied by someone they recognize."
+						"Originally, the passage between the outer and inner wards could be closed off with heavy wooden gates, but they have long since fallen apart and haven't been replaced. The inner ward is patrolled by three {@creature guard drake|HotDQ|guard drakes} at all hours of the day. They attack anyone they don't recognize or who isn't accompanied by someone they recognize."
 					]
 				},
 				{
@@ -2466,7 +2530,7 @@
 					"type": "entries",
 					"name": "1N. Rectory",
 					"entries": [
-						"This was originally the castle priest's living quarters, and it included many sturdy storage cabinets for vestments and religious paraphernalia. All the cabinets were hacked open and looted long ago. Four {@creature dragonclaw|RoT|dragonclaws} moved into this chamber and turned it into their living quarters. They tend the library in {@area 6>1N}."
+						"This was originally the castle priest's living quarters, and it included many sturdy storage cabinets for vestments and religious paraphernalia. All the cabinets were hacked open and looted long ago. Four {@creature dragonclaw|HotDQ|dragonclaws} moved into this chamber and turned it into their living quarters. They tend the library in {@area 6>1N}."
 					]
 				},
 				{
@@ -2489,7 +2553,7 @@
 					"name": "1Q. Great Hall",
 					"entries": [
 						"The cultists eat their meals and conduct most of their business in this high, wide hall. The eastern end of the hall is used for dining and socializing. The western half is where contraband hauled in from the Carnath Roadhouse is inspected, cleaned, sorted, and repacked before being carried down to the portal beneath the southwest tower. The tables in that half of the hall are covered with valuables. The southwest corner of the room is a makeshift carpentry shop, where cultists build new chests and boxes to hold the plunder. If characters have a chance to paw through the piles and keep what they find, they get 450 gp, 520 sp, 80 pp, 22 semiprecious stones (5 × 35 gp, 6 × 45 gp, 6 × 55 gp, 4 × 65 gp, 1 × 80 gp), and a potion of greater healing. Alternatively, you can create your own expert-level hoard.",
-						"Looting won't be possible, however, as long as any cultists are alive. During the day, there will always be twelve {@creature cultist|MM|cultists} (of initiate rank) working in the Great Hall and four {@creature dragonclaw|RoT|dragonclaws} keeping an eye on them. Most of the cultists are human, but all the character races are represented. The precise mix doesn't matter.",
+						"Looting won't be possible, however, as long as any cultists are alive. During the day, there will always be twelve {@creature cultist|MM|cultists} (of initiate rank) working in the Great Hall and four {@creature dragonclaw|HotDQ|dragonclaws} keeping an eye on them. Most of the cultists are human, but all the character races are represented. The precise mix doesn't matter.",
 						"If there is any disturbance in the Great Hall, everyone within hearing responds to the hue and cry. Cultists in the southwest tower and guard drakes from the inner ward show up at the start of the third round, and any bullywugs or lizardfolk in the outer ward respond at the beginning of the fourth round.",
 						"At night, two guard drakes sleep in the Great Hall while a third guard drake patrols the hall and the inner ward. Even asleep, the guard drakes are at normal alertness."
 					]
@@ -2544,7 +2608,9 @@
 								"type": "internal",
 								"path": "adventure/HotDQ/Castle Naerytar - Second Level.jpg"
 							},
-							"title": "Castle Naerytar - Second Level"
+							"title": "Castle Naerytar - Second Level",
+							"width": 788,
+							"height": 1013
 						},
 						{
 							"type": "image",
@@ -2552,7 +2618,9 @@
 								"type": "internal",
 								"path": "adventure/HotDQ/Castle Naerytar - Second Level (Player).jpg"
 							},
-							"title": "Castle Naerytar - Second Level (Player)"
+							"title": "Castle Naerytar - Second Level (Player)",
+							"width": 2946,
+							"height": 4127
 						}
 					]
 				},
@@ -2641,7 +2709,7 @@
 						"Since treasure first started funneling through Naerytar, Dralmorrer Borngray has pulled out any books, parchments, tablets, and other written material that interested him. He knows better than to claim it as his own; he will forward these treasures to Tiamat's hoard when the work at Castle Naerytar draws to a close. Until then, he keeps the written material at the castle to study and to divert him from the miserable surroundings. Rezmir knows about the library and approves of using the books this way, as long as they are delivered to the Well of Dragons before Tiamat's arrival.",
 						"Borngray has assembled an impressive library. It contains over one hundred books, quartos, and manuscripts covering the history of the Sword Coast, natural philosophy, mathematics, astronomy, magic, and many theoretical works on alternate reality, time, and dimensional travel. This collection would be a priceless addition to any library or collector in Waterdeep if it could be removed from the castle before the cultists spirit it away or the bullywugs spoil it.",
 						"The books and manuscripts are stored on wooden shelves built by the cultists from salvaged lumber.",
-						"One {@creature dragonwing|RoT} and four {@creature cultist|MM|cultists} (initiates) spend most of their time here, organizing the books."
+						"One {@creature dragonwing|HotDQ} and four {@creature cultist|MM|cultists} (initiates) spend most of their time here, organizing the books."
 					]
 				},
 				{
@@ -2662,7 +2730,7 @@
 					"type": "entries",
 					"name": "2T. Cultists' Sleeping Chamber",
 					"entries": [
-						"At night, seven {@creature dragonwing|RoT|dragonwings} sleep here. Otherwise, the chamber is empty of all but their reed mattresses and simple belongings in wooden trunks. A small stone hearth keeps the chamber warm."
+						"At night, seven {@creature dragonwing|HotDQ|dragonwings} sleep here. Otherwise, the chamber is empty of all but their reed mattresses and simple belongings in wooden trunks. A small stone hearth keeps the chamber warm."
 					]
 				},
 				{
@@ -2692,7 +2760,9 @@
 								"type": "internal",
 								"path": "adventure/HotDQ/Castle Naerytar - Third Level.jpg"
 							},
-							"title": "Castle Naerytar - Third Level"
+							"title": "Castle Naerytar - Third Level",
+							"width": 630,
+							"height": 810
 						},
 						{
 							"type": "image",
@@ -2700,7 +2770,9 @@
 								"type": "internal",
 								"path": "adventure/HotDQ/Castle Naerytar - Third Level (Player).jpg"
 							},
-							"title": "Castle Naerytar - Third Level (Player)"
+							"title": "Castle Naerytar - Third Level (Player)",
+							"width": 3122,
+							"height": 4023
 						}
 					]
 				},
@@ -2777,7 +2849,7 @@
 					"type": "entries",
 					"name": "3R. Cultists' Sleeping Chamber",
 					"entries": [
-						"Middle-ranking cultists have the entire top floor of the tower for their use. At night, six {@creature dragonwing|RoT|dragonwings} are present. Otherwise, the chamber is empty of all but their reed mattresses and belongings in wooden trunks. A small stone hearth provides meager warmth.",
+						"Middle-ranking cultists have the entire top floor of the tower for their use. At night, six {@creature dragonwing|HotDQ|dragonwings} are present. Otherwise, the chamber is empty of all but their reed mattresses and belongings in wooden trunks. A small stone hearth provides meager warmth.",
 						"The door to {@area 6>3S} is always kept closed but not locked."
 					]
 				},
@@ -2849,7 +2921,9 @@
 										"type": "internal",
 										"path": "adventure/HotDQ/Castle Naerytar - Dungeon.jpg"
 									},
-									"title": "Castle Naerytar - Dungeon"
+									"title": "Castle Naerytar - Dungeon",
+									"width": 810,
+									"height": 600
 								},
 								{
 									"type": "image",
@@ -2857,7 +2931,9 @@
 										"type": "internal",
 										"path": "adventure/HotDQ/Castle Naerytar - Dungeon (Player).jpg"
 									},
-									"title": "Castle Naerytar - Dungeon (Player)"
+									"title": "Castle Naerytar - Dungeon (Player)",
+									"width": 4214,
+									"height": 3121
 								}
 							]
 						}
@@ -2877,7 +2953,7 @@
 					"name": "2. Gray Ooze Lair",
 					"entries": [
 						"This chamber is the lair of a {@creature gray ooze|MM}, though none of the bullywugs or cultists are aware of it. Occasionally it slithers out of its chamber and eats a giant frog; the rest of the time, it stays out of sight. The ooze matches the surrounding stone perfectly and has nothing but time in which to camouflage itself. Compare the ooze's Dexterity (Stealth) check to the characters' passive Wisdom (Perception) scores to determine whether one or more of them spots it.",
-						"Searching characters do see the glint of gems beneath the water at the east end of the chamber. Fishing through that area turns up a handful of fancy and semiprecious stones worth 1,800 gp (2 × 50 gp, 5 × 100 gp, 200 gp, 400 gp, 600 gp). The gems came from a less than- devoted cultist who throws a fistful of coins and other treasure items into area 2 every time he gets the chance. His plan is to come back to the castle after the cult leaves and collect his \"retirement fund.\" Unknown to him, the ooze living in area 2 scoops up the items when it passes through its lair. All the items except the gems dissolve in the ooze's body. The stones fascinate the creature's tiny brain, so it \"spits out\" the gems in the corner and collects them. The ooze won't bother those who enter, look around, and leave. It fights back if attacked, and it attacks (probably with surprise) anyone who takes gems."
+						"Searching characters do see the glint of gems beneath the water at the east end of the chamber. Fishing through that area turns up a handful of fancy and semiprecious stones worth 1,800 gp (2 × 50 gp, 5 × 100 gp, 200 gp, 400 gp, 600 gp). The gems came from a less-than devoted cultist who throws a fistful of coins and other treasure items into area 2 every time he gets the chance. His plan is to come back to the castle after the cult leaves and collect his \"retirement fund.\" Unknown to him, the ooze living in area 2 scoops up the items when it passes through its lair. All the items except the gems dissolve in the ooze's body. The stones fascinate the creature's tiny brain, so it \"spits out\" the gems in the corner and collects them. The ooze won't bother those who enter, look around, and leave. It fights back if attacked, and it attacks (probably with surprise) anyone who takes gems."
 					]
 				},
 				{
@@ -2952,7 +3028,7 @@
 					"entries": [
 						"Pharblex turned this area into a shrine to his distorted notions of religion. Niches in the walls are filled with carvings of frogs ranging from the size of a fist to the size of a pumpkin. Larger carvings sit on the floor.",
 						"Crude renderings of frogs are scratched into the walls around the niches and colored with chalk.",
-						"Anyone with the Intelligence (Religion) skill recognizes elements in these designs taken from the worship of both Ghaunadaur (god of slimes) and Shar (goddess of shadows), but none of these elements are used in a canonical manner. Pharblex used pieces that he saw in religious icons that arrived in treasure shipments, but he has no understanding of their real meaning. With a successful DC 18 Intelligence (Religion) check, a character also sees indications that Ramenos is venerated here. Ramenos is an ancient entity now believed to be in a deep slumber. As far as the character is aware, Ramenos was a god of one of the ancient creator races- if it was ever anything more than a legend. Judging from this chamber, whoever created this place has only the shallowest knowledge about these entities.",
+						"Anyone with the Intelligence (Religion) skill recognizes elements in these designs taken from the worship of both Ghaunadaur (god of slimes) and Shar (goddess of shadows), but none of these elements are used in a canonical manner. Pharblex used pieces that he saw in religious icons that arrived in treasure shipments, but he has no understanding of their real meaning. With a successful DC 18 Intelligence (Religion) check, a character also sees indications that Ramenos is venerated here. Ramenos is an ancient entity now believed to be in a deep slumber. As far as the character is aware, Ramenos was a god of one of the ancient creator races\u2014if it was ever anything more than a legend. Judging from this chamber, whoever created this place has only the shallowest knowledge about these entities.",
 						"Unless a disturbance develops elsewhere in the caverns, the most likely place to find Pharblex is here, followed by areas 12 and 7 (in that order). Wherever he goes, {@b Pharblex} has ten {@creature bullywug|MM|bullywugs} protecting him."
 					]
 				},
@@ -2996,7 +3072,9 @@
 						"type": "internal",
 						"path": "adventure/HotDQ/Episode 7 - Hunting Lodge.jpg"
 					},
-					"title": "Episode 7 - Hunting Lodge"
+					"title": "Episode 7 - Hunting Lodge",
+					"width": 1000,
+					"height": 629
 				},
 				"Next to the portal is a hunting lodge used by a succession of local lords over the years. The lodge is a useful and central meeting place for high-ranking cultists, among them a Wearer of Purple known as Talis the White.",
 				"Talis feels strongly that she belongs in Severin's \"inner circle,\" but Severin doesn't trust her and recently appointed a dwarf named Varram as his wyrmspeaker in charge of recovering the White Dragon Mask. The adventurers meet Talis and her servants, and they could end up fighting Talis and her crew in the lodge. They might also bargain and make a deal with Talis, striking against those who oppose her ascension. If they do the latter, she helps the party reach the nearby village of Parnast and aboard Skyreach Castle (see episode 8)- but negotiations are fairly hazardous and might easily result in combat rather than a deal.",
@@ -3007,7 +3085,9 @@
 						"type": "internal",
 						"path": "adventure/HotDQ/Hunting Lodge - Ground Floor.jpg"
 					},
-					"title": "Hunting Lodge - Ground Floor"
+					"title": "Hunting Lodge - Ground Floor",
+					"width": 1013,
+					"height": 750
 				},
 				{
 					"type": "image",
@@ -3015,7 +3095,9 @@
 						"type": "internal",
 						"path": "adventure/HotDQ/Hunting Lodge - Ground Floor (Player).jpg"
 					},
-					"title": "Hunting Lodge - Ground Floor (Player)"
+					"title": "Hunting Lodge - Ground Floor (Player)",
+					"width": 1742,
+					"height": 1290
 				},
 				{
 					"type": "image",
@@ -3023,7 +3105,9 @@
 						"type": "internal",
 						"path": "adventure/HotDQ/Hunting Lodge - Upper Floor.jpg"
 					},
-					"title": "Hunting Lodge - Upper Floor"
+					"title": "Hunting Lodge - Upper Floor",
+					"width": 1013,
+					"height": 750
 				},
 				{
 					"type": "image",
@@ -3031,7 +3115,9 @@
 						"type": "internal",
 						"path": "adventure/HotDQ/Hunting Lodge - Upper Floor (Player).jpg"
 					},
-					"title": "Hunting Lodge - Upper Floor (Player)"
+					"title": "Hunting Lodge - Upper Floor (Player)",
+					"width": 1489,
+					"height": 1103
 				},
 				{
 					"type": "entries",
@@ -3066,7 +3152,7 @@
 							"type": "entries",
 							"name": "Talis",
 							"entries": [
-								"Talis believes she is the rightful bearer of the White Dragon Mask, and that she was deeply wronged when custody of the mask went to her hated rival, the dwarf Varram, a foolish creature whom Talis considers insultingly incompetent and worthless. She's been watching the cult's hoard grow, and she hopes to still make her move to become a major figure within the cult hierarchy- certainly she has a lot of support among cultists."
+								"Talis believes she is the rightful bearer of the White Dragon Mask, and that she was deeply wronged when custody of the mask went to her hated rival, the dwarf Varram, a foolish creature whom Talis considers insultingly incompetent and worthless. She's been watching the cult's hoard grow, and she hopes to still make her move to become a major figure within the cult hierarchy\u2014certainly she has a lot of support among cultists."
 							]
 						},
 						{
@@ -3415,7 +3501,7 @@
 							]
 						},
 						"This encounter is the classic scene where the villain explains herself if the players are willing to pause.",
-						"{@creature Talis the White|HotDQ} is a dangerous foe. She stands behind her bodyguards and uses a wand of winter. Talis's bodyguards include two human {@creature veteran|MM|veterans} named Maelgot and Sorvic, and a {@creature dragonclaw|RoT} named Kusphia. If Talis is slain, the veterans surrender, but Kusphia fights to the death to avenge her slain mistress.",
+						"{@creature Talis the White|HotDQ} is a dangerous foe. She stands behind her bodyguards and uses a wand of winter. Talis's bodyguards include two human {@creature veteran|MM|veterans} named Maelgot and Sorvic, and a {@creature dragonclaw|HotDQ} named Kusphia. If Talis is slain, the veterans surrender, but Kusphia fights to the death to avenge her slain mistress.",
 						"Talis expects to meet some co-conspirators at the lodge to discuss various matters of her own ascendancy in the ranks. If the characters can be turned to her advantage, she would much rather send them against her rival than fight them. At the same time, she knows she cannot be seen as disloyal to the cult's interests.",
 						{
 							"type": "entries",
@@ -3654,7 +3740,9 @@
 						"type": "internal",
 						"path": "adventure/HotDQ/Episode 8 - Castle in the Clouds.jpg"
 					},
-					"title": "Episode 8 - Castle in the Clouds"
+					"title": "Episode 8 - Castle in the Clouds",
+					"width": 1000,
+					"height": 629
 				},
 				"By the time the characters arrive in the village, Rezmir has already announced that the fortress must be made ready for departure. Characters should have time to deal with Talis and possibly other cultists before it takes to the sky.",
 				"The characters must be smart in how they tackle storming the castle-it's clearly a well-fortified place.",
@@ -3671,7 +3759,9 @@
 								"type": "internal",
 								"path": "adventure/HotDQ/Parnast.jpg"
 							},
-							"title": "Parnast"
+							"title": "Parnast",
+							"width": 490,
+							"height": 630
 						},
 						{
 							"type": "image",
@@ -3679,7 +3769,9 @@
 								"type": "internal",
 								"path": "adventure/HotDQ/Parnast (Player).jpg"
 							},
-							"title": "Parnast (Player)"
+							"title": "Parnast (Player)",
+							"width": 3172,
+							"height": 4080
 						},
 						{
 							"type": "inset",
@@ -3768,7 +3860,7 @@
 							"type": "entries",
 							"name": "Developments",
 							"entries": [
-								"The characters can try to equip the wyverns with harnesses and ride them as aerial mounts; see the \"Wyvern Riding and Castle Catching\" sidebar for details. If they steal one or both wyverns from under the Cult of the Dragon's nose, divide 4,000 XP evenly among the characters- more than what they would receive for slaying the wyverns."
+								"The characters can try to equip the wyverns with harnesses and ride them as aerial mounts; see the \"Wyvern Riding and Castle Catching\" sidebar for details. If they steal one or both wyverns from under the Cult of the Dragon's nose, divide 4,000 XP evenly among the characters\u2014more than what they would receive for slaying the wyverns."
 							]
 						}
 					]
@@ -3813,7 +3905,9 @@
 								"type": "internal",
 								"path": "adventure/HotDQ/Skyreach Castle.jpg"
 							},
-							"title": "Skyreach Castle"
+							"title": "Skyreach Castle",
+							"width": 795,
+							"height": 1140
 						},
 						{
 							"type": "image",
@@ -3821,7 +3915,9 @@
 								"type": "internal",
 								"path": "adventure/HotDQ/Skyreach Castle - Side View.jpg"
 							},
-							"title": "Skyreach Castle - Side View"
+							"title": "Skyreach Castle - Side View",
+							"width": 2270,
+							"height": 1629
 						},
 						"Skyreach Castle is carved from ice so thick as to be opaque. The ice is as strong and impenetrable as granite, thanks to ancient cloud giant wizardry. Towers and walls surround an iceberg core that's been hollowed out to serve as the lair of a powerful white dragon allied with the cult. The whole thing can be hidden under a veil of fog and cloud, or set to move slowly with the wind. See {@area 8>19} for details.",
 						{
@@ -3863,7 +3959,9 @@
 										"type": "internal",
 										"path": "adventure/HotDQ/Skyreach Castle - Lower Courtyard (Player).jpg"
 									},
-									"title": "Skyreach Castle - Lower Courtyard (Player)"
+									"title": "Skyreach Castle - Lower Courtyard (Player)",
+									"width": 5675,
+									"height": 2739
 								},
 								{
 									"type": "image",
@@ -3871,7 +3969,9 @@
 										"type": "internal",
 										"path": "adventure/HotDQ/Skyreach Castle - Upper Courtyard (Player).jpg"
 									},
-									"title": "Skyreach Castle - Upper Courtyard (Player)"
+									"title": "Skyreach Castle - Upper Courtyard (Player)",
+									"width": 6727,
+									"height": 3595
 								},
 								{
 									"type": "image",
@@ -3879,7 +3979,9 @@
 										"type": "internal",
 										"path": "adventure/HotDQ/Skyreach Castle - Ice Tunnels (Player).jpg"
 									},
-									"title": "Skyreach Castle - Ice Tunnels (Player)"
+									"title": "Skyreach Castle - Ice Tunnels (Player)",
+									"width": 3291,
+									"height": 3188
 								}
 							]
 						}
@@ -4019,7 +4121,7 @@
 					"name": "9. Cultist Barracks",
 					"entries": [
 						"The barracks smell of unwashed bedclothes, and the chamber contains fourteen fur-covered beds, as well as several chests of clothing, a table and chairs, and other simple furnishings.",
-						"At any given time, ten {@creature dragonwing|RoT|dragonwings} are resting here.",
+						"At any given time, ten {@creature dragonwing|HotDQ|dragonwings} are resting here.",
 						"Half of them are sound asleep, while the other half are awake but doing nothing overly strenuous. They do not roam the castle unless an alarm has sounded, they hear combat in the courtyard, or the ogres at the gate yell for reinforcements."
 					]
 				},
@@ -4073,7 +4175,7 @@
 								"A large rug covers the icy floor just inside the door of this 10-foot-high room, which is lit by a brazier of hot coals. A large bed rests in one corner, a desk in another. Resting atop the desk is a handsome, iron-banded chest secured with a sturdy padlock."
 							]
 						},
-						"Unless she is lured elsewhere by a general alarm, {@creature Rezmir|HotDQ} is here along with two loyal {@creature guard drake|RoT|guard drakes} (appendix B).",
+						"Unless she is lured elsewhere by a general alarm, {@creature Rezmir|HotDQ} is here along with two loyal {@creature guard drake|HotDQ|guard drakes} (appendix B).",
 						"The large rug inside of the door is actually a {@i rug of smothering}. The rug patiently waits for a creature to walk onto it before attacking. If they are present, Rezmir and her drakes wait for the rug to attack an enemy coming through the door before springing into action.",
 						"If Rezmir is killed, the contents of the iron chest on her desk teleport away, leaving the chest empty.",
 						{
@@ -4107,7 +4209,7 @@
 						},
 						"Rath Modar, a Red Wizard of Thay allied with the Cult of the Dragon, resides here. Unless he was killed or captured previously, Azbara Jos is also present. If both Red Wizards are present, they are in the midst of a scholarly argument when the characters arrive, but they clam up as soon as others appear. If Rath Modar is alone, he is standing at a lectern, reading a book (see \"Treasure\").",
 						"If Azbara is absent, Rath Modar might mistake the characters for cultists. If the characters play along and attempt to gather information from the Red Wizard, roleplay it out. Rath is no fool, and he is an expert at seeing through illusions and deceptions. He also has a healthy suspicion of strangers, especially if the characters are wounded or inappropriately equipped.",
-						"{@creature Rath Modar|RoT} is here to help watch over the vast treasure being transported to the Well of Dragons and also to plan for the summoning of Tiamat; the necessary incantations are complex and require hundreds of skilled spellcasters. He knows that the cult's ultimate goal is to free Tiamat and raise her temple from the Nine Hells, and Rath's ultimate goal is to use Tiamat and her dragons to overthrow Szass Tam.",
+						"{@creature Rath Modar|HotDQ} is here to help watch over the vast treasure being transported to the Well of Dragons and also to plan for the summoning of Tiamat; the necessary incantations are complex and require hundreds of skilled spellcasters. He knows that the cult's ultimate goal is to free Tiamat and raise her temple from the Nine Hells, and Rath's ultimate goal is to use Tiamat and her dragons to overthrow Szass Tam.",
 						"The horse skulls on the ceiling are ghastly ornaments and nothing more.",
 						"Three of the gargoyles are statues; the fourth is a living gargoyle that serves Rath Modar.",
 						"Vanishing Wall of Ice. Between two windows is a 35-foot-long, 20-foot-high section of icy wall that vanishes for 1 minute when touched. Beyond the wall is an outdoor landing platform.",
@@ -4161,7 +4263,7 @@
 						{
 							"type": "inset",
 							"entries": [
-								"The scene is pure chaos: dozens of kobolds chopping, mixing, carrying sacks of ingredients, and stirring great cauldrons. It could be an alchemical lab or a kitchen- with kobolds cooking, it's a little hard to be sure."
+								"The scene is pure chaos: dozens of kobolds chopping, mixing, carrying sacks of ingredients, and stirring great cauldrons. It could be an alchemical lab or a kitchen\u2014with kobolds cooking, it's a little hard to be sure."
 							]
 						},
 						"Twenty {@creature kobold|MM|kobolds} are here, preparing food for the castle's other inhabitants. The kitchen is filled with huge sides of beef, entire sheep, chests full of dried fish and vast amounts of bacon, onions, beans, and so forth.",
@@ -4649,48 +4751,48 @@
 										"Result"
 									],
 									"colStyles": [
-										"col-xs-1 text-align-center",
-										"col-xs-11"
+										"col-1 text-center",
+										"col-11"
 									],
 									"rows": [
 										[
-											"1.",
+											"1",
 											"Leosin Erlanthar, a wandering monk, once saved your life. He's sent urgent word for you to meet him in a small town called Greenest. Looks like it's time to pay off that debt."
 										],
 										[
-											"2.",
+											"2",
 											"When an orc raid drove your family from your home, the people of Greenest took you in. Anyone who threatens Greenest is your sworn enemy."
 										],
 										[
-											"3.",
+											"3",
 											"Every five nights, you have a strange sequence of apocalyptic dreams. The world is destroyed by cold, choking fumes, lightning storms, waves of acid, and horrible fire. Each time, the dream ends with ten evil eyes glaring at you from the darkness. You feel a strange compulsion to travel to Greenest. Perhaps the answer to the riddle of your dreams awaits you there."
 										],
 										[
-											"4.",
+											"4",
 											"Ontharr Frume, a crusading warrior and champion of good, is your friend and mentor. He has asked you to travel to Greenest in search of rumors of increasing dragon activity."
 										],
 										[
-											"5.",
+											"5",
 											"You have heard rumors that your close childhood friend, a half-elf named Talis, has been kidnapped by a strange group of dragon cultists. Your investigations into the cult have led you to the town of Greenest. You must save her!"
 										],
 										[
-											"6.",
+											"6",
 											"Being the grandchild of a renowned dragon slayer is usually a good way to impress people, but just last week a gang of ruffians attack you. You barely escaped with your life, but as you fled, the ruffians told you that the Cult of the Dragon never forgets and always avenges. You're hoping to lie low in a sleepy little town called Greenest until this blows over."
 										],
 										[
-											"7.",
+											"7",
 											"On his deathbed, your father confessed that he had become involved with a group called the Cult of the Dragon. They paid him to smuggle goods across the Sword Coast. Wracked by guilt, he begged you to investigate the cult and undo the evil he may have helped foster. He urged you to begin your search in a town called Greenest."
 										],
 										[
-											"8.",
+											"8",
 											"The dragons destroyed everything you hold dear. They killed your family and destroyed your home. Now, with nothing but what you carry on your back and a horrid scar of the near fatal wounds you sustained in the attack, you seek revenge."
 										],
 										[
-											"9.",
+											"9",
 											"You and your family were members of the Cult of the Dragon, until your rivals in the cult arranged to wipe you out. Though they slaughtered your kin, you survived, but they think you're dead. Now is your chance for vengeance! Your hit list consists of three names: a human cultist named Frulam Mondath, a half-orc named Bog Luck, and a half-dragon named Rezmir. You have arrived in Greenest, knowing it's next on the cult's list of targets."
 										],
 										[
-											"10.",
+											"10",
 											"You have a secret. You once were a gold dragon who served Bahamut. You were too proud and vain, to the point that Bahamut decided to teach you a lesson. You have been trapped in a weak, humanoid body, with your memories of your former life but a dim shadow. You remember only one thing with perfect clarity: Bahamut's command to go into the world and prove your devotion to the cause of good. If you prove worthy, on your death you will return to his side in your true form."
 										]
 									]
@@ -4708,7 +4810,8 @@
 							"type": "entries",
 							"name": "Optional Feature: Cult of the Dragon Infiltrator",
 							"entries": [
-								"You have infiltrated the ranks of the Cult of the Dragon.</p><p>Having spied on the organization for quite some time, you are familiar with its inner workings and customs.</p><p>You have a second identity as an initiate of the cult, enough of a facade to blend in as a simple grunt or servant."
+								"You have infiltrated the ranks of the Cult of the Dragon.",
+								"Having spied on the organization for quite some time, you are familiar with its inner workings and customs.</p><p>You have a second identity as an initiate of the cult, enough of a facade to blend in as a simple grunt or servant."
 							]
 						},
 						{

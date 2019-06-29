@@ -1,27 +1,40 @@
 "use strict";
-const JSON_URL = "data/generated/gendata-tables.json";
-const renderer = EntryRenderer.getDefaultRenderer();
+
+const GEN_JSON_URL = "data/generated/gendata-tables.json";
+const JSON_URL = "data/tables.json";
+const renderer = Renderer.get();
 
 window.onload = function load () {
+	ExcludeUtil.pInitialise(); // don't await, as this is only used for search
+
 	SortUtil.initHandleFilterButtonClicks();
-	DataUtil.loadJSON(JSON_URL).then(onJsonLoad);
+	Promise.all([GEN_JSON_URL, JSON_URL].map(url => DataUtil.loadJSON(url))).then((datas) => {
+		const combined = {};
+		datas.forEach(data => {
+			Object.entries(data).forEach(([k, v]) => {
+				if (combined[k] && combined[k] instanceof Array && v instanceof Array) combined[k] = combined[k].concat(v);
+				else if (combined[k] == null) combined[k] = v;
+				else throw new Error(`Could not merge keys for key "${k}"`);
+			});
+		});
+		onJsonLoad(combined);
+	});
 };
 
 const sourceFilter = getSourceFilter();
 let filterBox;
 let list;
-function onJsonLoad (data) {
+async function onJsonLoad (data) {
 	list = ListUtil.search({
 		valueNames: ["name", "source", "sort-name"],
 		listClass: "tablesdata"
 	});
 
-	filterBox = initFilterBox(
-		sourceFilter
-	);
+	filterBox = await pInitFilterBox({filters: [sourceFilter]});
 
+	const $outVisibleResults = $(`.lst__wrp-search-visible`);
 	list.on("updated", () => {
-		filterBox.setCount(list.visibleItems.length, list.items.length);
+		$outVisibleResults.html(`${list.visibleItems.length}/${list.items.length}`);
 	});
 
 	// filtering function
@@ -40,15 +53,17 @@ function onJsonLoad (data) {
 	addTables(data);
 	BrewUtil.pAddBrewData()
 		.then(handleBrew)
-		.then(BrewUtil.pAddLocalBrewData)
-		.catch(BrewUtil.purgeBrew)
-		.then(() => {
+		.then(() => BrewUtil.bind({list}))
+		.then(() => BrewUtil.pAddLocalBrewData())
+		.catch(BrewUtil.pPurgeBrew)
+		.then(async () => {
 			BrewUtil.makeBrewButton("manage-brew");
-			BrewUtil.bind({list, filterBox, sourceFilter});
-			ListUtil.loadState();
+			BrewUtil.bind({filterBox, sourceFilter});
+			await ListUtil.pLoadState();
+			RollerUtil.addListRollButton();
+			ListUtil.addListShowHide();
 
 			History.init(true);
-			RollerUtil.addListRollButton();
 		});
 }
 
@@ -78,20 +93,17 @@ function addTables (data) {
 		tempString += `
 			<li class="row" ${FLTR_ID}="${cdI}" onclick="ListUtil.toggleSelected(event, this)" oncontextmenu="ListUtil.openContextMenu(event, this)">
 				<a id="${cdI}" href="#${UrlUtil.autoEncodeHash(it)}" title="${it.name}">
-					<span class='name col-xs-10'>${it.name}</span>
-					<span class='source col-xs-2 text-align-center ${Parser.sourceJsonToColor(it.source)}' title="${Parser.sourceJsonToFull(it.source)}">${Parser.sourceJsonToAbv(it.source)}</span>
+					<span class="name col-10 pl-0">${it.name}</span>
+					<span class="source col-2 text-center ${Parser.sourceJsonToColor(it.source)} pr-0" title="${Parser.sourceJsonToFull(it.source)}" ${BrewUtil.sourceJsonToStyle(it.source)}>${Parser.sourceJsonToAbv(it.source)}</span>
 					<span class="hidden sort-name">${sortName}</span>
 				</a>
 			</li>`;
 
 		// populate filters
-		sourceFilter.addIfAbsent(it.source);
+		sourceFilter.addItem(it.source);
 	}
 	const lastSearch = ListUtil.getSearchTermAndReset(list);
 	tablesTable.append(tempString);
-
-	// sort filters
-	sourceFilter.items.sort(SortUtil.ascSort);
 
 	list.reIndex();
 	if (lastSearch) list.search(lastSearch);
@@ -105,7 +117,7 @@ function addTables (data) {
 		primaryLists: [list]
 	});
 	ListUtil.bindPinButton();
-	EntryRenderer.hover.bindPopoutButton(tableList);
+	Renderer.hover.bindPopoutButton(tableList);
 	UrlUtil.bindLinkExportButton(filterBox);
 	ListUtil.bindDownloadButton();
 	ListUtil.bindUploadButton();
@@ -115,7 +127,7 @@ function getSublistItem (table, pinId) {
 	return `
 		<li class="row" ${FLTR_ID}="${pinId}" oncontextmenu="ListUtil.openSubContextMenu(event, this)">
 			<a href="#${UrlUtil.autoEncodeHash(table)}">
-				<span class="name col-xs-12">${table.name}</span>		
+				<span class="name col-12 px-0">${table.name}</span>		
 				<span class="id hidden">${pinId}</span>				
 			</a>
 		</li>
@@ -132,25 +144,30 @@ function handleFilterChange () {
 			it.source
 		);
 	});
-	FilterBox.nextIfHidden(tableList);
+	FilterBox.selectFirstVisible(tableList);
 }
 
-function loadhash (id) {
+function loadHash (id) {
 	renderer.setFirstSection(true);
 	const $content = $("#pagecontent").empty();
 	const it = tableList[id];
 
 	$content.append(`
-		${EntryRenderer.utils.getBorderTr()}
-		${EntryRenderer.utils.getNameTr(it)}
+		${Renderer.utils.getBorderTr()}
+		${Renderer.utils.getNameTr(it)}
 		<tr><td class="divider" colspan="6"><div></div></td></tr>
-		${EntryRenderer.table.getCompactRenderedString(it)}
+		${Renderer.table.getCompactRenderedString(it)}
 		${it.chapter ? `<tr class="text"><td colspan="6">
-		${EntryRenderer.getDefaultRenderer().renderEntry(`{@note ${it._type === "t" ? `This table` : "These tables"} can be found in ${Parser.sourceJsonToFull(it.source)}${Parser.bookOrdinalToAbv(it.chapter.ordinal, true)}, {@book ${it.chapter.name}|${it.source}|${it.chapter.index}|${it.chapter.name}}.}`)}
+		${Renderer.get().render(`{@note ${it._type === "t" ? `This table` : "These tables"} can be found in ${Parser.sourceJsonToFull(it.source)}${Parser.bookOrdinalToAbv(it.chapter.ordinal, true)}, {@book ${it.chapter.name}|${it.source}|${it.chapter.index}|${it.chapter.name}}.}`)}
 		</td></tr>` : ""}
-		${EntryRenderer.utils.getPageTr(it)}
-		${EntryRenderer.utils.getBorderTr()}
+		${Renderer.utils.getPageTr(it)}
+		${Renderer.utils.getBorderTr()}
 	`);
 
 	ListUtil.updateSelected();
+}
+
+function loadSubHash (sub) {
+	sub = filterBox.setFromSubHashes(sub);
+	ListUtil.setFromSubHashes(sub);
 }

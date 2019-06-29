@@ -1,9 +1,20 @@
 {
 	"_meta": {
-		"dependencies": [
-			"MM",
-			"VGM"
-		]
+		"dependencies": {
+			"monster": [
+				"MM",
+				"VGM"
+			]
+		},
+		"internalCopies": [
+			"monster"
+		],
+		"otherSources": {
+			"monster": {
+				"MM": "WDH",
+				"VGM": "WDH"
+			}
+		}
 	},
 	"monster": [
 		{
@@ -11,15 +22,16 @@
 			"_copy": {
 				"name": "Bandit Captain",
 				"source": "MM",
-				"replacers": [
-					{
+				"_mod": {
+					"*": {
+						"mode": "replaceTxt",
 						"replace": "the captain",
 						"with": "Embric",
 						"flags": "i"
 					}
-				]
+				}
 			},
-			"isNPC": true,
+			"isNpc": true,
 			"type": {
 				"type": "humanoid",
 				"tags": [
@@ -35,7 +47,9 @@
 				"N",
 				"G"
 			],
-			"senses": "darkvision 60 ft.",
+			"senses": [
+				"darkvision 60 ft."
+			],
 			"spellcasting": [
 				{
 					"name": "Innate Spellcasting",
@@ -48,9 +62,19 @@
 					"ability": "con"
 				}
 			],
-			"languages": "Common, Primordial",
+			"languages": [
+				"Common",
+				"Primordial"
+			],
 			"senseTags": [
 				"D"
+			],
+			"languageTags": [
+				"C",
+				"P"
+			],
+			"spellcastingTags": [
+				"I"
 			]
 		},
 		{
@@ -58,28 +82,25 @@
 			"_copy": {
 				"name": "Priest",
 				"source": "MM",
-				"replacers": [
-					{
+				"_mod": {
+					"*": {
+						"mode": "replaceTxt",
 						"replace": "the priest",
 						"with": "Avi",
 						"flags": "i"
-					}
-				],
-				"arrayModifiers": {
+					},
 					"trait": {
-						"mode": "prepend",
-						"data": [
-							{
-								"name": "Control Water",
-								"entries": [
-									"At will, Avi can control the flow and shape of water in a 5-foot cube, or cause the water to freeze for up to 1 hour."
-								]
-							}
-						]
+						"mode": "prependArr",
+						"items": {
+							"name": "Control Water",
+							"entries": [
+								"At will, Avi can control the flow and shape of water in a 5-foot cube, or cause the water to freeze for up to 1 hour."
+							]
+						}
 					}
 				}
 			},
-			"isNPC": true,
+			"isNpc": true,
 			"type": {
 				"type": "humanoid",
 				"tags": [
@@ -102,15 +123,22 @@
 			"resist": [
 				"acid"
 			],
-			"languages": "Common, Primordial",
+			"languages": [
+				"Common",
+				"Primordial"
+			],
 			"languageTags": [
 				"C",
 				"P"
+			],
+			"miscTags": [
+				"MW",
+				"AOE"
 			]
 		},
 		{
 			"name": "Yalah Gralhund",
-			"isNPC": true,
+			"isNpc": true,
 			"size": "M",
 			"type": {
 				"type": "humanoid",
@@ -154,14 +182,16 @@
 				"persuasion": "+5"
 			},
 			"passive": 13,
-			"languages": "Common, Infernal",
+			"languages": [
+				"Common",
+				"Infernal"
+			],
 			"cr": "1/8",
-			"senses": "",
 			"action": [
 				{
 					"name": "Rapier",
 					"entries": [
-						"{@atk mw} {@hit 3} to hit, reach 5 ft., one target. Hit: 5 ({@damage 1d8 + 1}) piercing damage."
+						"{@atk mw} {@hit 3} to hit, reach 5 ft., one target. {@h}5 ({@damage 1d8 + 1}) piercing damage."
 					]
 				}
 			],
@@ -179,11 +209,17 @@
 			"languageTags": [
 				"C",
 				"I"
+			],
+			"damageTags": [
+				"P"
+			],
+			"miscTags": [
+				"MW"
 			]
 		},
 		{
 			"name": "Magister Umbero Zastro",
-			"isNPC": true,
+			"isNpc": true,
 			"size": "M",
 			"type": {
 				"type": "humanoid",
@@ -219,9 +255,14 @@
 				"persuasion": "+5"
 			},
 			"passive": 12,
-			"languages": "Common, Elvish",
+			"languages": [
+				"Common",
+				"Elvish"
+			],
 			"cr": "0",
-			"senses": "darkvision 60 ft.",
+			"senses": [
+				"darkvision 60 ft."
+			],
 			"trait": [
 				{
 					"name": "Fey Ancestry",
@@ -234,7 +275,7 @@
 				{
 					"name": "Rapier",
 					"entries": [
-						"{@atk mw} {@hit 3} to hit, reach 5 ft., one target. Hit: 5 ({@damage 1d8 + 1}) piercing damage."
+						"{@atk mw} {@hit 3} to hit, reach 5 ft., one target. {@h}5 ({@damage 1d8 + 1}) piercing damage."
 					]
 				}
 			],
@@ -258,10 +299,16 @@
 			],
 			"senseTags": [
 				"D"
+			],
+			"damageTags": [
+				"P"
+			],
+			"miscTags": [
+				"MW"
 			]
 		},
 		{
-			"name": "Dining Table",
+			"name": "Dining Table Mimic",
 			"size": "L",
 			"type": {
 				"type": "monstrosity",
@@ -306,7 +353,9 @@
 			],
 			"passive": 11,
 			"cr": "3",
-			"senses": "darkvision 60 ft.",
+			"senses": [
+				"darkvision 60 ft."
+			],
 			"trait": [
 				{
 					"name": "Shapechanger",
@@ -317,7 +366,7 @@
 				{
 					"name": "Adhesive (Object Form Only)",
 					"entries": [
-						"The mimic adheres to anything that touches it. A Huge or smaller creature adhered to the mimic is also {@condition grappled} by it (escape DC 13). Ability checks made to escape this grapple have disadvantage."
+						"The mimic adheres to anything that touches it. A Huge or smaller creature adhered to the mimic is also {@condition grappled} by it (escape {@dc 13}). Ability checks made to escape this grapple have disadvantage."
 					]
 				},
 				{
@@ -343,13 +392,13 @@
 				{
 					"name": "Pseudopod",
 					"entries": [
-						"{@atk mw} {@hit 5} to hit, reach 5 ft., one target. Hit: 7 ({@damage 1d8 + 3}) bludgeoning damage. If the mimic is in object form, the target is subjected to its Adhesive trait."
+						"{@atk mw} {@hit 5} to hit, reach 5 ft., one target. {@h}7 ({@damage 1d8 + 3}) bludgeoning damage. If the mimic is in object form, the target is subjected to its Adhesive trait."
 					]
 				},
 				{
 					"name": "Bite",
 					"entries": [
-						"{@atk mw} {@hit 5} to hit, reach 5 ft., one target. Hit: 7 ({@damage 1d8 + 3}) piercing damage plus 4 ({@damage 1d8}) acid damage."
+						"{@atk mw} {@hit 5} to hit, reach 5 ft., one target. {@h}7 ({@damage 1d8 + 3}) piercing damage plus 4 ({@damage 1d8}) acid damage."
 					]
 				}
 			],
@@ -361,6 +410,14 @@
 			],
 			"senseTags": [
 				"D"
+			],
+			"damageTags": [
+				"B",
+				"P",
+				"A"
+			],
+			"miscTags": [
+				"MW"
 			]
 		},
 		{
@@ -417,7 +474,9 @@
 			],
 			"passive": 7,
 			"cr": "1/4",
-			"senses": "blindsight 60 ft. (blind beyond this radius)",
+			"senses": [
+				"blindsight 60 ft. (blind beyond this radius)"
+			],
 			"trait": [
 				{
 					"name": "Antimagic Susceptibility",
@@ -436,7 +495,7 @@
 				{
 					"name": "Knife",
 					"entries": [
-						"{@atk mw} {@hit 3} to hit, reach 5 ft., one target. Hit: 4 ({@damage 1d6 + 1}) bludgeoning damage."
+						"{@atk mw} {@hit 3} to hit, reach 5 ft., one target. {@h}4 ({@damage 1d6 + 1}) bludgeoning damage."
 					]
 				}
 			],
@@ -446,6 +505,12 @@
 			],
 			"senseTags": [
 				"B"
+			],
+			"damageTags": [
+				"B"
+			],
+			"miscTags": [
+				"MW"
 			]
 		},
 		{
@@ -494,7 +559,9 @@
 			],
 			"passive": 11,
 			"cr": "1/4",
-			"senses": "blindsight 60 ft.",
+			"senses": [
+				"blindsight 60 ft."
+			],
 			"trait": [
 				{
 					"name": "Swarm",
@@ -507,17 +574,23 @@
 				{
 					"name": "Slam",
 					"entries": [
-						"{@atk mw} {@hit 4} to hit, reach 0 ft., one creature in the swarm's space. Hit: 5 ({@damage 2d4}) bludgeoning damage, or 2 ({@damage 1d4}) bludgeoning damage if the swarm has half of its hit points or fewer."
+						"{@atk mw} {@hit 4} to hit, reach 0 ft., one creature in the swarm's space. {@h}5 ({@damage 2d4}) bludgeoning damage, or 2 ({@damage 1d4}) bludgeoning damage if the swarm has half of its hit points or fewer."
 					]
 				}
 			],
 			"senseTags": [
 				"B"
+			],
+			"damageTags": [
+				"B"
+			],
+			"miscTags": [
+				"MW"
 			]
 		},
 		{
 			"name": "Manshoon Simulacrum",
-			"isNPC": true,
+			"isNpc": true,
 			"size": "M",
 			"type": {
 				"type": "humanoid",
@@ -560,14 +633,23 @@
 				"history": "+11"
 			},
 			"passive": 12,
-			"languages": "Common, Draconic, Goblin, Infernal, Orc, Undercommon",
+			"languages": [
+				"Common",
+				"Draconic",
+				"Goblin",
+				"Infernal",
+				"Orc",
+				"Undercommon"
+			],
 			"cr": "8",
-			"senses": "darkvision 60 ft.",
+			"senses": [
+				"darkvision 60 ft."
+			],
 			"action": [
 				{
 					"name": "Metal Fist",
 					"entries": [
-						"{@atk mw} {@hit 6} to hit, reach 5 ft., one target. Hit: 4 ({@damage 1d4 + 2}) bludgeoning damage."
+						"{@atk mw} {@hit 6} to hit, reach 5 ft., one target. {@h}4 ({@damage 1d4 + 2}) bludgeoning damage."
 					]
 				}
 			],
@@ -642,11 +724,20 @@
 			],
 			"senseTags": [
 				"D"
+			],
+			"spellcastingTags": [
+				"CW"
+			],
+			"damageTags": [
+				"B"
+			],
+			"miscTags": [
+				"MW"
 			]
 		},
 		{
 			"name": "Soluun Xibrindas",
-			"isNPC": true,
+			"isNpc": true,
 			"size": "M",
 			"type": {
 				"type": "humanoid",
@@ -692,9 +783,14 @@
 				"stealth": "+8"
 			},
 			"passive": 13,
-			"languages": "Elvish, Undercommon",
+			"languages": [
+				"Elvish",
+				"Undercommon"
+			],
 			"cr": "4",
-			"senses": "darkvision 120 ft.",
+			"senses": [
+				"darkvision 120 ft."
+			],
 			"trait": [
 				{
 					"name": "Fey Ancestry",
@@ -737,13 +833,13 @@
 				{
 					"name": "Scimitar",
 					"entries": [
-						"{@atk mw} {@hit 6} to hit, reach 5 ft., one target. Hit: 7 ({@damage 1d6 + 4}) slashing damage."
+						"{@atk mw} {@hit 6} to hit, reach 5 ft., one target. {@h}7 ({@damage 1d6 + 4}) slashing damage."
 					]
 				},
 				{
 					"name": "Poisonous Pistol",
 					"entries": [
-						"{@atk rw} {@hit 6} to hit, range 30/90 ft., one target. Hit: 9 ({@damage 1d10 + 4}) piercing damage plus 11 ({@damage 2d10}) poison damage."
+						"{@atk rw} {@hit 6} to hit, range 30/90 ft., one target. {@h}9 ({@damage 1d10 + 4}) piercing damage plus 11 ({@damage 2d10}) poison damage."
 					]
 				}
 			],
@@ -779,11 +875,23 @@
 			],
 			"senseTags": [
 				"SD"
+			],
+			"spellcastingTags": [
+				"I"
+			],
+			"damageTags": [
+				"S",
+				"P",
+				"I"
+			],
+			"miscTags": [
+				"MW",
+				"RW"
 			]
 		},
 		{
 			"name": "Renaer Neverember",
-			"isNPC": true,
+			"isNpc": true,
 			"size": "M",
 			"type": {
 				"type": "humanoid",
@@ -827,9 +935,10 @@
 				"persuasion": "+6"
 			},
 			"passive": 10,
-			"languages": "Common",
+			"languages": [
+				"Common"
+			],
 			"cr": "3",
-			"senses": "",
 			"trait": [
 				{
 					"name": "Lightfooted",
@@ -854,13 +963,13 @@
 				{
 					"name": "Dagger",
 					"entries": [
-						"{@atk mw} {@hit 6} to hit, reach 5 ft., one target. Hit: 6 ({@damage 1d4 + 4}) piercing damage. Or Ranged Weapon Attack: {@hit 6} to hit, range 20/60 ft., one target. Hit: 6 ({@damage 1d4 + 4}) piercing damage."
+						"{@atk mw} {@hit 6} to hit, reach 5 ft., one target. {@h}6 ({@damage 1d4 + 4}) piercing damage. Or Ranged Weapon Attack: {@hit 6} to hit, range 20/60 ft., one target. {@h}6 ({@damage 1d4 + 4}) piercing damage."
 					]
 				},
 				{
 					"name": "Rapier",
 					"entries": [
-						"{@atk mw} {@hit 6} to hit, reach 5 ft., one target. Hit: 8 ({@damage 1d8 + 4}) piercing damage."
+						"{@atk mw} {@hit 6} to hit, reach 5 ft., one target. {@h}8 ({@damage 1d8 + 4}) piercing damage."
 					]
 				}
 			],
@@ -869,11 +978,17 @@
 			],
 			"languageTags": [
 				"C"
+			],
+			"damageTags": [
+				"P"
+			],
+			"miscTags": [
+				"MW"
 			]
 		},
 		{
 			"name": "Sylgar",
-			"isNPC": true,
+			"isNpc": true,
 			"size": "T",
 			"type": "beast",
 			"source": "WDH",
@@ -900,7 +1015,9 @@
 			"cha": 2,
 			"passive": 8,
 			"cr": "0",
-			"senses": "darkvision 60 ft.",
+			"senses": [
+				"darkvision 60 ft."
+			],
 			"trait": [
 				{
 					"name": "Water Breathing",
@@ -913,7 +1030,7 @@
 				{
 					"name": "Bite",
 					"entries": [
-						"{@atk mw} {@hit 5} to hit, reach 5 ft., one target. Hit: 1 piercing damage."
+						"{@atk mw} {@hit 5} to hit, reach 5 ft., one target. {@h}1 piercing damage."
 					]
 				}
 			],
@@ -922,6 +1039,9 @@
 			],
 			"senseTags": [
 				"D"
+			],
+			"miscTags": [
+				"MW"
 			]
 		},
 		{
@@ -978,7 +1098,9 @@
 				"stunned",
 				"poisoned"
 			],
-			"senses": "blindsight 10 ft.",
+			"senses": [
+				"blindsight 10 ft."
+			],
 			"passive": 8,
 			"cr": "1/2",
 			"trait": [
@@ -1017,7 +1139,7 @@
 				{
 					"name": "Bites",
 					"entries": [
-						"{@atk mw} {@hit 3} to hit, reach 0 ft., one target in the swarm's space. Hit: 10 ({@damage 4d4}) piercing damage, or 5 ({@damage 2d4}) piercing damage if the swarm has half of its hit points or fewer."
+						"{@atk mw} {@hit 3} to hit, reach 0 ft., one target in the swarm's space. {@h}10 ({@damage 4d4}) piercing damage, or 5 ({@damage 2d4}) piercing damage if the swarm has half of its hit points or fewer."
 					]
 				}
 			],
@@ -1028,11 +1150,17 @@
 			],
 			"senseTags": [
 				"B"
+			],
+			"damageTags": [
+				"P"
+			],
+			"miscTags": [
+				"MW"
 			]
 		},
 		{
 			"name": "Awakened Rat",
-			"isNPC": true,
+			"isNpc": true,
 			"size": "T",
 			"type": "beast",
 			"source": "WDH",
@@ -1056,9 +1184,13 @@
 			"int": 10,
 			"wis": 10,
 			"cha": 4,
-			"senses": "darkvision 30 ft.",
+			"senses": [
+				"darkvision 30 ft."
+			],
 			"passive": 10,
-			"languages": "Common",
+			"languages": [
+				"Common"
+			],
 			"cr": "0",
 			"trait": [
 				{
@@ -1072,7 +1204,7 @@
 				{
 					"name": "Bite",
 					"entries": [
-						"{@atk mw} {@hit 0} to hit, reach 5 ft., one target. Hit: 1 piercing damage."
+						"{@atk mw} {@hit 0} to hit, reach 5 ft., one target. {@h}1 piercing damage."
 					]
 				}
 			],
@@ -1085,11 +1217,14 @@
 			],
 			"senseTags": [
 				"D"
+			],
+			"miscTags": [
+				"MW"
 			]
 		},
 		{
 			"name": "Bepis Honeymaker",
-			"isNPC": true,
+			"isNpc": true,
 			"size": "S",
 			"type": {
 				"type": "humanoid",
@@ -1123,9 +1258,11 @@
 			"wis": 10,
 			"cha": 10,
 			"passive": 10,
-			"languages": "Common, Halfling",
+			"languages": [
+				"Common",
+				"Halfling"
+			],
 			"cr": "0",
-			"senses": "",
 			"trait": [
 				{
 					"name": "Halfling Nimbleness",
@@ -1147,7 +1284,7 @@
 		},
 		{
 			"name": "Tissina Khyret",
-			"isNPC": true,
+			"isNpc": true,
 			"size": "M",
 			"type": {
 				"type": "humanoid",
@@ -1191,9 +1328,14 @@
 				"fire"
 			],
 			"passive": 11,
-			"languages": "Common, Infernal",
+			"languages": [
+				"Common",
+				"Infernal"
+			],
 			"cr": "2",
-			"senses": "darkvision 60 ft.",
+			"senses": [
+				"darkvision 60 ft."
+			],
 			"trait": [
 				{
 					"name": "Dark Devotion",
@@ -1212,7 +1354,7 @@
 				{
 					"name": "Dagger",
 					"entries": [
-						"{@atk mw} {@hit 4} to hit, reach 5 ft., one creature. Hit: 4 ({@damage 1d4 + 2}) piercing damage. Or Ranged Weapon Attack: {@hit 4} to hit, range 20/60 ft., one creature. Hit: 4 ({@damage 1d4 + 2}) piercing damage."
+						"{@atk mw} {@hit 4} to hit, reach 5 ft., one creature. {@h}4 ({@damage 1d4 + 2}) piercing damage. Or Ranged Weapon Attack: {@hit 4} to hit, range 20/60 ft., one creature. {@h}4 ({@damage 1d4 + 2}) piercing damage."
 					]
 				}
 			],
@@ -1268,11 +1410,21 @@
 			],
 			"senseTags": [
 				"D"
+			],
+			"spellcastingTags": [
+				"I",
+				"CC"
+			],
+			"damageTags": [
+				"P"
+			],
+			"miscTags": [
+				"MW"
 			]
 		},
 		{
 			"name": "Laiba \"Nana\" Rosse",
-			"isNPC": true,
+			"isNpc": true,
 			"size": "M",
 			"type": {
 				"type": "humanoid",
@@ -1316,9 +1468,14 @@
 				"fire"
 			],
 			"passive": 11,
-			"languages": "Common, Infernal",
+			"languages": [
+				"Common",
+				"Infernal"
+			],
 			"cr": "2",
-			"senses": "darkvision 60 ft.",
+			"senses": [
+				"darkvision 60 ft."
+			],
 			"trait": [
 				{
 					"name": "Dark Devotion",
@@ -1337,7 +1494,7 @@
 				{
 					"name": "Dagger",
 					"entries": [
-						"{@atk mw} {@hit 4} to hit, reach 5 ft., one creature. Hit: 4 ({@damage 1d4 + 2}) piercing damage. Or Ranged Weapon Attack: {@hit 4} to hit, range 20/60 ft., one creature. Hit: 4 ({@damage 1d4 + 2}) piercing damage."
+						"{@atk mw} {@hit 4} to hit, reach 5 ft., one creature. {@h}4 ({@damage 1d4 + 2}) piercing damage. Or Ranged Weapon Attack: {@hit 4} to hit, range 20/60 ft., one creature. {@h}4 ({@damage 1d4 + 2}) piercing damage."
 					]
 				}
 			],
@@ -1393,11 +1550,21 @@
 			],
 			"senseTags": [
 				"D"
+			],
+			"spellcastingTags": [
+				"I",
+				"CC"
+			],
+			"damageTags": [
+				"P"
+			],
+			"miscTags": [
+				"MW"
 			]
 		},
 		{
 			"name": "Jandar Chergoba",
-			"isNPC": true,
+			"isNpc": true,
 			"size": "M",
 			"type": {
 				"type": "humanoid",
@@ -1441,9 +1608,14 @@
 				"fire"
 			],
 			"passive": 11,
-			"languages": "Common, Infernal",
+			"languages": [
+				"Common",
+				"Infernal"
+			],
 			"cr": "2",
-			"senses": "darkvision 60 ft.",
+			"senses": [
+				"darkvision 60 ft."
+			],
 			"trait": [
 				{
 					"name": "Dark Devotion",
@@ -1462,7 +1634,7 @@
 				{
 					"name": "Dagger",
 					"entries": [
-						"{@atk mw} {@hit 4} to hit, reach 5 ft., one creature. Hit: 4 ({@damage 1d4 + 2}) piercing damage. Or Ranged Weapon Attack: {@hit 4} to hit, range 20/60 ft., one creature. Hit: 4 ({@damage 1d4 + 2}) piercing damage."
+						"{@atk mw} {@hit 4} to hit, reach 5 ft., one creature. {@h}4 ({@damage 1d4 + 2}) piercing damage. Or Ranged Weapon Attack: {@hit 4} to hit, range 20/60 ft., one creature. {@h}4 ({@damage 1d4 + 2}) piercing damage."
 					]
 				}
 			],
@@ -1518,11 +1690,21 @@
 			],
 			"senseTags": [
 				"D"
+			],
+			"spellcastingTags": [
+				"I",
+				"CC"
+			],
+			"damageTags": [
+				"P"
+			],
+			"miscTags": [
+				"MW"
 			]
 		},
 		{
 			"name": "Kaevja Cynavern",
-			"isNPC": true,
+			"isNpc": true,
 			"size": "M",
 			"type": {
 				"type": "humanoid",
@@ -1569,9 +1751,13 @@
 				"history": "+6"
 			},
 			"passive": 11,
-			"languages": "Common, Draconic, Dwarvish, Elvish",
+			"languages": [
+				"Common",
+				"Draconic",
+				"Dwarvish",
+				"Elvish"
+			],
 			"cr": "6",
-			"senses": "",
 			"trait": [
 				{
 					"name": "Special Equipment",
@@ -1584,7 +1770,7 @@
 				{
 					"name": "Dagger",
 					"entries": [
-						"{@atk mw} {@hit 5} to hit, reach 5 ft., one target. Hit: 4 ({@damage 1d4 + 2}) piercing damage. Or Ranged Weapon Attack: {@hit 5} to hit, range 20/60 ft., one target. Hit: 4 ({@damage 1d4 + 2}) piercing damage."
+						"{@atk mw} {@hit 5} to hit, reach 5 ft., one target. {@h}4 ({@damage 1d4 + 2}) piercing damage. Or Ranged Weapon Attack: {@hit 5} to hit, range 20/60 ft., one target. {@h}4 ({@damage 1d4 + 2}) piercing damage."
 					]
 				}
 			],
@@ -1649,11 +1835,20 @@
 				"DR",
 				"D",
 				"E"
+			],
+			"spellcastingTags": [
+				"CW"
+			],
+			"damageTags": [
+				"P"
+			],
+			"miscTags": [
+				"MW"
 			]
 		},
 		{
 			"name": "Kalain",
-			"isNPC": true,
+			"isNpc": true,
 			"size": "M",
 			"type": {
 				"type": "humanoid",
@@ -1698,9 +1893,14 @@
 				"performance": "+6"
 			},
 			"passive": 15,
-			"languages": "Common, Elvish",
+			"languages": [
+				"Common",
+				"Elvish"
+			],
 			"cr": "2",
-			"senses": "darkvision 60 ft.",
+			"senses": [
+				"darkvision 60 ft."
+			],
 			"trait": [
 				{
 					"name": "Fey Ancestry",
@@ -1717,7 +1917,7 @@
 				{
 					"name": "Taunt (2/Day)",
 					"entries": [
-						"Kalain can use a bonus action on her turn to target one creature within 30 feet of it. If the target can hear Kalain, the target must succeed on a DC 12 Charisma saving throw or have disadvantage on ability checks, attack rolls, and saving throws until the start of Kalain's next turn."
+						"Kalain can use a bonus action on her turn to target one creature within 30 feet of it. If the target can hear Kalain, the target must succeed on a {@dc 12} Charisma saving throw or have disadvantage on ability checks, attack rolls, and saving throws until the start of Kalain's next turn."
 					]
 				}
 			],
@@ -1725,13 +1925,13 @@
 				{
 					"name": "Shortsword",
 					"entries": [
-						"{@atk mw} {@hit 4} to hit, reach 5 ft., one target. Hit: 5 ({@damage 1d6 + 2}) piercing damage."
+						"{@atk mw} {@hit 4} to hit, reach 5 ft., one target. {@h}5 ({@damage 1d6 + 2}) piercing damage."
 					]
 				},
 				{
 					"name": "Shortbow",
 					"entries": [
-						"{@atk rw} {@hit 4} to hit, range 80/320 ft., one target. Hit: 5 ({@damage 1d6 + 2}) piercing damage."
+						"{@atk rw} {@hit 4} to hit, range 80/320 ft., one target. {@h}5 ({@damage 1d6 + 2}) piercing damage."
 					]
 				}
 			],
@@ -1779,11 +1979,22 @@
 			],
 			"senseTags": [
 				"D"
+			],
+			"spellcastingTags": [
+				"CB"
+			],
+			"damageTags": [
+				"P"
+			],
+			"miscTags": [
+				"MW",
+				"RW",
+				"RNG"
 			]
 		},
 		{
 			"name": "Lady Gondafrey",
-			"isNPC": true,
+			"isNpc": true,
 			"size": "M",
 			"type": "elemental",
 			"source": "WDH",
@@ -1833,9 +2044,13 @@
 				"poisoned"
 			],
 			"passive": 10,
-			"languages": "Common",
+			"languages": [
+				"Common"
+			],
 			"cr": "2",
-			"senses": "darkvision 60 ft.",
+			"senses": [
+				"darkvision 60 ft."
+			],
 			"trait": [
 				{
 					"name": "False Appearance",
@@ -1854,13 +2069,13 @@
 				{
 					"name": "Bite",
 					"entries": [
-						"{@atk mw} {@hit 4} to hit, reach 5 ft., one target. Hit: 5 ({@damage 1d6 + 2}) piercing damage."
+						"{@atk mw} {@hit 4} to hit, reach 5 ft., one target. {@h}5 ({@damage 1d6 + 2}) piercing damage."
 					]
 				},
 				{
 					"name": "Claws",
 					"entries": [
-						"{@atk mw} {@hit 4} to hit, reach 5 ft., one target. Hit: 5 ({@damage 1d6 + 2}) slashing damage."
+						"{@atk mw} {@hit 4} to hit, reach 5 ft., one target. {@h}5 ({@damage 1d6 + 2}) slashing damage."
 					]
 				}
 			],
@@ -1875,11 +2090,18 @@
 			],
 			"senseTags": [
 				"D"
+			],
+			"damageTags": [
+				"P",
+				"S"
+			],
+			"miscTags": [
+				"MW"
 			]
 		},
 		{
 			"name": "Manafret Cherryport",
-			"isNPC": true,
+			"isNpc": true,
 			"size": "S",
 			"type": {
 				"type": "humanoid",
@@ -1926,9 +2148,11 @@
 				"history": "+6"
 			},
 			"passive": 11,
-			"languages": "Common, Halfling",
+			"languages": [
+				"Common",
+				"Halfling"
+			],
 			"cr": "6",
-			"senses": "",
 			"trait": [
 				{
 					"name": "Halfling Nimbleness",
@@ -1947,7 +2171,7 @@
 				{
 					"name": "Dagger",
 					"entries": [
-						"{@atk mw} {@hit 5} to hit, reach 5 ft., one target. Hit: 4 ({@damage 1d4 + 2}) piercing damage. Or Ranged Weapon Attack: {@hit 5} to hit, range 20/60 ft., one target. Hit: 4 ({@damage 1d4 + 2}) piercing damage."
+						"{@atk mw} {@hit 5} to hit, reach 5 ft., one target. {@h}4 ({@damage 1d4 + 2}) piercing damage. Or Ranged Weapon Attack: {@hit 5} to hit, range 20/60 ft., one target. {@h}4 ({@damage 1d4 + 2}) piercing damage."
 					]
 				}
 			],
@@ -2010,11 +2234,20 @@
 			"languageTags": [
 				"C",
 				"H"
+			],
+			"spellcastingTags": [
+				"CW"
+			],
+			"damageTags": [
+				"P"
+			],
+			"miscTags": [
+				"MW"
 			]
 		},
 		{
 			"name": "Melannor Fellbranch",
-			"isNPC": true,
+			"isNpc": true,
 			"size": "M",
 			"type": {
 				"type": "humanoid",
@@ -2055,9 +2288,14 @@
 				"perception": "+4"
 			},
 			"passive": 14,
-			"languages": "Common, Elvish",
+			"languages": [
+				"Common",
+				"Elvish"
+			],
 			"cr": "2",
-			"senses": "darkvision 60 ft.",
+			"senses": [
+				"darkvision 60 ft."
+			],
 			"trait": [
 				{
 					"name": "Fey Ancestry",
@@ -2070,7 +2308,7 @@
 				{
 					"name": "Quarterstaff",
 					"entries": [
-						"{@atk mw} {@hit 2} to hit or Melee Weapon Attack {@hit 4} to hit with shillelagh, reach 5 ft., one target. Hit: 3 ({@damage 1d6}) bludgeoning damage, or 6 ({@damage 1d8 + 2}) bludgeoning damage with shillelagh or if wielded with two hands."
+						"{@atk mw} {@hit 2} to hit or Melee Weapon Attack {@hit 4} to hit with shillelagh, reach 5 ft., one target. {@h}3 ({@damage 1d6}) bludgeoning damage, or 6 ({@damage 1d8 + 2}) bludgeoning damage with shillelagh or if wielded with two hands."
 					]
 				}
 			],
@@ -2117,11 +2355,20 @@
 			],
 			"senseTags": [
 				"D"
+			],
+			"spellcastingTags": [
+				"CD"
+			],
+			"damageTags": [
+				"B"
+			],
+			"miscTags": [
+				"MW"
 			]
 		},
 		{
 			"name": "Nar'l Xibrindas",
-			"isNPC": true,
+			"isNpc": true,
 			"size": "M",
 			"type": {
 				"type": "humanoid",
@@ -2163,9 +2410,14 @@
 				"stealth": "+5"
 			},
 			"passive": 14,
-			"languages": "Elvish, Undercommon",
+			"languages": [
+				"Elvish",
+				"Undercommon"
+			],
 			"cr": "7",
-			"senses": "darkvision 120 ft.",
+			"senses": [
+				"darkvision 120 ft."
+			],
 			"trait": [
 				{
 					"name": "Fey Ancestry",
@@ -2180,9 +2432,9 @@
 					]
 				},
 				{
-					"name": "Special equipment",
+					"name": "Special Equipment",
 					"entries": [
-						"Nar'l carries a vial containing three doses of eyescratch, a contact poison. A creature that comes into contact with the poison must succeed on a DC 14 Constitution saving throw or be {@condition poisoned} for 1 hour and {@condition blinded} while {@condition poisoned} in this way. A lesser restoration spell or similar magic ends the effect."
+						"Nar'l carries a vial containing three doses of eyescratch, a contact poison. A creature that comes into contact with the poison must succeed on a {@dc 14} Constitution saving throw or be {@condition poisoned} for 1 hour and {@condition blinded} while {@condition poisoned} in this way. A lesser restoration spell or similar magic ends the effect."
 					]
 				}
 			],
@@ -2190,7 +2442,7 @@
 				{
 					"name": "Staff",
 					"entries": [
-						"{@atk mw} {@hit 2} to hit, reach 5 ft., one target. Hit: 2 ({@damage 1d6 + 1}) bludgeoning damage + 3 ({@damage 1d6}) poison damage, or 3 ({@damage 1d8 + 1}) bludgeoning damage + 3 ({@damage 1d6}) poison damage if used with two hands."
+						"{@atk mw} {@hit 2} to hit, reach 5 ft., one target. {@h}2 ({@damage 1d6 + 1}) bludgeoning damage + 3 ({@damage 1d6}) poison damage, or 3 ({@damage 1d8 + 1}) bludgeoning damage + 3 ({@damage 1d6}) poison damage if used with two hands."
 					]
 				},
 				{
@@ -2283,11 +2535,22 @@
 			],
 			"senseTags": [
 				"SD"
+			],
+			"spellcastingTags": [
+				"I",
+				"CW"
+			],
+			"damageTags": [
+				"B",
+				"I"
+			],
+			"miscTags": [
+				"MW"
 			]
 		},
 		{
 			"name": "Noska Ur'gray",
-			"isNPC": true,
+			"isNpc": true,
 			"size": "M",
 			"type": {
 				"type": "humanoid",
@@ -2329,9 +2592,14 @@
 				"poison"
 			],
 			"passive": 10,
-			"languages": "Common, Dwarvish",
+			"languages": [
+				"Common",
+				"Dwarvish"
+			],
 			"cr": "1/2",
-			"senses": "darkvision 60 ft.",
+			"senses": [
+				"darkvision 60 ft."
+			],
 			"trait": [
 				{
 					"name": "Pack Tactics",
@@ -2362,13 +2630,13 @@
 				{
 					"name": "Mace",
 					"entries": [
-						"{@atk mw} {@hit 4} to hit, reach 5 ft., one creature. Hit: 5 ({@damage 1d6 + 2}) bludgeoning damage."
+						"{@atk mw} {@hit 4} to hit, reach 5 ft., one creature. {@h}5 ({@damage 1d6 + 2}) bludgeoning damage."
 					]
 				},
 				{
 					"name": "Heavy Crossbow",
 					"entries": [
-						"{@atk rw} {@hit 2} to hit, range 100/400 ft., one target. Hit: 5 ({@damage 1d10}) piercing damage."
+						"{@atk rw} {@hit 2} to hit, range 100/400 ft., one target. {@h}5 ({@damage 1d10}) piercing damage."
 					]
 				}
 			],
@@ -2384,11 +2652,20 @@
 			],
 			"senseTags": [
 				"D"
+			],
+			"damageTags": [
+				"B",
+				"P"
+			],
+			"miscTags": [
+				"MW",
+				"RW",
+				"RNG"
 			]
 		},
 		{
 			"name": "Obliteros",
-			"isNPC": true,
+			"isNpc": true,
 			"size": "H",
 			"type": "beast",
 			"source": "WDH",
@@ -2423,9 +2700,13 @@
 				"perception": "+3"
 			},
 			"passive": 13,
-			"languages": "Aquan",
+			"languages": [
+				"Aquan"
+			],
 			"cr": "5",
-			"senses": "blindsight 60 ft.",
+			"senses": [
+				"blindsight 60 ft."
+			],
 			"trait": [
 				{
 					"name": "Blood Frenzy",
@@ -2444,7 +2725,7 @@
 				{
 					"name": "Bite",
 					"entries": [
-						"{@atk mw} {@hit 9} to hit, reach 5 ft., one target. Hit: 22 ({@damage 3d10 + 6}) piercing damage."
+						"{@atk mw} {@hit 9} to hit, reach 5 ft., one target. {@h}22 ({@damage 3d10 + 6}) piercing damage."
 					]
 				}
 			],
@@ -2456,11 +2737,17 @@
 			],
 			"senseTags": [
 				"B"
+			],
+			"damageTags": [
+				"P"
+			],
+			"miscTags": [
+				"MW"
 			]
 		},
 		{
 			"name": "Orond Gralhund",
-			"isNPC": true,
+			"isNpc": true,
 			"size": "M",
 			"type": {
 				"type": "humanoid",
@@ -2504,14 +2791,15 @@
 				"persuasion": "+5"
 			},
 			"passive": 12,
-			"languages": "Common",
+			"languages": [
+				"Common"
+			],
 			"cr": "1/8",
-			"senses": "",
 			"action": [
 				{
 					"name": "Rapier",
 					"entries": [
-						"{@atk mw} {@hit 3} to hit, reach 5 ft., one target. Hit: 5 ({@damage 1d8 + 1}) piercing damage."
+						"{@atk mw} {@hit 3} to hit, reach 5 ft., one target. {@h}5 ({@damage 1d8 + 1}) piercing damage."
 					]
 				}
 			],
@@ -2528,6 +2816,12 @@
 			],
 			"languageTags": [
 				"C"
+			],
+			"damageTags": [
+				"P"
+			],
+			"miscTags": [
+				"MW"
 			]
 		},
 		{
@@ -2568,9 +2862,11 @@
 				"poison"
 			],
 			"passive": 10,
-			"languages": "Common, Dwarvish",
+			"languages": [
+				"Common",
+				"Dwarvish"
+			],
 			"cr": "1/4",
-			"senses": "",
 			"trait": [
 				{
 					"name": "Dwarven Resilience",
@@ -2583,7 +2879,7 @@
 				{
 					"name": "Dagger",
 					"entries": [
-						"{@atk mw} {@hit 2} to hit, reach 5 ft., one target. Hit: 2 ({@damage 1d4}) piercing damage. Or Ranged Weapon Attack: {@hit 2} to hit, range 20/60 ft., one target. Hit: 2 ({@damage 1d4}) piercing damage."
+						"{@atk mw} {@hit 2} to hit, reach 5 ft., one target. {@h}2 ({@damage 1d4}) piercing damage. Or Ranged Weapon Attack: {@hit 2} to hit, range 20/60 ft., one target. {@h}2 ({@damage 1d4}) piercing damage."
 					]
 				}
 			],
@@ -2616,6 +2912,15 @@
 			"languageTags": [
 				"C",
 				"D"
+			],
+			"spellcastingTags": [
+				"CW"
+			],
+			"damageTags": [
+				"P"
+			],
+			"miscTags": [
+				"MW"
 			]
 		},
 		{
@@ -2657,9 +2962,14 @@
 				"history": "+4"
 			},
 			"passive": 10,
-			"languages": "Common, Gnomish",
+			"languages": [
+				"Common",
+				"Gnomish"
+			],
 			"cr": "1/4",
-			"senses": "darkvision 60 ft.",
+			"senses": [
+				"darkvision 60 ft."
+			],
 			"trait": [
 				{
 					"name": "Gnome Cunning",
@@ -2672,7 +2982,7 @@
 				{
 					"name": "Dagger",
 					"entries": [
-						"{@atk mw} {@hit 2} to hit, reach 5 ft., one target. Hit: 2 ({@damage 1d4}) piercing damage. Or Ranged Weapon Attack: {@hit 2} to hit, range 20/60 ft., one target. Hit: 2 ({@damage 1d4}) piercing damage."
+						"{@atk mw} {@hit 2} to hit, reach 5 ft., one target. {@h}2 ({@damage 1d4}) piercing damage. Or Ranged Weapon Attack: {@hit 2} to hit, range 20/60 ft., one target. {@h}2 ({@damage 1d4}) piercing damage."
 					]
 				}
 			],
@@ -2708,11 +3018,20 @@
 			],
 			"senseTags": [
 				"D"
+			],
+			"spellcastingTags": [
+				"CW"
+			],
+			"damageTags": [
+				"P"
+			],
+			"miscTags": [
+				"MW"
 			]
 		},
 		{
 			"name": "Thrakkus",
-			"isNPC": true,
+			"isNpc": true,
 			"size": "M",
 			"type": {
 				"type": "humanoid",
@@ -2751,9 +3070,11 @@
 				"fire"
 			],
 			"passive": 10,
-			"languages": "Common, Draconic",
+			"languages": [
+				"Common",
+				"Draconic"
+			],
 			"cr": "2",
-			"senses": "",
 			"trait": [
 				{
 					"name": "Reckless",
@@ -2766,13 +3087,13 @@
 				{
 					"name": "Greataxe",
 					"entries": [
-						"{@atk mw} {@hit 5} to hit, reach 5 ft., one target. Hit: 9 ({@damage 1d12 + 3}) slashing damage."
+						"{@atk mw} {@hit 5} to hit, reach 5 ft., one target. {@h}9 ({@damage 1d12 + 3}) slashing damage."
 					]
 				},
 				{
 					"name": "Breath Weapon (1/Day)",
 					"entries": [
-						"Thrakkus can use his action to exhale a 15-foot cone of fire. Each creature in the cone must make a DC 13 Dexterity saving throw, taking 6 ({@damage 2d6}) fire damage on a failed save, or half as much damage on a successful one."
+						"Thrakkus can use his action to exhale a 15-foot cone of fire. Each creature in the cone must make a {@dc 13} Dexterity saving throw, taking 6 ({@damage 2d6}) fire damage on a failed save, or half as much damage on a successful one."
 					]
 				}
 			],
@@ -2782,11 +3103,19 @@
 			"languageTags": [
 				"C",
 				"DR"
+			],
+			"damageTags": [
+				"S",
+				"F"
+			],
+			"miscTags": [
+				"MW",
+				"AOE"
 			]
 		},
 		{
 			"name": "Urstul Floxin",
-			"isNPC": true,
+			"isNpc": true,
 			"size": "M",
 			"type": {
 				"type": "humanoid",
@@ -2838,9 +3167,12 @@
 				"poison"
 			],
 			"passive": 13,
-			"languages": "Common, Orc, Thieves' cant",
+			"languages": [
+				"Common",
+				"Orc",
+				"Thieves' cant"
+			],
 			"cr": "8",
-			"senses": "",
 			"trait": [
 				{
 					"name": "Assassinate",
@@ -2871,13 +3203,13 @@
 				{
 					"name": "Shortsword",
 					"entries": [
-						"{@atk mw} {@hit 6} to hit, reach 5 ft., one target. Hit: 6 ({@damage 1d6 + 3}) piercing damage, and the target must make a DC 15 Constitution saving throw, taking 24 ({@damage 7d6}) poison damage on a failed save, or half as much damage on a successful one."
+						"{@atk mw} {@hit 6} to hit, reach 5 ft., one target. {@h}6 ({@damage 1d6 + 3}) piercing damage, and the target must make a {@dc 15} Constitution saving throw, taking 24 ({@damage 7d6}) poison damage on a failed save, or half as much damage on a successful one."
 					]
 				},
 				{
 					"name": "Light Crossbow",
 					"entries": [
-						"{@atk rw} {@hit 6} to hit, range 80/320 ft., one target. Hit: 7 ({@damage 1d8 + 3}) piercing damage, and the target must make a DC 15 Constitution saving throw, taking 24 ({@damage 7d6}) poison damage on a failed save, or half as much damage on a successful one."
+						"{@atk rw} {@hit 6} to hit, range 80/320 ft., one target. {@h}7 ({@damage 1d8 + 3}) piercing damage, and the target must make a {@dc 15} Constitution saving throw, taking 24 ({@damage 7d6}) poison damage on a failed save, or half as much damage on a successful one."
 					]
 				}
 			],
@@ -2891,11 +3223,20 @@
 				"C",
 				"O",
 				"TC"
+			],
+			"damageTags": [
+				"P",
+				"I"
+			],
+			"miscTags": [
+				"MW",
+				"RW",
+				"RNG"
 			]
 		},
 		{
 			"name": "Valetta",
-			"isNPC": true,
+			"isNpc": true,
 			"size": "M",
 			"type": {
 				"type": "humanoid",
@@ -2938,9 +3279,11 @@
 				"lightning"
 			],
 			"passive": 13,
-			"languages": "Common, Draconic",
+			"languages": [
+				"Common",
+				"Draconic"
+			],
 			"cr": "2",
-			"senses": "",
 			"trait": [
 				{
 					"name": "Divine Eminence",
@@ -2953,13 +3296,13 @@
 				{
 					"name": "Breathe Weapon",
 					"entries": [
-						"Valetta can use her action to exhale a 5-foot-wide, 30-foot line of lightning (but can't do this again until she finishes a short or long rest); each creature in the line must make a DC 11 Dexterity saving throw, taking {@dice 2d6} lightning damage on a failed save, or half as much damage on a successful one."
+						"Valetta can use her action to exhale a 5-foot-wide, 30-foot line of lightning (but can't do this again until she finishes a short or long rest); each creature in the line must make a {@dc 11} Dexterity saving throw, taking {@dice 2d6} lightning damage on a failed save, or half as much damage on a successful one."
 					]
 				},
 				{
 					"name": "Mace",
 					"entries": [
-						"{@atk mw} {@hit 2} to hit, reach 5 ft., one target. Hit: 3 ({@damage 1d6}) bludgeoning damage."
+						"{@atk mw} {@hit 2} to hit, reach 5 ft., one target. {@h}3 ({@damage 1d6}) bludgeoning damage."
 					]
 				}
 			],
@@ -3006,11 +3349,22 @@
 			"languageTags": [
 				"C",
 				"DR"
+			],
+			"spellcastingTags": [
+				"CC"
+			],
+			"damageTags": [
+				"B",
+				"R"
+			],
+			"miscTags": [
+				"AOE",
+				"MW"
 			]
 		},
 		{
 			"name": "Yagra Stonefist",
-			"isNPC": true,
+			"isNpc": true,
 			"size": "M",
 			"type": {
 				"type": "humanoid",
@@ -3048,9 +3402,14 @@
 				"intimidation": "+2"
 			},
 			"passive": 10,
-			"languages": "Common, Orc",
+			"languages": [
+				"Common",
+				"Orc"
+			],
 			"cr": "1/2",
-			"senses": "darkvision 60 ft.",
+			"senses": [
+				"darkvision 60 ft."
+			],
 			"trait": [
 				{
 					"name": "Relentless Endurance",
@@ -3081,13 +3440,13 @@
 				{
 					"name": "Mace",
 					"entries": [
-						"{@atk mw} {@hit 4} to hit, reach 5 ft., one creature. Hit: 5 ({@damage 1d6 + 2}) bludgeoning damage."
+						"{@atk mw} {@hit 4} to hit, reach 5 ft., one creature. {@h}5 ({@damage 1d6 + 2}) bludgeoning damage."
 					]
 				},
 				{
 					"name": "Heavy Crossbow",
 					"entries": [
-						"{@atk rw} {@hit 2} to hit, range 100/400 ft., one target. Hit: 5 ({@damage 1d10}) piercing damage."
+						"{@atk rw} {@hit 2} to hit, range 100/400 ft., one target. {@h}5 ({@damage 1d10}) piercing damage."
 					]
 				}
 			],
@@ -3103,11 +3462,20 @@
 			],
 			"senseTags": [
 				"D"
+			],
+			"damageTags": [
+				"B",
+				"P"
+			],
+			"miscTags": [
+				"MW",
+				"RW",
+				"RNG"
 			]
 		},
 		{
 			"name": "Yorn",
-			"isNPC": true,
+			"isNpc": true,
 			"size": "M",
 			"type": {
 				"type": "humanoid",
@@ -3146,9 +3514,14 @@
 				"intimidation": "+2"
 			},
 			"passive": 10,
-			"languages": "Common, Orc",
+			"languages": [
+				"Common",
+				"Orc"
+			],
 			"cr": "1/2",
-			"senses": "darkvision 60 ft.",
+			"senses": [
+				"darkvision 60 ft."
+			],
 			"trait": [
 				{
 					"name": "Pack Tactics",
@@ -3173,13 +3546,13 @@
 				{
 					"name": "Mace",
 					"entries": [
-						"{@atk mw} {@hit 4} to hit, reach 5 ft., one creature. Hit: 5 ({@damage 1d6 + 2}) bludgeoning damage."
+						"{@atk mw} {@hit 4} to hit, reach 5 ft., one creature. {@h}5 ({@damage 1d6 + 2}) bludgeoning damage."
 					]
 				},
 				{
 					"name": "Heavy Crossbow",
 					"entries": [
-						"{@atk rw} {@hit 2} to hit, range 100/400 ft., one target. Hit: 5 ({@damage 1d10}) piercing damage."
+						"{@atk rw} {@hit 2} to hit, range 100/400 ft., one target. {@h}5 ({@damage 1d10}) piercing damage."
 					]
 				}
 			],
@@ -3195,11 +3568,20 @@
 			],
 			"senseTags": [
 				"D"
+			],
+			"damageTags": [
+				"B",
+				"P"
+			],
+			"miscTags": [
+				"MW",
+				"RW",
+				"RNG"
 			]
 		},
 		{
 			"name": "Maxeene",
-			"isNPC": true,
+			"isNpc": true,
 			"size": "L",
 			"type": "beast",
 			"source": "WDH",
@@ -3224,24 +3606,31 @@
 			"wis": 11,
 			"cha": 7,
 			"passive": 10,
-			"languages": "Common",
+			"languages": [
+				"Common"
+			],
 			"cr": "1/4",
-			"senses": "",
 			"action": [
 				{
 					"name": "Hooves",
 					"entries": [
-						"{@atk mw} {@hit 6} to hit, reach 5 ft., one target. Hit: 9 ({@damage 2d4 + 4}) bludgeoning damage."
+						"{@atk mw} {@hit 6} to hit, reach 5 ft., one target. {@h}9 ({@damage 2d4 + 4}) bludgeoning damage."
 					]
 				}
 			],
 			"languageTags": [
 				"C"
+			],
+			"damageTags": [
+				"B"
+			],
+			"miscTags": [
+				"MW"
 			]
 		},
 		{
 			"name": "Thorvin Twinbeard",
-			"isNPC": true,
+			"isNpc": true,
 			"size": "M",
 			"type": {
 				"type": "humanoid",
@@ -3275,9 +3664,14 @@
 				"poison"
 			],
 			"passive": 13,
-			"languages": "Common, Dwarvish",
+			"languages": [
+				"Common",
+				"Dwarvish"
+			],
 			"cr": "0",
-			"senses": "darkvision 60 ft.",
+			"senses": [
+				"darkvision 60 ft."
+			],
 			"trait": [
 				{
 					"name": "Dwarven Resilience",
@@ -3290,7 +3684,7 @@
 				{
 					"name": "Club",
 					"entries": [
-						"{@atk mw} {@hit 2} to hit, reach 5 ft., one target. Hit: 2 ({@damage 1d4}) bludgeoning damage."
+						"{@atk mw} {@hit 2} to hit, reach 5 ft., one target. {@h}2 ({@damage 1d4}) bludgeoning damage."
 					]
 				}
 			],
@@ -3300,11 +3694,17 @@
 			],
 			"senseTags": [
 				"D"
+			],
+			"damageTags": [
+				"B"
+			],
+			"miscTags": [
+				"MW"
 			]
 		},
 		{
 			"name": "Saeth Cromley",
-			"isNPC": true,
+			"isNpc": true,
 			"size": "M",
 			"type": {
 				"type": "humanoid",
@@ -3348,9 +3748,10 @@
 				"intimidation": "+4"
 			},
 			"passive": 12,
-			"languages": "Common",
+			"languages": [
+				"Common"
+			],
 			"cr": "3",
-			"senses": "",
 			"action": [
 				{
 					"name": "Multiattack",
@@ -3361,19 +3762,19 @@
 				{
 					"name": "Longsword",
 					"entries": [
-						"{@atk mw} {@hit 5} to hit, reach 5 ft., one target. Hit: 7 ({@damage 1d8 + 3}) slashing damage, or 8 ({@damage 1d10 + 3}) slashing damage if used with two hands."
+						"{@atk mw} {@hit 5} to hit, reach 5 ft., one target. {@h}7 ({@damage 1d8 + 3}) slashing damage, or 8 ({@damage 1d10 + 3}) slashing damage if used with two hands."
 					]
 				},
 				{
 					"name": "Shortsword",
 					"entries": [
-						"{@atk mw} {@hit 5} to hit, reach 5 ft., one target. Hit: 6 ({@damage 1d6 + 3}) piercing damage."
+						"{@atk mw} {@hit 5} to hit, reach 5 ft., one target. {@h}6 ({@damage 1d6 + 3}) piercing damage."
 					]
 				},
 				{
 					"name": "Heavy Crossbow",
 					"entries": [
-						"{@atk rw} {@hit 3} to hit, range 100/400 ft., one target. Hit: 6 ({@damage 1d10 + 1}) piercing damage."
+						"{@atk rw} {@hit 3} to hit, range 100/400 ft., one target. {@h}6 ({@damage 1d10 + 1}) piercing damage."
 					]
 				}
 			],
@@ -3382,11 +3783,20 @@
 			],
 			"languageTags": [
 				"C"
+			],
+			"damageTags": [
+				"S",
+				"P"
+			],
+			"miscTags": [
+				"MW",
+				"RW",
+				"RNG"
 			]
 		},
 		{
 			"name": "Ott Steeltoes",
-			"isNPC": true,
+			"isNpc": true,
 			"size": "M",
 			"type": {
 				"type": "humanoid",
@@ -3429,12 +3839,17 @@
 				"poison"
 			],
 			"passive": 10,
-			"languages": "Common, Dwarvish",
+			"languages": [
+				"Common",
+				"Dwarvish"
+			],
 			"cr": "1/8",
-			"senses": "darkvision 60 ft.",
+			"senses": [
+				"darkvision 60 ft."
+			],
 			"trait": [
 				{
-					"name": "Dwarven resilience",
+					"name": "Dwarven Resilience",
 					"entries": [
 						"Ott has advantage on saving throws against poison and resistance to poison damage."
 					]
@@ -3450,7 +3865,7 @@
 				{
 					"name": "Scimitar",
 					"entries": [
-						"{@atk mw} {@hit 3} to hit, reach 5 ft., one creature. Hit: 4 ({@damage 1d6 + 1}) slashing damage."
+						"{@atk mw} {@hit 3} to hit, reach 5 ft., one creature. {@h}4 ({@damage 1d6 + 1}) slashing damage."
 					]
 				}
 			],
@@ -3460,6 +3875,12 @@
 			],
 			"senseTags": [
 				"D"
+			],
+			"damageTags": [
+				"S"
+			],
+			"miscTags": [
+				"MW"
 			]
 		},
 		{
@@ -3502,9 +3923,11 @@
 				"stealth": "+5"
 			},
 			"passive": 13,
-			"languages": "Common, Halfling",
+			"languages": [
+				"Common",
+				"Halfling"
+			],
 			"cr": "3",
-			"senses": "",
 			"trait": [
 				{
 					"name": "Halfling Nimbleness",
@@ -3535,13 +3958,13 @@
 				{
 					"name": "Unarmed Strike",
 					"entries": [
-						"{@atk mw} {@hit 5} to hit, reach 5 ft., one target. Hit: 7 ({@damage 1d8 + 3}) bludgeoning damage. If the target is a creature, the adept can choose one of the following additional effects:",
+						"{@atk mw} {@hit 5} to hit, reach 5 ft., one target. {@h}7 ({@damage 1d8 + 3}) bludgeoning damage. If the target is a creature, the adept can choose one of the following additional effects:",
 						{
 							"type": "list",
 							"items": [
-								"The target must succeed on a DC 13 Strength saving throw or drop one item it is holding (adept's choice).",
-								"The target must succeed on a DC 13 Dexterity saving throw or be knocked {@condition prone}.",
-								"The target must succeed on a DC 13 Constitution saving throw or be {@condition stunned} until the end of the adept's next turn."
+								"The target must succeed on a {@dc 13} Strength saving throw or drop one item it is holding (adept's choice).",
+								"The target must succeed on a {@dc 13} Dexterity saving throw or be knocked {@condition prone}.",
+								"The target must succeed on a {@dc 13} Constitution saving throw or be {@condition stunned} until the end of the adept's next turn."
 							]
 						}
 					]
@@ -3549,7 +3972,7 @@
 				{
 					"name": "Dart",
 					"entries": [
-						"{@atk rw} {@hit 5} to hit, range 20/60 ft., one target. Hit: 5 ({@damage 1d4 + 3}) piercing damage."
+						"{@atk rw} {@hit 5} to hit, range 20/60 ft., one target. {@h}5 ({@damage 1d4 + 3}) piercing damage."
 					]
 				}
 			],
@@ -3567,11 +3990,20 @@
 			"languageTags": [
 				"C",
 				"H"
+			],
+			"damageTags": [
+				"B",
+				"P"
+			],
+			"miscTags": [
+				"MW",
+				"RW",
+				"THW"
 			]
 		},
 		{
 			"name": "Losser Mirklav",
-			"isNPC": true,
+			"isNpc": true,
 			"size": "S",
 			"type": {
 				"type": "humanoid",
@@ -3618,9 +4050,11 @@
 				"history": "+6"
 			},
 			"passive": 11,
-			"languages": "Common, Halfling",
+			"languages": [
+				"Common",
+				"Halfling"
+			],
 			"cr": "6",
-			"senses": "",
 			"trait": [
 				{
 					"name": "Halfling Nimbleness",
@@ -3639,7 +4073,7 @@
 				{
 					"name": "Dagger",
 					"entries": [
-						"{@atk mw} {@hit 5} to hit, reach 5 ft., one target. Hit: 4 ({@damage 1d4 + 2}) piercing damage. Or Ranged Weapon Attack: {@hit 5} to hit, range 20/60 ft., one target. Hit: 4 ({@damage 1d4 + 2}) piercing damage."
+						"{@atk mw} {@hit 5} to hit, reach 5 ft., one target. {@h}4 ({@damage 1d4 + 2}) piercing damage. Or Ranged Weapon Attack: {@hit 5} to hit, range 20/60 ft., one target. {@h}4 ({@damage 1d4 + 2}) piercing damage."
 					]
 				}
 			],
@@ -3702,6 +4136,15 @@
 			"languageTags": [
 				"C",
 				"H"
+			],
+			"spellcastingTags": [
+				"CW"
+			],
+			"damageTags": [
+				"P"
+			],
+			"miscTags": [
+				"MW"
 			]
 		},
 		{
@@ -3751,9 +4194,15 @@
 				}
 			],
 			"passive": 12,
-			"languages": "Common, Halfling, Thieves' cant",
+			"languages": [
+				"Common",
+				"Halfling",
+				"Thieves' cant"
+			],
 			"cr": "2",
-			"senses": "darkvision 60 ft. (rat form only)",
+			"senses": [
+				"darkvision 60 ft. (rat form only)"
+			],
 			"trait": [
 				{
 					"name": "Shapechanger",
@@ -3790,19 +4239,19 @@
 				{
 					"name": "Bite (Rat or Hybrid Form Only)",
 					"entries": [
-						"{@atk mw} {@hit 4} to hit, reach 5 ft., one target. Hit: 4 ({@damage 1d4 + 2}) piercing damage. If the target is a humanoid, it must succeed on a DC 11 Constitution saving throw or be cursed with wererat lycanthropy."
+						"{@atk mw} {@hit 4} to hit, reach 5 ft., one target. {@h}4 ({@damage 1d4 + 2}) piercing damage. If the target is a humanoid, it must succeed on a {@dc 11} Constitution saving throw or be cursed with wererat lycanthropy."
 					]
 				},
 				{
 					"name": "Shortsword (Humanoid or Hybrid Form Only)",
 					"entries": [
-						"{@atk mw} {@hit 4} to hit, reach 5 ft., one target. Hit: 5 ({@damage 1d6 + 2}) piercing damage."
+						"{@atk mw} {@hit 4} to hit, reach 5 ft., one target. {@h}5 ({@damage 1d6 + 2}) piercing damage."
 					]
 				},
 				{
 					"name": "Hand Crossbow (Humanoid or Hybrid Form Only)",
 					"entries": [
-						"{@atk rw} {@hit 4} to hit, range 30/120 ft., one target. Hit: 5 ({@damage 1d6 + 2}) piercing damage."
+						"{@atk rw} {@hit 4} to hit, range 30/120 ft., one target. {@h}5 ({@damage 1d6 + 2}) piercing damage."
 					]
 				}
 			],
@@ -3817,11 +4266,19 @@
 			],
 			"senseTags": [
 				"D"
+			],
+			"damageTags": [
+				"P"
+			],
+			"miscTags": [
+				"MW",
+				"RW",
+				"RNG"
 			]
 		},
 		{
-			"name": "Rishaal",
-			"isNPC": true,
+			"name": "Rishaal the Page-Turner",
+			"isNpc": true,
 			"size": "M",
 			"type": {
 				"type": "humanoid",
@@ -3867,20 +4324,24 @@
 				"fire"
 			],
 			"passive": 11,
-			"languages": "Common, Draconic, Dwarvish, Elvish",
+			"languages": [
+				"Common",
+				"Draconic",
+				"Dwarvish",
+				"Elvish"
+			],
 			"cr": "6",
-			"senses": "",
 			"action": [
 				{
 					"name": "Breath Weapon",
 					"entries": [
-						"Rishaal can use his action to exhale a 15-foot cone of fire (but can't do this again until he finishes a short or long rest); each creature in the cone must make a DC 10 Dexterity saving throw, taking {@dice 2d6} fire damage on a failed save, or half as much damage on a successful one."
+						"Rishaal can use his action to exhale a 15-foot cone of fire (but can't do this again until he finishes a short or long rest); each creature in the cone must make a {@dc 10} Dexterity saving throw, taking {@dice 2d6} fire damage on a failed save, or half as much damage on a successful one."
 					]
 				},
 				{
 					"name": "Dagger",
 					"entries": [
-						"{@atk mw} {@hit 5} to hit, reach 5 ft., one target. Hit: 4 ({@damage 1d4 + 2}) piercing damage. Or Ranged Weapon Attack: {@hit 5} to hit, range 20/60 ft., one target. Hit: 4 ({@damage 1d4 + 2}) piercing damage."
+						"{@atk mw} {@hit 5} to hit, reach 5 ft., one target. {@h}4 ({@damage 1d4 + 2}) piercing damage. Or Ranged Weapon Attack: {@hit 5} to hit, range 20/60 ft., one target. {@h}4 ({@damage 1d4 + 2}) piercing damage."
 					]
 				}
 			],
@@ -3945,11 +4406,21 @@
 				"DR",
 				"D",
 				"E"
+			],
+			"spellcastingTags": [
+				"CW"
+			],
+			"damageTags": [
+				"P"
+			],
+			"miscTags": [
+				"AOE",
+				"MW"
 			]
 		},
 		{
 			"name": "Fala Lefaliir",
-			"isNPC": true,
+			"isNpc": true,
 			"size": "M",
 			"type": {
 				"type": "humanoid",
@@ -3993,9 +4464,15 @@
 				"perception": "+4"
 			},
 			"passive": 14,
-			"languages": "Druidic, Common, Elvish",
+			"languages": [
+				"Druidic",
+				"Common",
+				"Elvish"
+			],
 			"cr": "2",
-			"senses": "darkvision 60 ft.",
+			"senses": [
+				"darkvision 60 ft."
+			],
 			"trait": [
 				{
 					"name": "Fey Ancestry",
@@ -4008,7 +4485,7 @@
 				{
 					"name": "Quarterstaff",
 					"entries": [
-						"{@atk mw} {@hit 2} to hit or Melee Weapon Attack {@hit 4} to hit with shillelagh, reach 5 ft., one target. Hit: 3 ({@damage 1d6}) bludgeoning damage, or 6 ({@damage 1d8 + 2}) bludgeoning damage with shillelagh or if wielded with two hands."
+						"{@atk mw} {@hit 2} to hit or Melee Weapon Attack {@hit 4} to hit with shillelagh, reach 5 ft., one target. {@h}3 ({@damage 1d6}) bludgeoning damage, or 6 ({@damage 1d8 + 2}) bludgeoning damage with shillelagh or if wielded with two hands."
 					]
 				}
 			],
@@ -4056,11 +4533,20 @@
 			],
 			"senseTags": [
 				"D"
+			],
+			"spellcastingTags": [
+				"CD"
+			],
+			"damageTags": [
+				"B"
+			],
+			"miscTags": [
+				"MW"
 			]
 		},
 		{
 			"name": "Talisolvanar \"Tally\" Fellbranch",
-			"isNPC": true,
+			"isNpc": true,
 			"size": "M",
 			"type": {
 				"type": "humanoid",
@@ -4091,9 +4577,14 @@
 			"wis": 10,
 			"cha": 10,
 			"passive": 10,
-			"languages": "Common, Elvish",
+			"languages": [
+				"Common",
+				"Elvish"
+			],
 			"cr": "0",
-			"senses": "darkvision 60 ft.",
+			"senses": [
+				"darkvision 60 ft."
+			],
 			"trait": [
 				{
 					"name": "Fey Ancestry",
@@ -4106,7 +4597,7 @@
 				{
 					"name": "Club",
 					"entries": [
-						"{@atk mw} {@hit 2} to hit, reach 5 ft., one target. Hit: 2 ({@damage 1d4}) bludgeoning damage."
+						"{@atk mw} {@hit 2} to hit, reach 5 ft., one target. {@h}2 ({@damage 1d4}) bludgeoning damage."
 					]
 				}
 			],
@@ -4119,11 +4610,17 @@
 			],
 			"senseTags": [
 				"D"
+			],
+			"damageTags": [
+				"B"
+			],
+			"miscTags": [
+				"MW"
 			]
 		},
 		{
 			"name": "Grum'shar",
-			"isNPC": true,
+			"isNpc": true,
 			"size": "M",
 			"type": {
 				"type": "humanoid",
@@ -4158,9 +4655,14 @@
 				"history": "+4"
 			},
 			"passive": 10,
-			"languages": "Common, Orc",
+			"languages": [
+				"Common",
+				"Orc"
+			],
 			"cr": "1/4",
-			"senses": "darkvision 60 ft.",
+			"senses": [
+				"darkvision 60 ft."
+			],
 			"trait": [
 				{
 					"name": "Relentless Endurance",
@@ -4173,7 +4675,7 @@
 				{
 					"name": "Dagger",
 					"entries": [
-						"{@atk mw} {@hit 2} to hit, reach 5 ft., one target. Hit: 2 ({@damage 1d4}) piercing damage. Or Ranged Weapon Attack: {@hit 2} to hit, range 20/60 ft., one target. Hit: 2 ({@damage 1d4}) piercing damage."
+						"{@atk mw} {@hit 2} to hit, reach 5 ft., one target. {@h}2 ({@damage 1d4}) piercing damage. Or Ranged Weapon Attack: {@hit 2} to hit, range 20/60 ft., one target. {@h}2 ({@damage 1d4}) piercing damage."
 					]
 				}
 			],
@@ -4181,7 +4683,7 @@
 				{
 					"name": "Spellcasting",
 					"headerEntries": [
-						"Grum'sahr is a 1st-level spellcaster. His spellcasting ability is Intelligence. He has the following wizard spells prepared:"
+						"Grum'shar is a 1st-level spellcaster. His spellcasting ability is Intelligence. He has the following wizard spells prepared:"
 					],
 					"spells": {
 						"0": {
@@ -4209,11 +4711,20 @@
 			],
 			"senseTags": [
 				"D"
+			],
+			"spellcastingTags": [
+				"CW"
+			],
+			"damageTags": [
+				"P"
+			],
+			"miscTags": [
+				"MW"
 			]
 		},
 		{
 			"name": "Ahmaergo",
-			"isNPC": true,
+			"isNpc": true,
 			"size": "M",
 			"type": {
 				"type": "humanoid",
@@ -4261,9 +4772,15 @@
 				"poison"
 			],
 			"passive": 16,
-			"languages": "Common, Dwarvish, Undercommon",
+			"languages": [
+				"Common",
+				"Dwarvish",
+				"Undercommon"
+			],
 			"cr": "9",
-			"senses": "darkvision 60 ft.",
+			"senses": [
+				"darkvision 60 ft."
+			],
 			"trait": [
 				{
 					"name": "Dwarven Resilience",
@@ -4300,13 +4817,13 @@
 				{
 					"name": "Greataxe",
 					"entries": [
-						"{@atk mw} {@hit 9} to hit, reach 5 ft., one target. Hit: 11 ({@damage 1d12 + 5}) slashing damage"
+						"{@atk mw} {@hit 9} to hit, reach 5 ft., one target. {@h}11 ({@damage 1d12 + 5}) slashing damage"
 					]
 				},
 				{
 					"name": "Heavy Crossbow",
 					"entries": [
-						"{@atk rw} {@hit 6} to hit, range 100/400 ft., one target. Hit: 7 ({@damage 1d10 + 2}) piercing damage."
+						"{@atk rw} {@hit 6} to hit, range 100/400 ft., one target. {@h}7 ({@damage 1d10 + 2}) piercing damage."
 					]
 				}
 			],
@@ -4320,11 +4837,20 @@
 			],
 			"senseTags": [
 				"D"
+			],
+			"damageTags": [
+				"S",
+				"P"
+			],
+			"miscTags": [
+				"MW",
+				"RW",
+				"RNG"
 			]
 		},
 		{
 			"name": "Ammalia Cassalanter",
-			"isNPC": true,
+			"isNpc": true,
 			"size": "M",
 			"type": {
 				"type": "humanoid",
@@ -4376,14 +4902,18 @@
 				"poisoned"
 			],
 			"passive": 11,
-			"languages": "Common, Draconic, Elvish, Infernal",
+			"languages": [
+				"Common",
+				"Draconic",
+				"Elvish",
+				"Infernal"
+			],
 			"cr": "5",
-			"senses": "",
 			"action": [
 				{
 					"name": "Quarterstaff",
 					"entries": [
-						"{@atk mw} {@hit 2} to hit, reach 5 ft., one target. Hit: 2 ({@damage 1d6 - 1}) bludgeoning damage, or 3 ({@damage 1d8 - 1}) bludgeoning damage if used with two hands."
+						"{@atk mw} {@hit 2} to hit, reach 5 ft., one target. {@h}2 ({@damage 1d6 - 1}) bludgeoning damage, or 3 ({@damage 1d8 - 1}) bludgeoning damage if used with two hands."
 					]
 				}
 			],
@@ -4391,7 +4921,7 @@
 				{
 					"name": "Spellcasting",
 					"headerEntries": [
-						"Ammalia is a 9th-level spellcaster. Her spellcasting ability is Intelligence (spell save DC 14, {@hit 6} to hit with spell attacks). She has the following wizard spells prepared:"
+						"Ammalia is a 9th-level spellcaster. Her spellcasting ability is Intelligence (spell save {@dc 14}, {@hit 6} to hit with spell attacks). She has the following wizard spells prepared:"
 					],
 					"spells": {
 						"0": {
@@ -4448,11 +4978,20 @@
 				"DR",
 				"E",
 				"I"
+			],
+			"spellcastingTags": [
+				"CW"
+			],
+			"damageTags": [
+				"B"
+			],
+			"miscTags": [
+				"MW"
 			]
 		},
 		{
 			"name": "Barnibus Blastwind",
-			"isNPC": true,
+			"isNpc": true,
 			"size": "M",
 			"type": {
 				"type": "humanoid",
@@ -4498,9 +5037,13 @@
 				"perception": "+4"
 			},
 			"passive": 14,
-			"languages": "Common, Draconic, Dwarvish, Halfling",
+			"languages": [
+				"Common",
+				"Draconic",
+				"Dwarvish",
+				"Halfling"
+			],
 			"cr": "2",
-			"senses": "",
 			"trait": [
 				{
 					"name": "Special Equipment",
@@ -4513,7 +5056,7 @@
 				{
 					"name": "Dagger",
 					"entries": [
-						"{@atk mw,rw} {@hit 2} to hit, reach 5 ft. or range 20/60 ft., one target. Hit: 2 ({@damage 1d4}) piercing damage."
+						"{@atk mw,rw} {@hit 2} to hit, reach 5 ft. or range 20/60 ft., one target. {@h}2 ({@damage 1d4}) piercing damage."
 					]
 				}
 			],
@@ -4521,7 +5064,7 @@
 				{
 					"name": "Spellcasting",
 					"headerEntries": [
-						"Barnibus is a 7th-level spellcaster. His spellcasting ability is Intelligence. He has the following wizard spells prepared:"
+						"Barnibus is a 7th-level spellcaster. His spellcasting ability is Intelligence (spell save {@dc 13}, {@hit 5} to hit with spell attacks) He has the following wizard spells prepared:"
 					],
 					"spells": {
 						"0": {
@@ -4572,11 +5115,22 @@
 				"DR",
 				"D",
 				"H"
+			],
+			"spellcastingTags": [
+				"CW"
+			],
+			"damageTags": [
+				"P"
+			],
+			"miscTags": [
+				"RW",
+				"MW",
+				"THW"
 			]
 		},
 		{
 			"name": "Black Viper",
-			"isNPC": true,
+			"isNpc": true,
 			"size": "M",
 			"type": {
 				"type": "humanoid",
@@ -4623,9 +5177,11 @@
 				"stealth": "+7"
 			},
 			"passive": 13,
-			"languages": "Common, Thieves' cant",
+			"languages": [
+				"Common",
+				"Thieves' cant"
+			],
 			"cr": "5",
-			"senses": "",
 			"trait": [
 				{
 					"name": "Cunning Action",
@@ -4656,13 +5212,13 @@
 				{
 					"name": "Rapier",
 					"entries": [
-						"{@atk mw} {@hit 7} to hit, reach 5 ft., one target. Hit: 7 ({@damage 1d6 + 4}) piercing damage."
+						"{@atk mw} {@hit 7} to hit, reach 5 ft., one target. {@h}7 ({@damage 1d8 + 4}) piercing damage."
 					]
 				},
 				{
 					"name": "Hand Crossbow",
 					"entries": [
-						"{@atk rw} {@hit 7} to hit, range 30/120 ft., one target. Hit: 7 ({@damage 1d6 + 4}) piercing damage."
+						"{@atk rw} {@hit 7} to hit, range 30/120 ft., one target. {@h}7 ({@damage 1d6 + 4}) piercing damage."
 					]
 				}
 			],
@@ -4683,11 +5239,19 @@
 			"languageTags": [
 				"C",
 				"TC"
+			],
+			"damageTags": [
+				"P"
+			],
+			"miscTags": [
+				"MW",
+				"RW",
+				"RNG"
 			]
 		},
 		{
 			"name": "Davil Starsong",
-			"isNPC": true,
+			"isNpc": true,
 			"size": "M",
 			"type": {
 				"type": "humanoid",
@@ -4733,9 +5297,16 @@
 				"performance": "+6"
 			},
 			"passive": 14,
-			"languages": "Common, Draconic, Dwarvish, Elvish",
+			"languages": [
+				"Common",
+				"Draconic",
+				"Dwarvish",
+				"Elvish"
+			],
 			"cr": "6",
-			"senses": "darkvision 60 ft.",
+			"senses": [
+				"darkvision 60 ft."
+			],
 			"trait": [
 				{
 					"name": "Fey Ancestry",
@@ -4748,7 +5319,7 @@
 				{
 					"name": "Dagger",
 					"entries": [
-						"{@atk mw} {@hit 5} to hit, reach 5 ft., one target. Hit: 4 ({@damage 1d4 + 2}) piercing damage. Or Ranged Weapon Attack: {@hit 5} to hit, range 20/60 ft., one target. Hit: 4 ({@damage 1d4 + 2}) piercing damage."
+						"{@atk mw} {@hit 5} to hit, reach 5 ft., one target. {@h}4 ({@damage 1d4 + 2}) piercing damage. Or Ranged Weapon Attack: {@hit 5} to hit, range 20/60 ft., one target. {@h}4 ({@damage 1d4 + 2}) piercing damage."
 					]
 				}
 			],
@@ -4756,7 +5327,7 @@
 				{
 					"name": "Spellcasting",
 					"headerEntries": [
-						"Davil is a 12th-level spellcaster. His spellcasting ability is Charisma. He has the following bard spells prepared:"
+						"Davil is a 12th-level spellcaster. His spellcasting ability is Charisma (spell save {@dc 14}, {@hit 6} to hit with spell attacks) He has the following bard spells prepared:"
 					],
 					"spells": {
 						"0": {
@@ -4827,6 +5398,15 @@
 			],
 			"senseTags": [
 				"D"
+			],
+			"spellcastingTags": [
+				"CB"
+			],
+			"damageTags": [
+				"P"
+			],
+			"miscTags": [
+				"MW"
 			]
 		},
 		{
@@ -4875,9 +5455,14 @@
 				"stealth": "+8"
 			},
 			"passive": 13,
-			"languages": "Elvish, Undercommon",
+			"languages": [
+				"Elvish",
+				"Undercommon"
+			],
 			"cr": "4",
-			"senses": "darkvision 120 ft.",
+			"senses": [
+				"darkvision 120 ft."
+			],
 			"trait": [
 				{
 					"name": "Fey Ancestry",
@@ -4908,13 +5493,13 @@
 				{
 					"name": "Shortsword",
 					"entries": [
-						"{@atk mw} {@hit 6} to hit, reach 5 ft., one target. Hit: 7 ({@damage 1d6 + 4}) piercing damage."
+						"{@atk mw} {@hit 6} to hit, reach 5 ft., one target. {@h}7 ({@damage 1d6 + 4}) piercing damage."
 					]
 				},
 				{
 					"name": "Poisonous Pistol",
 					"entries": [
-						"{@atk rw} {@hit 6} to hit, range 30/90 ft., one target. Hit: 9 ({@damage 1d10 + 4}) piercing damage plus 11 ({@damage 2d10}) poison damage."
+						"{@atk rw} {@hit 6} to hit, range 30/90 ft., one target. {@h}9 ({@damage 1d10 + 4}) piercing damage plus 11 ({@damage 2d10}) poison damage."
 					]
 				}
 			],
@@ -4922,7 +5507,7 @@
 				{
 					"name": "Innate Spellcasting",
 					"headerEntries": [
-						"The drow's spellcasting ability is Charisma. It can innately cast the following spells, requiring no material components:"
+						"The drow's spellcasting ability is Charisma (spell save {@dc 12}) It can innately cast the following spells, requiring no material components:"
 					],
 					"will": [
 						"{@spell dancing lights}"
@@ -4950,11 +5535,22 @@
 			],
 			"senseTags": [
 				"SD"
+			],
+			"spellcastingTags": [
+				"I"
+			],
+			"damageTags": [
+				"P",
+				"I"
+			],
+			"miscTags": [
+				"MW",
+				"RW"
 			]
 		},
 		{
 			"name": "Durnan",
-			"isNPC": true,
+			"isNpc": true,
 			"size": "M",
 			"type": {
 				"type": "humanoid",
@@ -4997,9 +5593,11 @@
 				"perception": "+5"
 			},
 			"passive": 15,
-			"languages": "Common, Dwarvish",
+			"languages": [
+				"Common",
+				"Dwarvish"
+			],
 			"cr": "9",
-			"senses": "",
 			"trait": [
 				{
 					"name": "Special Equipment",
@@ -5030,13 +5628,13 @@
 				{
 					"name": "Grimvault",
 					"entries": [
-						"{@atk mw} {@hit 8} to hit, reach 5 ft., one target. Hit: 11 ({@damage 2d6 + 4}) slashing damage. If the target is an object, the hit instead deals 16 slashing damage. If the target is a creature and Durnan rolls a 20 on the {@dice d20} for the attack roll, the target takes an extra 14 slashing damage, and Durnan rolls another {@dice d20}. On a roll of 20, he lops off one of the target's limbs, or some other part of its body if it is limbless."
+						"{@atk mw} {@hit 8} to hit, reach 5 ft., one target. {@h}11 ({@damage 2d6 + 4}) slashing damage. If the target is an object, the hit instead deals 16 slashing damage. If the target is a creature and Durnan rolls a 20 on the {@dice d20} for the attack roll, the target takes an extra 14 slashing damage, and Durnan rolls another {@dice d20}. On a roll of 20, he lops off one of the target's limbs, or some other part of its body if it is limbless."
 					]
 				},
 				{
 					"name": "Double Crossbow",
 					"entries": [
-						"{@atk rw} {@hit 6} to hit, range 60/240 ft., one target. Hit: 13 ({@damage 2d10 + 2}) piercing damage."
+						"{@atk rw} {@hit 6} to hit, range 60/240 ft., one target. {@h}13 ({@damage 2d10 + 2}) piercing damage."
 					]
 				}
 			],
@@ -5046,6 +5644,14 @@
 			"languageTags": [
 				"C",
 				"D"
+			],
+			"damageTags": [
+				"S",
+				"P"
+			],
+			"miscTags": [
+				"MW",
+				"RW"
 			]
 		},
 		{
@@ -5089,20 +5695,21 @@
 				"perception": "+3"
 			},
 			"passive": 13,
-			"languages": "any one language (usually Common)",
+			"languages": [
+				"any one language (usually Common)"
+			],
 			"cr": "2",
-			"senses": "",
 			"action": [
 				{
 					"name": "Lance",
 					"entries": [
-						"{@atk mw} {@hit 4} to hit (with disadvantage against a target within 5 ft.), reach 10 ft., one target. Hit: 8 ({@damage 1d12 + 2}) piercing damage, or 11 ({@damage 1d12 + 5}) piercing damage while mounted."
+						"{@atk mw} {@hit 4} to hit (with disadvantage against a target within 5 ft.), reach 10 ft., one target. {@h}8 ({@damage 1d12 + 2}) piercing damage, or 11 ({@damage 1d12 + 5}) piercing damage while mounted."
 					]
 				},
 				{
 					"name": "Dagger",
 					"entries": [
-						"{@atk mw} {@hit 4} to hit, reach 5 ft., one target. Hit: 4 ({@damage 1d4 + 2}) piercing damage. Or Ranged Weapon Attack: {@hit 4} to hit, range 20/60 ft., one target. Hit: 4 ({@damage 1d4 + 2}) piercing damage."
+						"{@atk mw} {@hit 4} to hit, reach 5 ft., one target. {@h}4 ({@damage 1d4 + 2}) piercing damage. Or Ranged Weapon Attack: {@hit 4} to hit, range 20/60 ft., one target. {@h}4 ({@damage 1d4 + 2}) piercing damage."
 					]
 				},
 				{
@@ -5115,11 +5722,18 @@
 			"languageTags": [
 				"C",
 				"X"
+			],
+			"damageTags": [
+				"P"
+			],
+			"miscTags": [
+				"MW",
+				"RCH"
 			]
 		},
 		{
 			"name": "Hlam",
-			"isNPC": true,
+			"isNpc": true,
 			"size": "M",
 			"type": {
 				"type": "humanoid",
@@ -5171,9 +5785,10 @@
 				"poisoned"
 			],
 			"passive": 15,
-			"languages": "all spoken languages",
+			"languages": [
+				"all spoken languages"
+			],
 			"cr": "16",
-			"senses": "",
 			"trait": [
 				{
 					"name": "Evasion",
@@ -5204,22 +5819,22 @@
 				{
 					"name": "Unarmed Strike",
 					"entries": [
-						"{@atk mw} {@hit 12} to hit, reach 5 ft., one target. Hit: 12 ({@dice 1d10 + 7}) bludgeoning, magic damage. If the target is a creature, Hlam can choose one of the following additional effects:",
-						"The target must succeed on a DC 18 Strength saving throw or drop one item it is holding (Hlam's choice).",
-						"The target must succeed on a DC 18 Dexterity saving throw or be knocked {@condition prone}.",
-						"The target must succeed on a DC 18 Constitution saving throw or be {@condition stunned} until the end of Hlam's next turn."
+						"{@atk mw} {@hit 12} to hit, reach 5 ft., one target. {@h}12 ({@dice 1d10 + 7}) bludgeoning, magic damage. If the target is a creature, Hlam can choose one of the following additional effects:",
+						"The target must succeed on a {@dc 18} Strength saving throw or drop one item it is holding (Hlam's choice).",
+						"The target must succeed on a {@dc 18} Dexterity saving throw or be knocked {@condition prone}.",
+						"The target must succeed on a {@dc 18} Constitution saving throw or be {@condition stunned} until the end of Hlam's next turn."
 					]
 				},
 				{
 					"name": "Dart",
 					"entries": [
-						"{@atk rw} {@hit 12} to hit, range 20/60 ft., one target. Hit: 9 ({@damage 1d4 + 7}) piercing damage."
+						"{@atk rw} {@hit 12} to hit, range 20/60 ft., one target. {@h}9 ({@damage 1d4 + 7}) piercing damage."
 					]
 				},
 				{
 					"name": "Quivering Palm {@recharge}",
 					"entries": [
-						"{@atk mw} {@hit 12} to hit, reach 5 ft., one creature. Hit: The target must make a DC 18 Constitution saving throw. On a failed save, the target is reduced to 0 hit points. On a successful save, the target takes 55 ({@damage 10d10}) necrotic damage."
+						"{@atk mw} {@hit 12} to hit, reach 5 ft., one creature. {@h}The target must make a {@dc 18} Constitution saving throw. On a failed save, the target is reduced to 0 hit points. On a successful save, the target takes 55 ({@damage 10d10}) necrotic damage."
 					]
 				},
 				{
@@ -5253,7 +5868,7 @@
 				{
 					"name": "Deflect Missile",
 					"entries": [
-						"In response to being hit by a ranged weapon attack, Hlam deflects the missile. The damage he takes from the attack is reduced by {@dice 1d10    +    27}. If the damage is reduced to 0, Hlam catches the missile if it's small enough to hold in one hand and he has a hand free."
+						"In response to being hit by a ranged weapon attack, Hlam deflects the missile. The damage he takes from the attack is reduced by {@dice 1d10 + 27}. If the damage is reduced to 0, Hlam catches the missile if it's small enough to hold in one hand and he has a hand free."
 					]
 				},
 				{
@@ -5267,7 +5882,7 @@
 				{
 					"name": "Spellcasting",
 					"headerEntries": [
-						"Hlam is a 5th-level spellcaster. His spellcasting ability is Wisdom. He has the following cleric spells prepared:"
+						"Hlam is a 5th-level spellcaster. His spellcasting ability is Wisdom (spell save {@dc 18}, {@hit 10} to hit with spell attacks) He has the following cleric spells prepared:"
 					],
 					"spells": {
 						"0": {
@@ -5313,11 +5928,23 @@
 			],
 			"languageTags": [
 				"XX"
+			],
+			"spellcastingTags": [
+				"CC"
+			],
+			"damageTags": [
+				"P",
+				"N"
+			],
+			"miscTags": [
+				"MW",
+				"RW",
+				"THW"
 			]
 		},
 		{
 			"name": "Hrabbaz",
-			"isNPC": true,
+			"isNpc": true,
 			"size": "M",
 			"type": {
 				"type": "humanoid",
@@ -5357,9 +5984,14 @@
 				"perception": "+5"
 			},
 			"passive": 15,
-			"languages": "Common, Orc",
+			"languages": [
+				"Common",
+				"Orc"
+			],
 			"cr": "5",
-			"senses": "darkvision 60 ft.",
+			"senses": [
+				"darkvision 60 ft."
+			],
 			"trait": [
 				{
 					"name": "Indomitable (2/Day)",
@@ -5376,7 +6008,7 @@
 				{
 					"name": "Extra Damage",
 					"entries": [
-						"As long as Hrabbaz has more than half his hit points left he deals and extra 3 ({@dice 1d6}) damage on all hits."
+						"As long as Hrabbaz has more than half his hit points left he deals an extra 3 ({@dice 1d6}) damage on all hits."
 					]
 				}
 			],
@@ -5390,7 +6022,7 @@
 				{
 					"name": "Morningstar",
 					"entries": [
-						"{@atk mw} {@hit 8} to hit, reach 5 ft., one target. Hit: 9 ({@damage 1d8 + 5}) piercing damage."
+						"{@atk mw} {@hit 8} to hit, reach 5 ft., one target. {@h}9 ({@damage 1d8 + 5}) piercing damage."
 					]
 				}
 			],
@@ -5403,11 +6035,17 @@
 			],
 			"senseTags": [
 				"D"
+			],
+			"damageTags": [
+				"P"
+			],
+			"miscTags": [
+				"MW"
 			]
 		},
 		{
 			"name": "Istrid Horn",
-			"isNPC": true,
+			"isNpc": true,
 			"size": "M",
 			"type": {
 				"type": "humanoid",
@@ -5454,9 +6092,14 @@
 				"poison"
 			],
 			"passive": 13,
-			"languages": "Common, Dwarvish",
+			"languages": [
+				"Common",
+				"Dwarvish"
+			],
 			"cr": "8",
-			"senses": "darkvision 60 ft.",
+			"senses": [
+				"darkvision 60 ft."
+			],
 			"trait": [
 				{
 					"name": "Dwarven Resilience",
@@ -5475,7 +6118,7 @@
 				{
 					"name": "Maul",
 					"entries": [
-						"{@atk mw} {@hit 4} to hit, reach 5 ft., one target. Hit: 8 ({@damage 2d6 + 1}) bludgeoning damage."
+						"{@atk mw} {@hit 4} to hit, reach 5 ft., one target. {@h}8 ({@damage 2d6 + 1}) bludgeoning damage."
 					]
 				},
 				{
@@ -5489,7 +6132,7 @@
 				{
 					"name": "Spellcasting",
 					"headerEntries": [
-						"Istrid is a 9th-level spellcaster. Her spellcasting ability is Wisdom. She has the following cleric spells prepared:"
+						"Istrid is a 9th-level spellcaster. Her spellcasting ability is Wisdom (spell save {@dc 14}, {@hit 6} to hit with spell attacks) She has the following cleric spells prepared:"
 					],
 					"spells": {
 						"0": {
@@ -5560,11 +6203,20 @@
 			],
 			"senseTags": [
 				"D"
+			],
+			"spellcastingTags": [
+				"CC"
+			],
+			"damageTags": [
+				"B"
+			],
+			"miscTags": [
+				"MW"
 			]
 		},
 		{
 			"name": "Jalester Silvermane",
-			"isNPC": true,
+			"isNpc": true,
 			"size": "M",
 			"type": {
 				"type": "humanoid",
@@ -5609,9 +6261,11 @@
 				"survival": "+4"
 			},
 			"passive": 12,
-			"languages": "Common, Elvish",
+			"languages": [
+				"Common",
+				"Elvish"
+			],
 			"cr": "4",
-			"senses": "",
 			"trait": [
 				{
 					"name": "Special Equipment",
@@ -5636,13 +6290,13 @@
 				{
 					"name": "Longsword",
 					"entries": [
-						"{@atk mw} {@hit 4} to hit, reach 5 ft., one target. Hit: 6 ({@damage 1d8 + 2}) slashing damage, or 7 ({@damage 1d10 + 2}) slashing damage when used with two hands."
+						"{@atk mw} {@hit 4} to hit, reach 5 ft., one target. {@h}6 ({@damage 1d8 + 2}) slashing damage, or 7 ({@damage 1d10 + 2}) slashing damage when used with two hands."
 					]
 				},
 				{
 					"name": "Dagger",
 					"entries": [
-						"{@atk mw} {@hit 4} to hit, reach 5 ft., one target. Hit: 4 ({@damage 1d4 + 2}) piercing damage. Or Ranged Weapon Attack: {@hit 4} to hit, range 20/60 ft., one target. Hit: 4 ({@damage 1d4 + 2}) piercing damage."
+						"{@atk mw} {@hit 4} to hit, reach 5 ft., one target. {@h}4 ({@damage 1d4 + 2}) piercing damage. Or Ranged Weapon Attack: {@hit 4} to hit, range 20/60 ft., one target. {@h}4 ({@damage 1d4 + 2}) piercing damage."
 					]
 				}
 			],
@@ -5660,11 +6314,18 @@
 			"languageTags": [
 				"C",
 				"E"
+			],
+			"damageTags": [
+				"S",
+				"P"
+			],
+			"miscTags": [
+				"MW"
 			]
 		},
 		{
 			"name": "Jarlaxle Baenre",
-			"isNPC": true,
+			"isNpc": true,
 			"size": "M",
 			"type": {
 				"type": "humanoid",
@@ -5713,9 +6374,18 @@
 				"stealth": "+16"
 			},
 			"passive": 18,
-			"languages": "Abyssal, Common, Draconic, Dwarvish, Elvish, Undercommon",
+			"languages": [
+				"Abyssal",
+				"Common",
+				"Draconic",
+				"Dwarvish",
+				"Elvish",
+				"Undercommon"
+			],
 			"cr": "15",
-			"senses": "darkvision 120 ft.",
+			"senses": [
+				"darkvision 120 ft."
+			],
 			"trait": [
 				{
 					"name": "Special Equipment",
@@ -5776,13 +6446,13 @@
 				{
 					"name": "+3 Rapier",
 					"entries": [
-						"{@atk mw} {@hit 14} to hit, reach 5 ft., one target. Hit: 13 ({@damage 1d8 + 9}) piercing damage."
+						"{@atk mw} {@hit 14} to hit, reach 5 ft., one target. {@h}13 ({@damage 1d8 + 9}) piercing damage."
 					]
 				},
 				{
 					"name": "Flying Dagger",
 					"entries": [
-						"{@atk rw} {@hit 11} to hit, range 20/60 ft., one target. Hit: 8 ({@damage 1d4 + 6}) piercing damage."
+						"{@atk rw} {@hit 11} to hit, range 20/60 ft., one target. {@h}8 ({@damage 1d4 + 6}) piercing damage."
 					]
 				}
 			],
@@ -5804,7 +6474,7 @@
 				{
 					"name": "Innate Spellcasting",
 					"headerEntries": [
-						"Jarlaxle's innate spellcasting ability is Charisma. He can innately cast the following spells, requiring no material components:"
+						"Jarlaxle's innate spellcasting ability is Charisma (spell save {@dc 17}, {@hit 9} to hit with spell attacks) He can innately cast the following spells, requiring no material components:"
 					],
 					"will": [
 						"{@spell dancing lights}"
@@ -5839,11 +6509,22 @@
 			],
 			"senseTags": [
 				"SD"
+			],
+			"spellcastingTags": [
+				"I"
+			],
+			"damageTags": [
+				"P"
+			],
+			"miscTags": [
+				"MW",
+				"RW",
+				"THW"
 			]
 		},
 		{
 			"name": "Laeral Silverhand",
-			"isNPC": true,
+			"isNpc": true,
 			"size": "M",
 			"type": {
 				"type": "humanoid",
@@ -5899,9 +6580,18 @@
 				"poisoned"
 			],
 			"passive": 21,
-			"languages": "Common, Draconic, Dwarvish, Elvish, Giant, Infernal",
+			"languages": [
+				"Common",
+				"Draconic",
+				"Dwarvish",
+				"Elvish",
+				"Giant",
+				"Infernal"
+			],
 			"cr": "17",
-			"senses": "truesight 60 ft.",
+			"senses": [
+				"truesight 60 ft."
+			],
 			"trait": [
 				{
 					"name": "Special Equipment",
@@ -5926,13 +6616,13 @@
 				{
 					"name": "Silver Hair",
 					"entries": [
-						"{@atk mw} {@hit 11} to hit, reach 5 ft., one target. Hit: 7 ({@damage 2d6}) force damage, and the target must succeed on a DC 19 Constitution saving throw or be {@condition paralyzed} for 1 minute. The target can repeat the saving throw at the end of each of its turns, ending the effect on itself on a success."
+						"{@atk mw} {@hit 11} to hit, reach 5 ft., one target. {@h}7 ({@damage 2d6}) force damage, and the target must succeed on a {@dc 19} Constitution saving throw or be {@condition paralyzed} for 1 minute. The target can repeat the saving throw at the end of each of its turns, ending the effect on itself on a success."
 					]
 				},
 				{
 					"name": "Flame Tongue",
 					"entries": [
-						"{@atk mw} {@hit 7} to hit, reach 5 ft., one target. Hit: 5 ({@damage 1d8 + 1}) slashing damage plus 7 ({@damage 2d6}) fire damage, or 6 ({@damage 1d10 + 1}) slashing damage plus 7 ({@damage 2d6}) fire damage when used with two hands."
+						"{@atk mw} {@hit 7} to hit, reach 5 ft., one target. {@h}5 ({@damage 1d8 + 1}) slashing damage plus 7 ({@damage 2d6}) fire damage, or 6 ({@damage 1d10 + 1}) slashing damage plus 7 ({@damage 2d6}) fire damage when used with two hands."
 					]
 				},
 				{
@@ -5954,7 +6644,7 @@
 							"items": [
 								"Cast the {@spell cure wounds} spell. The target regains {@dice 1d8 + 5} hit points. After Laeral takes this action, roll a {@dice d6}. On a roll of 1, the silver fire disappears.",
 								"Cast the {@spell revivify} spell without material components. After Laeral takes this action, roll a {@dice d6}. On a roll of 1-2, the silver fire disappears.",
-								"Release a 60-foot line of silver fire that is 5 feet wide or a 30-foot cone of silver fire. Objects in the area that aren't being worn or carried take 26 ({@damage 4d12}) fire damage. Each creature in the area must succeed on a DC 21 Dexterity saving throw, taking 26 ({@damage 4d12}) fire damage on a failed save, or half as much damage on a successful one. After Laeral takes this action, roll a {@dice d6}. On a roll of 1-3, the silver fire disappears."
+								"Release a 60-foot line of silver fire that is 5 feet wide or a 30-foot cone of silver fire. Objects in the area that aren't being worn or carried take 26 ({@damage 4d12}) fire damage. Each creature in the area must succeed on a {@dc 21} Dexterity saving throw, taking 26 ({@damage 4d12}) fire damage on a failed save, or half as much damage on a successful one. After Laeral takes this action, roll a {@dice d6}. On a roll of 1-3, the silver fire disappears."
 							]
 						}
 					]
@@ -5964,7 +6654,7 @@
 				{
 					"name": "Spellcasting",
 					"headerEntries": [
-						"Laeral is a 19th-level spellcaster. Her spellcasting ability is Intelligence (spell save DC 21, {@hit 13} to hit with spell attacks). Laeral has the following wizard spells prepared:"
+						"Laeral is a 19th-level spellcaster. Her spellcasting ability is Intelligence (spell save {@dc 21}, {@hit 13} to hit with spell attacks). Laeral has the following wizard spells prepared:"
 					],
 					"spells": {
 						"0": {
@@ -6063,11 +6753,23 @@
 			],
 			"senseTags": [
 				"U"
+			],
+			"spellcastingTags": [
+				"CW"
+			],
+			"damageTags": [
+				"O",
+				"S",
+				"F"
+			],
+			"miscTags": [
+				"MW",
+				"AOE"
 			]
 		},
 		{
 			"name": "Manshoon",
-			"isNPC": true,
+			"isNpc": true,
 			"size": "M",
 			"type": {
 				"type": "humanoid",
@@ -6116,9 +6818,18 @@
 				"history": "+11"
 			},
 			"passive": 12,
-			"languages": "Common, Draconic, Goblin, Infernal, Orc, Undercommon",
+			"languages": [
+				"Common",
+				"Draconic",
+				"Goblin",
+				"Infernal",
+				"Orc",
+				"Undercommon"
+			],
 			"cr": "13",
-			"senses": "darkvision 60 ft.",
+			"senses": [
+				"darkvision 60 ft."
+			],
 			"trait": [
 				{
 					"name": "Special Equipment",
@@ -6137,13 +6848,13 @@
 				{
 					"name": "Metal Fist",
 					"entries": [
-						"{@atk mw} {@hit 6} to hit, reach 5 ft., one target. Hit: 4 ({@damage 1d4 + 2}) bludgeoning damage."
+						"{@atk mw} {@hit 6} to hit, reach 5 ft., one target. {@h}4 ({@damage 1d4 + 2}) bludgeoning damage."
 					]
 				},
 				{
 					"name": "Staff of Power",
 					"entries": [
-						"{@atk mw} {@hit 7} to hit, reach 5 ft., one target. Hit: 5 ({@damage 1d6 + 2}) bludgeoning damage, or 6 ({@damage 1d8 + 2}) bludgeoning damage when used with two hands. Manshoon can expend 1 of the staff's charges to deal an extra 3 ({@damage 1d6}) force damage on a hit."
+						"{@atk mw} {@hit 7} to hit, reach 5 ft., one target. {@h}5 ({@damage 1d6 + 2}) bludgeoning damage, or 6 ({@damage 1d8 + 2}) bludgeoning damage when used with two hands. Manshoon can expend 1 of the staff's charges to deal an extra 3 ({@damage 1d6}) force damage on a hit."
 					]
 				}
 			],
@@ -6151,7 +6862,7 @@
 				{
 					"name": "Spellcasting",
 					"headerEntries": [
-						"Manshoon is an 18th-level spellcaster. His spellcasting ability is Intelligence (spell save DC 21, {@hit 15} to hit with spell attacks). He has the following wizard spells prepared:"
+						"Manshoon is an 18th-level spellcaster. His spellcasting ability is Intelligence (spell save {@dc 21}, {@hit 15} to hit with spell attacks). He has the following wizard spells prepared:"
 					],
 					"spells": {
 						"0": {
@@ -6249,11 +6960,21 @@
 			],
 			"senseTags": [
 				"D"
+			],
+			"spellcastingTags": [
+				"CW"
+			],
+			"damageTags": [
+				"B",
+				"O"
+			],
+			"miscTags": [
+				"MW"
 			]
 		},
 		{
 			"name": "Meloon Wardragon",
-			"isNPC": true,
+			"isNpc": true,
 			"size": "M",
 			"type": {
 				"type": "humanoid",
@@ -6297,9 +7018,15 @@
 				"survival": "+6"
 			},
 			"passive": 12,
-			"languages": "Common, Deep Speech, telepathy 60 ft.",
+			"languages": [
+				"Common",
+				"Deep Speech",
+				"telepathy 60 ft."
+			],
 			"cr": "9",
-			"senses": "darkvision 60 ft.",
+			"senses": [
+				"darkvision 60 ft."
+			],
 			"trait": [
 				{
 					"name": "Special Equipment",
@@ -6330,7 +7057,7 @@
 				{
 					"name": "Azuredge",
 					"entries": [
-						"{@atk m} {@hit 9} to hit, reach 5 ft., one target. Hit: 11 ({@damage 1d12 + 5}) slashing damage."
+						"{@atk m} {@hit 9} to hit, reach 5 ft., one target. {@h}11 ({@damage 1d12 + 5}) slashing damage."
 					]
 				}
 			],
@@ -6344,11 +7071,14 @@
 			],
 			"senseTags": [
 				"D"
+			],
+			"damageTags": [
+				"S"
 			]
 		},
 		{
 			"name": "Mirt",
-			"isNPC": true,
+			"isNpc": true,
 			"size": "M",
 			"type": {
 				"type": "humanoid",
@@ -6395,9 +7125,11 @@
 				"stealth": "+8"
 			},
 			"passive": 15,
-			"languages": "Common, Dwarvish",
+			"languages": [
+				"Common",
+				"Dwarvish"
+			],
 			"cr": "9",
-			"senses": "",
 			"trait": [
 				{
 					"name": "Special Equipment",
@@ -6434,13 +7166,13 @@
 				{
 					"name": "+1 Longsword",
 					"entries": [
-						"{@atk mw} {@hit 9} to hit, reach 5 ft., one target. Hit: 14 ({@damage 2d8 + 5}) slashing damage, or 16 ({@damage 2d10 + 5}) slashing damage when used with two hands."
+						"{@atk mw} {@hit 9} to hit, reach 5 ft., one target. {@h}14 ({@damage 2d8 + 5}) slashing damage, or 16 ({@damage 2d10 + 5}) slashing damage when used with two hands."
 					]
 				},
 				{
 					"name": "+1 Dagger",
 					"entries": [
-						"{@atk mw} {@hit 9} to hit, reach 5 ft., one target. Hit: 10 ({@damage 2d4 + 5}) piercing damage. Or Ranged Weapon Attack: {@hit 9} to hit, range 20/60 ft., one target. Hit: 7 ({@damage 1d4 + 5}) piercing damage."
+						"{@atk mw} {@hit 9} to hit, reach 5 ft., one target. {@h}10 ({@damage 2d4 + 5}) piercing damage. Or Ranged Weapon Attack: {@hit 9} to hit, range 20/60 ft., one target. {@h}7 ({@damage 1d4 + 5}) piercing damage."
 					]
 				}
 			],
@@ -6463,6 +7195,13 @@
 			"languageTags": [
 				"C",
 				"D"
+			],
+			"damageTags": [
+				"S",
+				"P"
+			],
+			"miscTags": [
+				"MW"
 			]
 		},
 		{
@@ -6519,9 +7258,13 @@
 				"poisoned"
 			],
 			"passive": 12,
-			"languages": "understands one language known to its creator but can't speak",
+			"languages": [
+				"understands one language known to its creator but can't speak"
+			],
 			"cr": "4",
-			"senses": "darkvision 60 ft.",
+			"senses": [
+				"darkvision 60 ft."
+			],
 			"trait": [
 				{
 					"name": "Magic Resistance",
@@ -6558,13 +7301,13 @@
 				{
 					"name": "Rapier",
 					"entries": [
-						"{@atk mw} {@hit 6} to hit, reach 5 ft., one target. Hit: 8 ({@damage 1d8 + 4}) piercing damage."
+						"{@atk mw} {@hit 6} to hit, reach 5 ft., one target. {@h}8 ({@damage 1d8 + 4}) piercing damage."
 					]
 				},
 				{
 					"name": "Dagger",
 					"entries": [
-						"{@atk mw} {@hit 6} to hit, reach 5 ft., one target. Hit: 6 ({@damage 1d4 + 4}) piercing damage. Or Ranged Weapon Attack: {@hit 6} to hit, range 20/60 ft., one target. Hit: 6 ({@damage 1d4 + 4}) piercing damage."
+						"{@atk mw} {@hit 6} to hit, reach 5 ft., one target. {@h}6 ({@damage 1d4 + 4}) piercing damage. Or Ranged Weapon Attack: {@hit 6} to hit, range 20/60 ft., one target. {@h}6 ({@damage 1d4 + 4}) piercing damage."
 					]
 				}
 			],
@@ -6586,11 +7329,20 @@
 			],
 			"senseTags": [
 				"D"
+			],
+			"languageTags": [
+				"CS"
+			],
+			"damageTags": [
+				"P"
+			],
+			"miscTags": [
+				"MW"
 			]
 		},
 		{
 			"name": "Remallia Haventree",
-			"isNPC": true,
+			"isNpc": true,
 			"size": "M",
 			"type": {
 				"type": "humanoid",
@@ -6636,9 +7388,17 @@
 				"persuasion": "+7"
 			},
 			"passive": 12,
-			"languages": "Common, Draconic, Dwarvish, Elvish, Halfling",
+			"languages": [
+				"Common",
+				"Draconic",
+				"Dwarvish",
+				"Elvish",
+				"Halfling"
+			],
 			"cr": "9",
-			"senses": "darkvision 60 ft.",
+			"senses": [
+				"darkvision 60 ft."
+			],
 			"trait": [
 				{
 					"name": "Special Equipment",
@@ -6663,7 +7423,7 @@
 				{
 					"name": "Dagger",
 					"entries": [
-						"{@atk mw} {@hit 6} to hit, reach 5 ft. or range 20/60 ft., one target. Hit: 4 ({@damage 1d4 + 2}) piercing damage."
+						"{@atk mw} {@hit 6} to hit, reach 5 ft. or range 20/60 ft., one target. {@h}4 ({@damage 1d4 + 2}) piercing damage."
 					]
 				}
 			],
@@ -6671,7 +7431,7 @@
 				{
 					"name": "Spellcasting",
 					"headerEntries": [
-						"Remallia is a 13th-level spellcaster. Her spellcasting ability is Intelligence (spell save DC 16, {@hit 8} to hit with spell attacks). She has the following wizard spells prepared:"
+						"Remallia is a 13th-level spellcaster. Her spellcasting ability is Intelligence (spell save {@dc 16}, {@hit 8} to hit with spell attacks). She has the following wizard spells prepared:"
 					],
 					"spells": {
 						"0": {
@@ -6751,11 +7511,20 @@
 			],
 			"senseTags": [
 				"D"
+			],
+			"spellcastingTags": [
+				"CW"
+			],
+			"damageTags": [
+				"P"
+			],
+			"miscTags": [
+				"MW"
 			]
 		},
 		{
 			"name": "Skeemo Weirdbottle",
-			"isNPC": true,
+			"isNpc": true,
 			"size": "S",
 			"type": {
 				"type": "humanoid",
@@ -6801,9 +7570,16 @@
 				"performance": "+5"
 			},
 			"passive": 14,
-			"languages": "Abyssal, Common, Gnomish, Undercommon",
+			"languages": [
+				"Abyssal",
+				"Common",
+				"Gnomish",
+				"Undercommon"
+			],
 			"cr": "6",
-			"senses": "darkvision 60 ft.",
+			"senses": [
+				"darkvision 60 ft."
+			],
 			"trait": [
 				{
 					"name": "Gnome Cunning",
@@ -6816,7 +7592,7 @@
 				{
 					"name": "Dagger",
 					"entries": [
-						"{@atk mw} {@hit 5} to hit, reach 5 ft., one target. Hit: 4 ({@damage 1d4 + 2}) piercing damage. Or Ranged Weapon Attack: {@hit 5} to hit, range 20/60 ft., one target. Hit: 4 ({@damage 1d4 + 2}) piercing damage."
+						"{@atk mw} {@hit 5} to hit, reach 5 ft., one target. {@h}4 ({@damage 1d4 + 2}) piercing damage. Or Ranged Weapon Attack: {@hit 5} to hit, range 20/60 ft., one target. {@h}4 ({@damage 1d4 + 2}) piercing damage."
 					]
 				}
 			],
@@ -6824,7 +7600,7 @@
 				{
 					"name": "Spellcasting",
 					"headerEntries": [
-						"Skeemo is a 9th-level spellcaster. His spellcasting ability is Intelligence. He has the following wizard spells prepared:"
+						"Skeemo is a 9th-level spellcaster. His spellcasting ability is Intelligence (spell save {@dc 14}, {@hit 6} to hit with spell attacks) He has the following wizard spells prepared:"
 					],
 					"spells": {
 						"0": {
@@ -6884,11 +7660,20 @@
 			],
 			"senseTags": [
 				"D"
+			],
+			"spellcastingTags": [
+				"CW"
+			],
+			"damageTags": [
+				"P"
+			],
+			"miscTags": [
+				"MW"
 			]
 		},
 		{
 			"name": "Tashlyn Yafeera",
-			"isNPC": true,
+			"isNpc": true,
 			"size": "M",
 			"type": {
 				"type": "humanoid",
@@ -6932,9 +7717,10 @@
 				"perception": "+6"
 			},
 			"passive": 16,
-			"languages": "Common",
+			"languages": [
+				"Common"
+			],
 			"cr": "9",
-			"senses": "",
 			"trait": [
 				{
 					"name": "Indomitable (2/Day)",
@@ -6965,13 +7751,13 @@
 				{
 					"name": "Greatsword",
 					"entries": [
-						"{@atk mw} {@hit 8} to hit, reach 5 ft., one target. Hit: 11 ({@damage 2d6 + 4}) slashing damage."
+						"{@atk mw} {@hit 8} to hit, reach 5 ft., one target. {@h}11 ({@damage 2d6 + 4}) slashing damage."
 					]
 				},
 				{
 					"name": "Shortbow",
 					"entries": [
-						"{@atk rw} {@hit 6} to hit, range 80/320 ft., one target. Hit: 5 ({@damage 1d6 + 2}) piercing damage."
+						"{@atk rw} {@hit 6} to hit, range 80/320 ft., one target. {@h}5 ({@damage 1d6 + 2}) piercing damage."
 					]
 				}
 			],
@@ -6980,11 +7766,20 @@
 			],
 			"languageTags": [
 				"C"
+			],
+			"damageTags": [
+				"S",
+				"P"
+			],
+			"miscTags": [
+				"MW",
+				"RW",
+				"RNG"
 			]
 		},
 		{
 			"name": "Vajra Safahr",
-			"isNPC": true,
+			"isNpc": true,
 			"size": "M",
 			"type": {
 				"type": "humanoid",
@@ -7032,9 +7827,15 @@
 				"history": "+10"
 			},
 			"passive": 10,
-			"languages": "Common, Dwarvish, Elvish, Giant, Halfling, Undercommon",
+			"languages": [
+				"Common",
+				"Dwarvish",
+				"Elvish",
+				"Giant",
+				"Halfling",
+				"Undercommon"
+			],
 			"cr": "13",
-			"senses": "",
 			"trait": [
 				{
 					"name": "Special Equipment",
@@ -7059,7 +7860,7 @@
 				{
 					"name": "Blackstaff",
 					"entries": [
-						"{@atk mw} {@hit 7} to hit, reach 5 ft., one target. Hit: 5 ({@dice 1d6 + 2}) bludgeoning, magic damage, or 6 ({@dice 1d8 + 2}) bludgeoning, magic damage when used with two hands. Vajra can expend 1 of the staff's charges to deal an extra 3 ({@damage 1d6}) force damage on a hit."
+						"{@atk mw} {@hit 7} to hit, reach 5 ft., one target. {@h}5 ({@dice 1d6 + 2}) bludgeoning, magic damage, or 6 ({@dice 1d8 + 2}) bludgeoning, magic damage when used with two hands. Vajra can expend 1 of the staff's charges to deal an extra 3 ({@damage 1d6}) force damage on a hit."
 					]
 				}
 			],
@@ -7067,7 +7868,7 @@
 				{
 					"name": "Spellcasting",
 					"headerEntries": [
-						"Vajra is an 18th-level spellcaster. Her spellcasting ability is Intelligence (spell save DC 18, {@hit 12} to hit with spell attacks). She has the following wizard spells prepared:"
+						"Vajra is an 18th-level spellcaster. Her spellcasting ability is Intelligence (spell save {@dc 18}, {@hit 12} to hit with spell attacks). She has the following wizard spells prepared:"
 					],
 					"spells": {
 						"0": {
@@ -7161,11 +7962,20 @@
 				"GI",
 				"H",
 				"U"
+			],
+			"spellcastingTags": [
+				"CW"
+			],
+			"damageTags": [
+				"O"
+			],
+			"miscTags": [
+				"MW"
 			]
 		},
 		{
 			"name": "Victoro Cassalanter",
-			"isNPC": true,
+			"isNpc": true,
 			"size": "M",
 			"type": {
 				"type": "humanoid",
@@ -7218,9 +8028,16 @@
 				"poisoned"
 			],
 			"passive": 13,
-			"languages": "Common, Draconic, Elvish, Infernal",
+			"languages": [
+				"Common",
+				"Draconic",
+				"Elvish",
+				"Infernal"
+			],
 			"cr": "10",
-			"senses": "darkvision 60 ft.",
+			"senses": [
+				"darkvision 60 ft."
+			],
 			"trait": [
 				{
 					"name": "Special Equipment",
@@ -7237,7 +8054,7 @@
 				{
 					"name": "Rod of Rulership",
 					"entries": [
-						"Victoro can use an action to present the rod and command obedience from each creature of his choice that he can see within 120 feet of him. Each target must succeed on a DC 15 Wisdom saving throw or be {@condition charmed} for 8 hours by Victorio. While {@condition charmed} in this way, the creature regards Victorio as its trusted leader. If harmed by VIctorio or his companions, or commanded to do something contrary to its nature, a target ceases to be {@condition charmed} in this way. The rod can't be used again until the next dawn."
+						"Victoro can use an action to present the rod and command obedience from each creature of his choice that he can see within 120 feet of him. Each target must succeed on a {@dc 15} Wisdom saving throw or be {@condition charmed} for 8 hours by Victoro. While {@condition charmed} in this way, the creature regards Victoro as its trusted leader. If harmed by Victoro or his companions, or commanded to do something contrary to its nature, a target ceases to be {@condition charmed} in this way. The rod can't be used again until the next dawn."
 					]
 				}
 			],
@@ -7251,7 +8068,7 @@
 				{
 					"name": "Rapier",
 					"entries": [
-						"{@atk mw} {@hit 5} to hit, reach 5 ft., one target. Hit: 5 ({@damage 1d8 + 1}) piercing damage."
+						"{@atk mw} {@hit 5} to hit, reach 5 ft., one target. {@h}5 ({@damage 1d8 + 1}) piercing damage."
 					]
 				},
 				{
@@ -7271,7 +8088,7 @@
 				{
 					"name": "Spellcasting",
 					"headerEntries": [
-						"Victoro is a 15th-level spellcaster. His spellcasting ability is Wisdom (spell save DC 15, {@hit 7} to hit with spell attacks). Victoro has the following cleric spells prepared:"
+						"Victoro is a 15th-level spellcaster. His spellcasting ability is Wisdom (spell save {@dc 15}, {@hit 7} to hit with spell attacks). Victoro has the following cleric spells prepared:"
 					],
 					"spells": {
 						"0": {
@@ -7369,6 +8186,15 @@
 			],
 			"senseTags": [
 				"D"
+			],
+			"spellcastingTags": [
+				"CC"
+			],
+			"damageTags": [
+				"P"
+			],
+			"miscTags": [
+				"MW"
 			]
 		},
 		{
@@ -7429,12 +8255,14 @@
 			],
 			"passive": 10,
 			"cr": "18",
-			"senses": "truesight 120 ft.",
+			"senses": [
+				"truesight 120 ft."
+			],
 			"trait": [
 				{
 					"name": "Crumbling Colossus",
 					"entries": [
-						"When the statue drops to 0 hit points, it crumbles and is destroyed. Any creature on the ground within 30 feet of the crumbling statue must make a DC 22 Dexterity saving throw, taking 22 ({@damage 4d10}) bludgeoning damage on a failed save, or half as much damage on a successful one."
+						"When the statue drops to 0 hit points, it crumbles and is destroyed. Any creature on the ground within 30 feet of the crumbling statue must make a {@dc 22} Dexterity saving throw, taking 22 ({@damage 4d10}) bludgeoning damage on a failed save, or half as much damage on a successful one."
 					]
 				},
 				{
@@ -7466,13 +8294,13 @@
 				{
 					"name": "Slam",
 					"entries": [
-						"{@atk mw} {@hit 16} to hit, reach 5 ft., one target. Hit: 29 ({@damage 3d12 + 10}) bludgeoning damage."
+						"{@atk mw} {@hit 16} to hit, reach 5 ft., one target. {@h}29 ({@damage 3d12 + 10}) bludgeoning damage."
 					]
 				},
 				{
 					"name": "Hurled Stone",
 					"entries": [
-						"{@atk rw} {@hit 16} to hit, range 200/800 ft., one target. Hit: 43 ({@damage 6d10 + 10}) bludgeoning damage."
+						"{@atk rw} {@hit 16} to hit, range 200/800 ft., one target. {@h}43 ({@damage 6d10 + 10}) bludgeoning damage."
 					]
 				}
 			],
@@ -7486,11 +8314,18 @@
 			],
 			"senseTags": [
 				"U"
+			],
+			"damageTags": [
+				"B"
+			],
+			"miscTags": [
+				"MW",
+				"RW"
 			]
 		},
 		{
 			"name": "Ziraj the Hunter",
-			"isNPC": true,
+			"isNpc": true,
 			"size": "M",
 			"type": {
 				"type": "humanoid",
@@ -7536,9 +8371,14 @@
 				"survival": "+5"
 			},
 			"passive": 12,
-			"languages": "Common, Orc",
+			"languages": [
+				"Common",
+				"Orc"
+			],
 			"cr": "8",
-			"senses": "darkvision 60 ft.",
+			"senses": [
+				"darkvision 60 ft."
+			],
 			"action": [
 				{
 					"name": "Multiattack",
@@ -7549,19 +8389,19 @@
 				{
 					"name": "Glaive",
 					"entries": [
-						"{@atk mw} {@hit 7} to hit, reach 5 ft., one target. Hit: 9 ({@damage 1d10 + 4}) slashing damage."
+						"{@atk mw} {@hit 7} to hit, reach 5 ft., one target. {@h}9 ({@damage 1d10 + 4}) slashing damage."
 					]
 				},
 				{
 					"name": "Oversized Longbow",
 					"entries": [
-						"{@atk rw} {@hit 7} to hit, range 150/600 ft., one target. Hit: 11 ({@damage 2d6 + 4}) piercing damage."
+						"{@atk rw} {@hit 7} to hit, range 150/600 ft., one target. {@h}11 ({@damage 2d6 + 4}) piercing damage."
 					]
 				},
 				{
 					"name": "Dreadful Aspect (Recharges after a Short or Long Rest)",
 					"entries": [
-						"Ziraj exudes magical menace. Each enemy within 30 feet of him must succeed on a DC 13 Wisdom saving throw or be {@condition frightened} for 1 minute of Ziraj. If a {@condition frightened} enemy ends its turn more than 30 feet away from Ziraj, the enemy can repeat the saving throw, ending the effect on itself on a success."
+						"Ziraj exudes magical menace. Each enemy within 30 feet of him must succeed on a {@dc 13} Wisdom saving throw or be {@condition frightened} for 1 minute of Ziraj. If a {@condition frightened} enemy ends its turn more than 30 feet away from Ziraj, the enemy can repeat the saving throw, ending the effect on itself on a success."
 					]
 				}
 			],
@@ -7607,7 +8447,697 @@
 			],
 			"senseTags": [
 				"D"
+			],
+			"spellcastingTags": [
+				"CP"
+			],
+			"damageTags": [
+				"S",
+				"P"
+			],
+			"miscTags": [
+				"MW",
+				"RW",
+				"RNG"
 			]
+		},
+		{
+			"name": "Aurinax",
+			"isNpc": true,
+			"source": "WDH",
+			"_copy": {
+				"name": "Adult Gold Dragon",
+				"source": "MM",
+				"_mod": {
+					"*": {
+						"mode": "replaceTxt",
+						"replace": "the dragon",
+						"with": "Aurinax",
+						"flags": "i"
+					}
+				}
+			},
+			"page": 194
+		},
+		{
+			"name": "Blinded Troll",
+			"isNpc": true,
+			"source": "WDH",
+			"_copy": {
+				"name": "Troll",
+				"source": "MM",
+				"_mod": {
+					"trait": {
+						"mode": "prependArr",
+						"items": {
+							"name": "Blinded",
+							"entries": [
+								"The troll is wearing an eyeless helm, and is {@condition blinded}."
+							]
+						}
+					}
+				}
+			},
+			"speed": {
+				"walk": 20
+			},
+			"cr": "4",
+			"page": 114
+		},
+		{
+			"name": "Bonnie",
+			"isNpc": true,
+			"source": "WDH",
+			"_copy": {
+				"name": "Doppelganger",
+				"source": "MM",
+				"_mod": {
+					"*": {
+						"mode": "replaceTxt",
+						"replace": "the doppelganger",
+						"with": "Bonnie",
+						"flags": "i"
+					}
+				}
+			},
+			"speed": {
+				"walk": 20
+			},
+			"cr": "4",
+			"page": 20
+		},
+		{
+			"name": "Diatryma",
+			"source": "WDH",
+			"_copy": {
+				"name": "Axe Beak",
+				"source": "MM",
+				"_mod": {
+					"*": {
+						"mode": "replaceTxt",
+						"replace": "axe beak",
+						"with": "diatryma"
+					}
+				}
+			},
+			"action": [
+				{
+					"name": "Beak",
+					"entries": [
+						"{@atk mw} {@hit 4} to hit, reach 5 ft., one target. {@h}6 ({@damage 1d8 + 2}) piercing damage."
+					]
+				}
+			],
+			"damageTags": [
+				"P"
+			],
+			"page": 191
+		},
+		{
+			"name": "Elzerina Cassalanter",
+			"size": "S",
+			"type": {
+				"type": "humanoid",
+				"tags": [
+					"human"
+				]
+			},
+			"isNpc": true,
+			"source": "WDH",
+			"ac": [
+				10
+			],
+			"speed": {
+				"walk": 30
+			},
+			"str": 10,
+			"dex": 10,
+			"con": 10,
+			"int": 10,
+			"wis": 10,
+			"cha": 10,
+			"alignment": [
+				"N"
+			],
+			"hp": {
+				"special": "1"
+			},
+			"passive": 10,
+			"cr": "Unknown",
+			"languages": [
+				"Common"
+			],
+			"languageTags": [
+				"C"
+			],
+			"page": 115
+		},
+		{
+			"name": "Terenzio Cassalanter",
+			"size": "S",
+			"type": {
+				"type": "humanoid",
+				"tags": [
+					"human"
+				]
+			},
+			"isNpc": true,
+			"source": "WDH",
+			"ac": [
+				10
+			],
+			"speed": {
+				"walk": 30
+			},
+			"str": 10,
+			"dex": 10,
+			"con": 10,
+			"int": 10,
+			"wis": 10,
+			"cha": 10,
+			"alignment": [
+				"N"
+			],
+			"hp": {
+				"special": "1"
+			},
+			"passive": 10,
+			"cr": "Unknown",
+			"languages": [
+				"Common"
+			],
+			"languageTags": [
+				"C"
+			],
+			"page": 115
+		},
+		{
+			"name": "Emmek Frewn",
+			"isNpc": true,
+			"source": "WDH",
+			"_copy": {
+				"name": "Commoner",
+				"source": "MM"
+			},
+			"alignment": [
+				"N",
+				"E"
+			],
+			"type": {
+				"type": "humanoid",
+				"tags": [
+					"human"
+				]
+			},
+			"page": 42
+		},
+		{
+			"name": "Falcon",
+			"source": "WDH",
+			"_copy": {
+				"name": "Hawk",
+				"source": "MM",
+				"_mod": {
+					"*": {
+						"mode": "replaceTxt",
+						"replace": "hawk",
+						"with": "falcon",
+						"flags": "i"
+					}
+				}
+			},
+			"page": 53
+		},
+		{
+			"name": "Fel'rekt Lafeen",
+			"isNpc": true,
+			"source": "WDH",
+			"_copy": {
+				"name": "Drow Gunslinger",
+				"source": "WDH",
+				"_mod": {
+					"*": {
+						"mode": "replaceTxt",
+						"replace": "the drow",
+						"with": "Fel'rekt",
+						"flags": "i"
+					}
+				}
+			},
+			"alignment": [
+				"N",
+				"G"
+			],
+			"page": 67
+		},
+		{
+			"name": "Krebbyg Masq'il'yr",
+			"isNpc": true,
+			"source": "WDH",
+			"_copy": {
+				"name": "Drow Gunslinger",
+				"source": "WDH",
+				"_mod": {
+					"*": {
+						"mode": "replaceTxt",
+						"replace": "the drow",
+						"with": "Krebbyg",
+						"flags": "i"
+					}
+				}
+			},
+			"alignment": [
+				"C",
+				"N"
+			],
+			"page": 67
+		},
+		{
+			"name": "Floon Blagmaar",
+			"isNpc": true,
+			"source": "WDH",
+			"_copy": {
+				"name": "Commoner",
+				"source": "MM"
+			},
+			"alignment": [
+				"N",
+				"G"
+			],
+			"type": {
+				"type": "humanoid",
+				"tags": [
+					"human"
+				]
+			},
+			"page": 202
+		},
+		{
+			"name": "Grinda Garloth",
+			"isNpc": true,
+			"source": "WDH",
+			"_copy": {
+				"name": "Mage",
+				"source": "MM",
+				"_mod": {
+					"*": {
+						"mode": "replaceTxt",
+						"replace": "the mage",
+						"with": "Grinda",
+						"flags": "i"
+					}
+				}
+			},
+			"alignment": [
+				"C",
+				"N"
+			],
+			"type": {
+				"type": "humanoid",
+				"tags": [
+					"human"
+				]
+			},
+			"languages": [
+				"Common",
+				"Dwarvish",
+				"Halfling",
+				"Undercommon"
+			],
+			"languageTags": [
+				"C",
+				"D",
+				"H",
+				"U"
+			],
+			"page": 65
+		},
+		{
+			"name": "Hester Barch",
+			"isNpc": true,
+			"source": "WDH",
+			"_copy": {
+				"name": "Acolyte",
+				"source": "MM",
+				"_mod": {
+					"*": {
+						"mode": "replaceTxt",
+						"replace": "the acolyte",
+						"with": "Hester",
+						"flags": "i"
+					}
+				}
+			},
+			"alignment": [
+				"L",
+				"G"
+			],
+			"type": {
+				"type": "humanoid",
+				"tags": [
+					"human"
+				]
+			},
+			"skill": {
+				"medicine": "+4",
+				"religion": "+2",
+				"insight": "+4"
+			},
+			"page": 83
+		},
+		{
+			"name": "Jenks",
+			"size": "S",
+			"type": {
+				"type": "humanoid",
+				"tags": [
+					"human"
+				]
+			},
+			"isNpc": true,
+			"source": "WDH",
+			"ac": [
+				10
+			],
+			"speed": {
+				"walk": 30
+			},
+			"str": 10,
+			"dex": 10,
+			"con": 10,
+			"int": 10,
+			"wis": 10,
+			"cha": 10,
+			"alignment": [
+				"N"
+			],
+			"hp": {
+				"special": "1"
+			},
+			"passive": 10,
+			"cr": "Unknown",
+			"page": 63
+		},
+		{
+			"name": "Nat",
+			"size": "S",
+			"type": {
+				"type": "humanoid",
+				"tags": [
+					"human"
+				]
+			},
+			"isNpc": true,
+			"source": "WDH",
+			"ac": [
+				10
+			],
+			"speed": {
+				"walk": 30
+			},
+			"str": 10,
+			"dex": 10,
+			"con": 10,
+			"int": 10,
+			"wis": 10,
+			"cha": 10,
+			"alignment": [
+				"N"
+			],
+			"hp": {
+				"special": "1"
+			},
+			"passive": 10,
+			"cr": "Unknown",
+			"page": 63
+		},
+		{
+			"name": "Squiddly",
+			"size": "S",
+			"type": {
+				"type": "humanoid",
+				"tags": [
+					"tiefling"
+				]
+			},
+			"isNpc": true,
+			"source": "WDH",
+			"ac": [
+				10
+			],
+			"speed": {
+				"walk": 30
+			},
+			"str": 10,
+			"dex": 10,
+			"con": 10,
+			"int": 10,
+			"wis": 10,
+			"cha": 10,
+			"alignment": [
+				"N"
+			],
+			"hp": {
+				"special": "1"
+			},
+			"passive": 10,
+			"cr": "Unknown",
+			"page": 63
+		},
+		{
+			"name": "Mattrim \"Threestrings\" Mereg",
+			"isNpc": true,
+			"source": "WDH",
+			"_copy": {
+				"name": "Bard",
+				"source": "VGM",
+				"_mod": {
+					"*": {
+						"mode": "replaceTxt",
+						"replace": "the bard",
+						"with": "Mattrim",
+						"flags": "i"
+					}
+				}
+			},
+			"alignment": [
+				"L",
+				"G"
+			],
+			"type": {
+				"type": "humanoid",
+				"tags": [
+					"human"
+				]
+			},
+			"page": 20
+		},
+		{
+			"name": "Mechanical Bird",
+			"size": "T",
+			"type": "construct",
+			"isNpc": true,
+			"source": "WDH",
+			"ac": [
+				15
+			],
+			"speed": {
+				"fly": 60
+			},
+			"str": 10,
+			"dex": 10,
+			"con": 10,
+			"int": 10,
+			"wis": 10,
+			"cha": 10,
+			"alignment": [
+				"N"
+			],
+			"hp": {
+				"special": "1"
+			},
+			"passive": 10,
+			"cr": "Unknown",
+			"immune": [
+				"poison"
+			],
+			"conditionImmune": [
+				"poisoned"
+			],
+			"action": [
+				{
+					"name": "Slam",
+					"entries": [
+						"{@atk mw} {@hit 0} to hit, reach 5 ft., one target. {@h}2 ({@damage 1d3}) piercing damage, and the bird is destroyed by the impact."
+					]
+				}
+			],
+			"miscTags": [
+				"MW"
+			],
+			"damageTags": [
+				"P"
+			],
+			"page": 46
+		},
+		{
+			"name": "Nihiloor",
+			"isNpc": true,
+			"source": "WDH",
+			"_copy": {
+				"name": "Mind Flayer",
+				"source": "MM",
+				"_mod": {
+					"*": {
+						"mode": "replaceTxt",
+						"replace": "the mind flayer",
+						"with": "Nihiloor",
+						"flags": "i"
+					}
+				}
+			},
+			"page": 212
+		},
+		{
+			"name": "Obaya Uday",
+			"isNpc": true,
+			"source": "WDH",
+			"_copy": {
+				"name": "Priest",
+				"source": "MM",
+				"_mod": {
+					"*": {
+						"mode": "replaceTxt",
+						"replace": "the priest",
+						"with": "Obaya",
+						"flags": "i"
+					}
+				}
+			},
+			"alignment": [
+				"N",
+				"G"
+			],
+			"type": {
+				"type": "humanoid",
+				"tags": [
+					"human"
+				]
+			},
+			"page": 20
+		},
+		{
+			"name": "Osvaldo Cassalanter",
+			"isNpc": true,
+			"source": "WDH",
+			"_copy": {
+				"name": "Chain Devil",
+				"source": "MM",
+				"_mod": {
+					"*": {
+						"mode": "replaceTxt",
+						"replace": "the devil",
+						"with": "Osvaldo",
+						"flags": "i"
+					}
+				}
+			},
+			"page": 124
+		},
+		{
+			"name": "Samara Strongbones",
+			"isNpc": true,
+			"source": "WDH",
+			"_copy": {
+				"name": "Spy",
+				"source": "MM",
+				"_mod": {
+					"*": {
+						"mode": "replaceTxt",
+						"replace": "the spy",
+						"with": "Samara",
+						"flags": "i"
+					}
+				},
+				"_trait": {
+					"name": "Stout Halfling",
+					"source": "PHB"
+				}
+			},
+			"languageTags": [
+				"X",
+				"H"
+			],
+			"page": 104
+		},
+		{
+			"name": "Sergeant",
+			"source": "WDH",
+			"_copy": {
+				"name": "Guard",
+				"source": "MM"
+			},
+			"page": 197
+		},
+		{
+			"name": "Vincent Trench",
+			"source": "WDH",
+			"_copy": {
+				"name": "Rakshasa",
+				"source": "MM",
+				"_mod": {
+					"*": {
+						"mode": "replaceTxt",
+						"replace": "the rakshasa",
+						"with": "Vincent",
+						"flags": "i"
+					}
+				}
+			},
+			"page": 32
+		},
+		{
+			"name": "Willifort Crowelle",
+			"source": "WDH",
+			"_copy": {
+				"name": "Doppelganger",
+				"source": "MM",
+				"_mod": {
+					"*": {
+						"mode": "replaceTxt",
+						"replace": "the doppelganger",
+						"with": "Willifort",
+						"flags": "i"
+					}
+				}
+			},
+			"page": 62
+		},
+		{
+			"name": "Xanathar",
+			"source": "WDH",
+			"_copy": {
+				"name": "Beholder",
+				"source": "MM",
+				"_mod": {
+					"*": {
+						"mode": "replaceTxt",
+						"replace": "the beholder",
+						"with": "Xanathar",
+						"flags": "i"
+					},
+					"trait": {
+						"mode": "prependArr",
+						"items": {
+							"name": "Special Equipment",
+							"entries": [
+								"Xanathar wears a {@item ring of invisibility}, a {@item ring of mind shielding}, and a {@item ring of force resistance|DMG|ring of resistance (force)}."
+							]
+						}
+					}
+				}
+			},
+			"page": 220
 		}
 	]
 }

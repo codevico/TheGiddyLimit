@@ -1,6 +1,6 @@
 {
-	"$schema": "http://json-schema.org/draft-06/schema#",
-	"version": "1.5.0",
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"version": "1.5.3",
 	"title": "Optional Features",
 	"type": "object",
 
@@ -13,10 +13,22 @@
 						"properties": {
 							"type": {"const": "prereqLevel"},
 							"level": {
-								"type": "integer",
-								"enum": [5, 7, 9, 12, 15, 18]
+								"type": "integer"
 							},
 							"class": {
+								"type": "object",
+								"properties": {
+									"name": {
+										"type": "string"
+									},
+									"source": {
+										"type": "string"
+									}
+								},
+								"required": ["name"],
+								"additionalProperties": false
+							},
+							"subclass": {
 								"type": "object",
 								"properties": {
 									"name": {
@@ -65,7 +77,7 @@
 							"entries": {
 								"type": "array",
 								"items": {
-									"$ref": "/Entry"
+									"$ref": "entry.json"
 								}
 							}
 						},
@@ -78,7 +90,35 @@
 							"entries": {
 								"type": "array",
 								"items": {
-									"$ref": "/Entry"
+									"$ref": "entry.json"
+								}
+							}
+						},
+						"required": ["entries"],
+						"additionalProperties": false
+					},
+					{
+						"description": "An alternative to a string, should a shortened form be required.",
+						"properties": {
+							"type": {"const": "prereqSpecial"},
+							"entry": {
+								"$ref": "entry.json"
+							},
+							"entrySummary": {
+								"description": "Used in short/list displays",
+								"$ref": "entry.json"
+							}
+						},
+						"required": ["entry"],
+						"additionalProperties": false
+					},
+					{
+						"properties": {
+							"type": {"const": "prereqItem"},
+							"entries": {
+								"type": "array",
+								"items": {
+									"$ref": "entry.json"
 								}
 							}
 						},
@@ -94,7 +134,7 @@
 
 		"featureType": {
 			"type": "string",
-			"enum":  ["EI", "MM", "MV:B", "OTH", "FS:F", "FS:B", "FS:R", "FS:P", "MV:C2-UA", "AS:V1-UA", "AS:V2-UA", "AS"]
+			"enum":  ["ED", "EI", "MM", "MV:B", "OTH", "FS:F", "FS:B", "FS:R", "FS:P", "MV:C2-UA", "AS:V1-UA", "AS:V2-UA", "AS", "PB", "AI", "SHP:H", "SHP:M", "SHP:W", "SHP:F", "SHP:O"]
 		},
 
 		"optionalfeature": {
@@ -108,7 +148,7 @@
 				"entries": {
 					"type": "array",
 					"items": {
-						"$ref": "/Entry"
+						"$ref": "entry.json"
 					}
 				},
 				"data": {

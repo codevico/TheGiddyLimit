@@ -8,7 +8,7 @@
 					"type": "image",
 					"href": {
 						"type": "internal",
-						"path": "bestiary/ToA/Lich.jpg"
+						"path": "bestiary/ToA/Acererak.jpg"
 					}
 				}
 			],
@@ -105,7 +105,7 @@
 					"type": "image",
 					"href": {
 						"type": "internal",
-						"path": "bestiary/ToA/Aldani.jpg"
+						"path": "bestiary/ToA/Aldani (Lobsterfolk).jpg"
 					}
 				}
 			],
@@ -120,7 +120,13 @@
 							"type": "entries",
 							"entries": [
 								"If disturbed, aldani try to frighten intruders away without killing them. When confronted by creatures who aren't easily startled, they offer bribes in exchange for being left alone. These bribes take the form of treasures that the aldani collect from the bottoms of rivers and lakes.",
-								"Cursed by Ubtao. The aldani are the monstrous descendants of Chultan humans belonging to the Aldani tribe. The fishers of the tribe trapped the lobsters of the rivers by the thousands, until no lobsters remained. Their greed made Ubtao angry, and he cursed the fishers by transforming them into lobsterfolk. The fishers accepted their punishment and embraced their new existence. However, they were scorned by other members of their tribe and forced to take refuge in the rivers they had once plundered. Although the Aldani tribe went extinct, the lobsterfolk remain to this day."
+								{
+									"name": "Cursed by Ubtao",
+									"entries": [
+										" The aldani are the monstrous descendants of Chultan humans belonging to the Aldani tribe. The fishers of the tribe trapped the lobsters of the rivers by the thousands, until no lobsters remained. Their greed made Ubtao angry, and he cursed the fishers by transforming them into lobsterfolk. The fishers accepted their punishment and embraced their new existence. However, they were scorned by other members of their tribe and forced to take refuge in the rivers they had once plundered. Although the Aldani tribe went extinct, the lobsterfolk remain to this day."
+									],
+									"type": "entries"
+								}
 							]
 						}
 					]
@@ -175,7 +181,7 @@
 							"name": "Tyrannosaurus Zombie",
 							"type": "entries",
 							"entries": [
-								"A tyrannosaurus zombie has a gullet full of smaller zombies, which it can disgorge. These zombies aren't under the tyrannosaurus zombie's contjrol."
+								"A tyrannosaurus zombie has a gullet full of smaller zombies, which it can disgorge. These zombies aren't under the tyrannosaurus zombie's control."
 							]
 						}
 					]
@@ -247,7 +253,7 @@
 					"type": "image",
 					"href": {
 						"type": "internal",
-						"path": "bestiary/ToA/Aarakocra.jpg"
+						"path": "bestiary/ToA/Asharra.jpg"
 					}
 				}
 			],
@@ -347,7 +353,7 @@
 					"type": "image",
 					"href": {
 						"type": "internal",
-						"path": "bestiary/ToA/Chwingas.jpg"
+						"path": "bestiary/ToA/Chwinga.jpg"
 					}
 				}
 			],
@@ -502,7 +508,7 @@
 					"type": "image",
 					"href": {
 						"type": "internal",
-						"path": "bestiary/ToA/Giant four-armed gargoyle.jpg"
+						"path": "bestiary/ToA/Giant Four-Armed Gargoyle.jpg"
 					}
 				}
 			],
@@ -562,7 +568,7 @@
 							"name": "Tyrannosaurus Zombie",
 							"type": "entries",
 							"entries": [
-								"A tyrannosaurus zombie has a gullet full of smaller zombies, which it can disgorge. These zombies aren't under the tyrannosaurus zombie's contjrol."
+								"A tyrannosaurus zombie has a gullet full of smaller zombies, which it can disgorge. These zombies aren't under the tyrannosaurus zombie's control."
 							]
 						}
 					]
@@ -577,7 +583,7 @@
 					"type": "image",
 					"href": {
 						"type": "internal",
-						"path": "bestiary/ToA/Hew.jpg"
+						"path": "bestiary/ToA/Hew Hackinstone.jpg"
 					}
 				}
 			],
@@ -649,7 +655,7 @@
 					"type": "image",
 					"href": {
 						"type": "internal",
-						"path": "bestiary/ToA/Ch3_Intro.jpg"
+						"path": "bestiary/ToA/King of Feathers.jpg"
 					}
 				}
 			],
@@ -719,14 +725,14 @@
 			]
 		},
 		{
-			"name": "Mwaxanare",
+			"name": "Mwaxanaré",
 			"source": "ToA",
 			"images": [
 				{
 					"type": "image",
 					"href": {
 						"type": "internal",
-						"path": "bestiary/ToA/Princess Mwaxanare and Prince Na.jpg"
+						"path": "bestiary/ToA/Mwaxanaré.jpg"
 					}
 				}
 			],
@@ -924,7 +930,7 @@
 					"type": "image",
 					"href": {
 						"type": "internal",
-						"path": "bestiary/ToA/Su-Monster.jpg"
+						"path": "bestiary/ToA/Su-monster.jpg"
 					}
 				}
 			],
@@ -942,15 +948,6 @@
 		{
 			"name": "Tabaxi Hunter",
 			"source": "ToA",
-			"images": [
-				{
-					"type": "image",
-					"href": {
-						"type": "internal",
-						"path": "bestiary/ToA/Tabaxi Minstrel.jpg"
-					}
-				}
-			],
 			"entries": [
 				{
 					"type": "entries",
@@ -1087,7 +1084,7 @@
 							"name": "Tyrannosaurus Zombie",
 							"type": "entries",
 							"entries": [
-								"A tyrannosaurus zombie has a gullet full of smaller zombies, which it can disgorge. These zombies aren't under the tyrannosaurus zombie's contjrol."
+								"A tyrannosaurus zombie has a gullet full of smaller zombies, which it can disgorge. These zombies aren't under the tyrannosaurus zombie's control."
 							]
 						}
 					]
@@ -1243,7 +1240,7 @@
 					"type": "image",
 					"href": {
 						"type": "internal",
-						"path": "bestiary/ToA/Yellow Musk Creeper and Zombie.jpg"
+						"path": "bestiary/ToA/Yellow Musk Creeper.png"
 					}
 				}
 			],
@@ -1278,7 +1275,7 @@
 					"type": "image",
 					"href": {
 						"type": "internal",
-						"path": "bestiary/ToA/Yellow Musk Creeper and Zombie.jpg"
+						"path": "bestiary/ToA/Yellow Musk Zombie.png"
 					}
 				}
 			],

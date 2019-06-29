@@ -21,7 +21,7 @@ function multisourceLoad (jsonDir, jsonListName, pPageInit, dataFn, pOptional) {
 
 let loadedSources;
 function _onIndexLoad (src2UrlMap, jsonDir, dataProp, pPageInit, addFn, pOptional) {
-	return new Promise(resolve => {
+	return new Promise(async resolve => {
 		// track loaded sources
 		loadedSources = {};
 		Object.keys(src2UrlMap).forEach(src => loadedSources[src] = {url: jsonDir + src2UrlMap[src], loaded: false});
@@ -32,7 +32,7 @@ function _onIndexLoad (src2UrlMap, jsonDir, dataProp, pPageInit, addFn, pOptiona
 		const hashSourceRaw = History.getHashSource();
 		const hashSource = hashSourceRaw ? Object.keys(src2UrlMap).find(it => it.toLowerCase() === hashSourceRaw.toLowerCase()) : null;
 		const userSel = [...new Set(
-			(FilterBox.getSelectedSources() || []).concat(ListUtil.getSelectedSources() || []).concat(hashSource ? [hashSource] : [])
+			(await FilterBox.pGetStoredActiveSources() || []).concat(await ListUtil.pGetSelectedSources() || []).concat(hashSource ? [hashSource] : [])
 		)];
 
 		const allSources = [];
@@ -82,7 +82,7 @@ function _onIndexLoad (src2UrlMap, jsonDir, dataProp, pPageInit, addFn, pOptiona
 
 						const finalise = () => new Promise(resolve => {
 							RollerUtil.addListRollButton();
-							addListShowHide();
+							ListUtil.addListShowHide();
 
 							History.init(true);
 							resolve();
@@ -91,8 +91,7 @@ function _onIndexLoad (src2UrlMap, jsonDir, dataProp, pPageInit, addFn, pOptiona
 						const p = pOptional ? pOptional().then(finalise) : finalise;
 						p.then(resolve);
 					});
-				},
-				(src) => ({src: src, url: jsonDir + src2UrlMap[src]})
+				}
 			);
 		} else {
 			initPromise.then(() => {
@@ -115,5 +114,5 @@ function loadSource (jsonListName, dataFn) {
 }
 
 function onFilterChangeMulti (multiList) {
-	FilterBox.nextIfHidden(multiList);
+	FilterBox.selectFirstVisible(multiList);
 }

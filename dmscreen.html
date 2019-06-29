@@ -10,23 +10,31 @@
 
 	<title>DM Screen - 5etools</title>
 
+	<link rel="manifest" href="manifest.json">
+
 	<link rel="stylesheet" href="css/bootstrap.css">
 	<link rel="stylesheet" href="css/jquery-ui.css">
 	<link rel="stylesheet" href="css/jquery-ui-slider-pips.css">
 	<link rel="stylesheet" href="css/style.css">
 	<link rel="icon" href="favicon.png">
 
-	<script type="text/javascript" src="lib/js-cookie.js"></script>
 	<script type="text/javascript" src="js/styleswitch.js"></script>
 	<script type="text/javascript" src="js/navigation.js"></script>
 
 	<style>
-		body.dm-screen-fullscreen header {
-			display: none;
+		body.dm-screen-locked .panel-control-bar,
+		body.dm-screen-locked .content-tab-remove,
+		body.dm-screen-locked .panel-history-control-remove-wrapper,
+		body.dm-screen-locked .panel-history-control-middle {
+			display: none !important;
 		}
 
-		body.dm-screen-fullscreen nav {
-			display: none;
+		label {
+			margin-bottom: 0;
+		}
+
+		input[type=checkbox] {
+			margin: 0;
 		}
 
 		.dm-screen {
@@ -67,8 +75,9 @@
 
 		.panel-control-bar {
 			position: absolute;
-			right: 0;
+			right: 11px;
 			border-bottom-left-radius: 5px;
+			border-bottom-right-radius: 5px;
 			padding-left: 3px;
 			opacity: 0.2;
 			z-index: 56;
@@ -98,9 +107,15 @@
 			font-family: 'Andada', serif;
 			font-variant: small-caps;
 			color: white;
-			cursor: default;
 			user-select: none;
 			background: #808080a0;
+			cursor: pointer;
+		}
+
+		.panel-control-title--bumped {
+			top: 20px;
+			border-top-right-radius: 5px;
+			opacity: 1;
 		}
 
 		.panel-control-addtab {
@@ -151,7 +166,6 @@
 			position: relative;
 			width: 100%;
 			height: 100%;
-			overflow-y: auto;
 			padding-right: -9px;
 			box-sizing: content-box;
 			box-shadow: inset 0 0 10px 0 #909090b0;
@@ -167,7 +181,7 @@
 			margin-bottom: 0;
 		}
 
-		.dm-sidemenu-history-item .panel-content-wrapper.panel-content-wrapper-tabs {
+		.sidemenu__history-item .panel-content-wrapper.panel-content-wrapper-tabs {
 			height: 100%;
 			margin-bottom: 0;
 		}
@@ -200,6 +214,13 @@
 			border-top-right-radius: 0;
 		}
 
+		.content-tab-title {
+			max-width: 80px;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			display: block;
+		}
+
 		.content-tab-remove {
 			top: 2px;
 			margin-left: 3px;
@@ -221,6 +242,16 @@
 		.panel-content-wrapper-inner {
 			height: 100%;
 			width: 100%;
+			overflow-y: auto;
+			overflow-x: hidden;
+		}
+
+		.panel-content-wrapper-inner::-webkit-scrollbar-track {
+			background: #f0f0f0;
+		}
+
+		.night-mode .panel-content-wrapper-inner::-webkit-scrollbar-track {
+			background: #222222;
 		}
 
 		.panel-control {
@@ -295,30 +326,6 @@
 			border-radius: 50%;
 		}
 
-		.panel-addmenu {
-			position: fixed;
-			z-index: 1000;
-			width: 100vw;
-			height: 100vh;
-			display: flex;
-			justify-content: center;
-			align-items: center;
-		}
-
-		.panel-addmenu-inner {
-			position: relative;
-			z-index: 10001;
-			top: initial;
-			left: initial;
-			margin: 60px auto;
-			padding: 5px 10px;
-			height: 400px;
-			float: none;
-			display: flex;
-			flex-direction: column;
-			min-width: 600px;
-		}
-
 		.panel-addmenu-bar {
 			display: flex;
 			flex-shrink: 0;
@@ -339,102 +346,12 @@
 			height: 100%;
 		}
 
-		.panel-tab-list-wrapper {
-			position: relative;
-			height: 100%;
-			display: flex;
-			flex-direction: column;
-		}
-
 		.underline-tabs {
 			margin-top: -1px;
 		}
 
 		.list {
 			padding: 3px;
-		}
-
-		.panel-tab-results {
-			padding: 3px;
-			transform: translateZ(0);
-			position: relative;
-			height: 100%;
-			overflow-y: auto;
-			overflow-x: hidden;
-			font-size: 0.8em;
-		}
-
-		.panel-tab-results-row {
-			cursor: pointer;
-			font-weight: bold;
-			padding: 1px 2px;
-			display: flex;
-			justify-content: space-between;
-		}
-
-		.panel-tab-message {
-			font-size: 1.4rem;
-			width: 100%;
-			height: 100%;
-			display: flex;
-			justify-content: center;
-			align-items: center;
-			font-family: 'Andada', serif;
-			font-variant: small-caps;
-			font-weight: 500;
-		}
-
-		.panel-tab-controls {
-			width: 100%;
-			display: flex;
-			margin-top: -1px;
-			z-index: 10002;
-		}
-
-		.panel-tab-cat {
-			border-radius: 0;
-			max-width: 180px;
-			flex-shrink: 0;
-			border-right: 0;
-		}
-
-		input.panel-tab-search {
-			border-radius: 0;
-			width: 100%;
-		}
-
-		.panel-tab-search-sub-wrp {
-			flex-shrink: 0;
-			padding: 5px;
-			margin-bottom: 0;
-			font-weight: normal;
-			border: 1px solid #ccc;
-			height: 34px;
-			border-left: 0;
-			display: flex;
-		}
-
-		.panel-tab-search-sub-lbl {
-			display: flex;
-			align-items: center;
-			height: 100%;
-		}
-
-		.panel-tab-search-sub-lbl:not(:last-child) {
-			margin-right: 7px;
-		}
-
-		input.panel-tab-search-sub-ipt[type=radio] {
-			display: inline-block;
-			margin: 0 3px 0 0;
-		}
-
-		.panel-tab-search-sub-ipt-custom {
-			max-width: 50px;
-			border-radius: 0;
-			margin-right: -1px;
-			border-right-color: #e0e0e0;
-			border-left-color: #e0e0e0;
 		}
 
 		.panel-tab-list-item {
@@ -536,130 +453,29 @@
 			border-radius: 0;
 		}
 
-		.tab-body-row {
-			margin-bottom: 5px;
-			display: flex;
-			justify-content: space-between;
-			align-items: center;
-		}
-
-		.tab-body-row:first-of-type {
-			margin-top: -1px;
-		}
-
-		.tab-body-row-sep {
-			height: 1px;
-			width: calc(100% - 12px);
-			margin: 2px 2px 7px;
-		}
-
-		.underline-tabs .tab-body-row:first-of-type {
+		.underline-tabs .ui-modal__row:first-of-type {
 			margin-top: 4px;
 		}
 
-		.tab-body-row > * {
-			margin-right: 5px;
-		}
-
-		.tab-body-row > *:last-child {
-			margin-right: 0;
-		}
-
-		.dm-sidemenu {
-			z-index: 60;
-			position: fixed;
-			top: 0;
-			bottom: 0;
-			left: -260px;
-			width: 250px;
-			box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
-			transition: left 0.1s;
-			cursor: default;
-			display: flex;
-			flex-direction: column;
-			padding: 3px;
-		}
-
-		.dm-sidemenu-toggle {
-			position: absolute;
+		.sidemenu__toggle {
 			top: -35px;
-			left: -7px;
-			width: 32px;
-			height: 32px;
-			box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
-			cursor: pointer;
-			z-index: 60;
-			transition: left 0.1s;
-			display: flex;
-			flex-direction: column;
-			justify-content: space-around;
-			padding: 3px 4px;
 		}
 
-		body.dm-screen-fullscreen .dm-sidemenu-toggle {
+		body.is-fullscreen .sidemenu__toggle {
 			top: 12px;
+			left: -31px;
 		}
 
-		.dm-sidemenu-hotzone {
-			position: fixed;
-			top: 0;
-			left: 0;
-			bottom: 0;
-			width: 1px;
+		body.is-fullscreen .sidemenu__hotzone {
+			width: 3px;
 		}
 
-		.dm-sidemenu-burger {
-			height: 3px;
-			box-shadow: inset 0 0 1px 0 #888;
-		}
-
-		.dm-sidemenu-toggle:hover .dm-sidemenu {
-			left: 0;
-			transition: left 0.1s;
-		}
-
-		.dm-sidemenu-row {
-			display: flex;
-			justify-content: space-between;
-			align-items: center;
-			margin-bottom: 5px;
-		}
-
-		.dm-sidemenu-row-alt {
-			display: flex;
-			justify-content: space-around;
-			align-items: center;
-			margin-bottom: 5px;
-		}
-
-		.dm-sidemenu-row-divider {
-			height: 1px;
-			width: calc(100% - 12px);
-			margin: 7px 2px;
-		}
-
-		.dm-sidemenu-row-label {
-			min-width: 46px;
-			flex-shrink: 0;
-		}
-
-		.dm-sidemenu-row-label--cb-label {
-			display: flex;
-			margin-bottom: 0;
-			justify-content: center;
-			width: 100%;
-		}
-
-		input[type=checkbox].dm-sidemenu-row-label-cb {
-			margin-left: 7px;
-		}
-
-		.dm-sidemenu-history {
+		.sidemenu__history {
 			overflow-y: auto;
 			padding: 4px;
 		}
 
-		.dm-sidemenu-history-item {
+		.sidemenu__history-item {
 			position: relative;
 			overflow: hidden;
 			height: 80px;
@@ -670,12 +486,12 @@
 			box-shadow: 0 0 5px 0 #000000a0;
 		}
 
-		.dm-sidemenu-history-item .panel-content-wrapper {
+		.sidemenu__history-item .panel-content-wrapper {
 			overflow-y: hidden;
 			user-select: none;
 		}
 
-		.dm-sidemenu-history-item-cover {
+		.sidemenu__history-item-cover {
 			position: absolute;
 			top: 0;
 			right: 0;
@@ -694,7 +510,7 @@
 			border-bottom-left-radius: 5px;
 		}
 
-		.dm-sidemenu-history-item-cover:hover .panel-history-control-remove-wrapper {
+		.sidemenu__history-item-cover:hover .panel-history-control-remove-wrapper {
 			opacity: 1;
 			transition: opacity 0.1s;
 		}
@@ -724,7 +540,7 @@
 			transition: opacity 0.1s;
 		}
 
-		.dm-sidemenu-history-item-cover:hover .panel-history-control-middle {
+		.sidemenu__history-item-cover:hover .panel-history-control-middle {
 			opacity: 1;
 			transition: opacity 0.1s;
 		}
@@ -737,6 +553,12 @@
 			height: 100%;
 		}
 
+		.dm-init-wrp-header-outer {
+			overflow-x: auto;
+			display: flex;
+			flex-direction: column;
+		}
+
 		.dm-init-wrp-header {
 			flex: none;
 			margin-bottom: 5px;
@@ -744,16 +566,28 @@
 			justify-content: space-between;
 			font-variant: small-caps;
 			border-bottom: 1px solid #ccc;
+			min-width: min-content;
 		}
 
 		.dm-init-header {
-			padding: 5px 3px;
+			padding: 5px 0;
 			width: 100%;
 			text-align: center;
 		}
 
+		.dm-init-header--input {
+			width: 40px;
+			margin-right: 3px;
+		}
+
+		.dm-init-header--input-wide {
+			width: 83px;
+			margin-right: 3px;
+		}
+
 		.dm-init-wrp-entries {
 			overflow-y: auto;
+			min-width: min-content;
 		}
 
 		.dm-init-row {
@@ -766,10 +600,16 @@
 		.dm-init-row-rhs {
 			display: flex;
 			justify-content: space-between;
+			position: relative;
 		}
 
 		.dm-init-row-lhs {
 			width: 100%;
+			min-width: 115px;
+		}
+
+		.dm-init-row-mid {
+			display: flex;
 		}
 
 		.dm-init-row-btn {
@@ -777,8 +617,13 @@
 			padding: 1px 3px;
 		}
 
-		.dm-init-row-btn-flag {
+		.dm-init-row-btn-flag,
+		.dm_init__btn_eye {
 			margin-right: 3px;
+		}
+
+		.dm_init__number {
+			margin: 0 3px;
 		}
 
 		.dm-init-row .init-wrp-creature {
@@ -797,18 +642,26 @@
 			font-size: 9px;
 		}
 
-		.dm-init-row input {
+		.dm-init-row .init-wrp-creature-link {
+			display: flex;
+			height: 20px;
+			overflow: hidden;
+		}
+
+		.dm-init-row-input {
 			padding: 5px 3px;
 			border-radius: 0;
 			margin-right: 3px;
 		}
 
-		.dm-init-row-rhs .dm-init-header,
-		.dm-init-row-rhs input {
+		.dm-init-name {
+			min-width: 50px;
+		}
+
+		.dm_init__ipt--rhs {
 			width: 40px;
 		}
 
-		input.panel-tab-search-sub-ipt-custom[type=number]::-webkit-inner-spin-button,
 		.dm-init-row-rhs input[type=number]::-webkit-inner-spin-button,
 		.dm-init-row-rhs input[type=number]::-webkit-outer-spin-button {
 			-webkit-appearance: none;
@@ -817,16 +670,25 @@
 
 		.dm-init-wrp-controls {
 			flex: none;
-			height: 40px;
+			height: 29px;
 			padding: 3px;
 			border-top: 1px solid #ccc;
 			justify-content: space-evenly;
 			display: flex;
 		}
 
+		.dm_init__rounds {
+			width: 35px;
+			height: 22px;
+			display: inline-block;
+			border-radius: 0;
+			padding: 0;
+			text-align: right;
+		}
+
 		.dm-init-modal-wrp-rows {
 			min-width: 400px;
-			padding: 7px 0;
+			padding: 7px;
 		}
 
 		.btn-dm-init-cond {
@@ -835,25 +697,91 @@
 			outline: none !important;
 		}
 
-		.dm-init-wrp-conds {
+		.dm_init__hp {
+			width: 42px;
+		}
+
+		.dm_init__hp--current {
+			margin-right: 0;
+			border-right: 0;
+		}
+
+		.dm_init__hp--max {
+			border-left: 0;
+		}
+
+		.dm_init__hp_slash {
+			position: absolute;
+			left: 40px;
+			pointer-events: none;
+			top: 0;
+			bottom: 0;
 			display: flex;
+			align-items: center;
+			color: #888;
 		}
 
-		.dm-init-cond {
-			width: 7px;
+		.dm_init__stats_rows {
+			width: 100%;
+			margin-right: 0;
+		}
+
+		.dm_init__stats_row {
+			width: 100%;
+			display: flex;
+			align-items: center;
+			margin-bottom: 2px;
+		}
+
+		.dm_init__stats_up_down {
+			display: flex;
+			justify-content: center;
+		}
+
+		.dm_init__stats_down {
+			left: 1px;
+			top: 2px;
+		}
+
+		.dm_init__stats_add {
+			right: -1px;
+		}
+
+		.dm_init__stats_row--item:only-child .dm_init__stats_up_down {
+			display: none;
+		}
+		.dm_init__stats_up_down--spacer {
+			display: none;
+		}
+		.dm_init__stats_row--item:only-child .dm_init__stats_up_down--spacer {
+			display: block;
+		}
+
+		.dm_init__stats_row--item:only-child .dm_init__stats_del {
+			display: none;
+		}
+
+		.dm_init__stat_head {
+			padding: 5px 0;
+			width: 40px;
+			height: 20px;
 			margin-right: 3px;
-			display: grid;
-			grid-gap: 3px;
-			cursor: pointer;
+			text-align: center;
+			overflow: hidden;
 		}
 
-		.dm-init-cond:hover {
-			box-shadow: 0 0 5px 0 rgba(240, 173, 78, 1);
+		.dm_init__stat_ipt {
+			padding: 5px 3px;
+			border-radius: 0;
+			margin-right: 3px;
+			width: 40px;
 		}
 
-		.dm-init-cond-bar {
-			width: 7px;
-			height: 100%;
+		/* player view */
+		textarea.dm_init__pl_textarea {
+			resize: none;
+			width: 100%;
+			height: 240px;
 		}
 
 		.dm-unitconv {
@@ -886,58 +814,141 @@
 			border-color: #e92b31;
 		}
 
-		@media (max-width: 767px) {
-			.panel-addmenu-inner {
-				min-width: 0;
-			}
+		.dm_money {
+			width: 100%;
+			height: 100%;
+			padding-top: 22px;
 		}
 
-		@media (min-width: 768px) {
-			.panel-addmenu-inner {
-				max-width: 750px;
-			}
+		.dm_money__rows {
+			overflow-y: scroll;
+		}
+
+		.dm_money__ctrl {
+			margin-top: 6px;
+			padding-top: 3px;
+			border-top: 1px solid #ccc;
+			flex-shrink: 0;
+		}
+
+		.dm_money__ctrl__lhs {
+			display: flex;
+			flex-direction: column;
+			padding: 3px;
+		}
+
+		.dm_money__ctrl__lhs > * {
+			margin-bottom: 3px;
+		}
+
+		.dm_money__ctrl__lhs > *:last-child {
+			margin-bottom: 0;
+		}
+
+		.dm_money__ctrl__rhs {
+			display: flex;
+			flex-direction: column;
+			padding: 3px;
+		}
+
+		.dm_money__ctrl__rhs > * {
+			margin-bottom: 3px;
+		}
+
+		.dm_money__ctrl__rhs > *:last-child {
+			margin-bottom: 0;
+		}
+
+		.dm_money__out,
+		.dm_money__out[disabled] {
+			text-align: right;
+			background: #0000;
+		}
+
+		.dm_money__row {
+			width: 100%;
+			display: flex;
+			margin-bottom: 3px;
+		}
+
+		.dm_money__row:last-child {
+			margin-bottom: 0;
+		}
+
+		.dm_money__row > * {
+			margin-right: 3px;
+		}
+
+		.dm_money__row > *:last-child {
+			margin-right: 0;
 		}
 
 		@media (max-width: 991px) {
 			.viewport-wrapper {
 				bottom: 0;
+				height: 100vh;
 			}
 		}
 
-		@media (min-width: 992px) {
-			.panel-addmenu-inner {
-				max-width: 970px;
-			}
+		.btn-text-insert {
+			display: inline-block;
+			font-size: 12px;
+			line-height: 14px;
+			padding: 0 2px;
+			margin: -1px 1px;
 		}
 
-		@media (min-width: 1200px) {
-			.panel-addmenu-inner {
-				max-width: 1170px;
-			}
+		.dms__tab_hidden {
+			display: none !important;
+		}
+
+		.panel-content-wrapper table.stats.stats-book--hover {
+			box-shadow: none;
+		}
+
+		.dm-book__wrp-content {
+			overflow-y: auto;
+			overflow-x: hidden;
+		}
+
+		.dm-book__wrp-controls {
+			padding: 2px 2px 1px 21px;
+			border-top: 1px solid #ccc;
+			justify-content: flex-end;
+		}
+
+		.dm-book__controls-title {
+			height: 20px;
+			padding: 0 3px;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+			width: 50%;
+			flex-grow: 0;
 		}
 	</style>
 </head>
 
 <body>
 <div class="viewport-wrapper">
-	<header class="hidden-xs hidden-sm">
+	<header class="hidden-xs hidden-sm page__header">
 		<div class="container">
 
-			<h1>DM Screen</h1>
-			<p>Build a personalised DM screen</p>
+			<h1 class="page__title">DM Screen</h1>
+			<p class="page__subtitle">Build a personalised DM screen</p>
 		</div>
 	</header>
-	<nav class="container" id="navigation">
-		<ul class="nav nav-pills" id="navbar">
+	<nav class="container page__nav" id="navigation">
+		<ul class="nav page__nav-inner" id="navbar">
 		</ul>
 	</nav>
 	<div class="dm-screen">
-		<div class="dm-sidemenu-toggle">
-			<div class="dm-sidemenu-hotzone"></div>
-			<div class="dm-sidemenu-burger"></div>
-			<div class="dm-sidemenu-burger"></div>
-			<div class="dm-sidemenu-burger"></div>
-			<div class="dm-sidemenu"></div>
+		<div class="sidemenu__toggle">
+			<div class="sidemenu__hotzone"></div>
+			<div class="sidemenu__burger"></div>
+			<div class="sidemenu__burger"></div>
+			<div class="sidemenu__burger"></div>
+			<div class="sidemenu"></div>
 		</div>
 	</div>
 </div>
@@ -947,14 +958,23 @@
 <script type="text/javascript" src="lib/jquery.panzoom.js"></script>
 <script type="text/javascript" src="lib/jquery-ui.js"></script>
 <script type="text/javascript" src="lib/jquery-ui-slider-pip.js"></script>
+<script type="text/javascript" src="lib/lzma.js"></script>
 <script type="text/javascript" src="js/utils.js"></script>
+<script type="text/javascript" src="js/utils-ui.js"></script>
+<script type="text/javascript" src="js/utils-p2p.js"></script>
+<script type="text/javascript" src="lib/localforage.js"></script>
 <script type="text/javascript" src="js/omnidexer.js"></script>
 <script type="text/javascript" src="js/omnisearch.js"></script>
-<script type="text/javascript" src="js/entryrender.js"></script>
+<script type="text/javascript" src="js/render.js"></script>
 <script type="text/javascript" src="js/scalecreature.js"></script>
+<script type="text/javascript" src="js/initiativetrackerutils.js"></script>
 <script type="text/javascript" src="js/dmscreen.js"></script>
+<script type="text/javascript" src="js/dmscreen-initiativetracker.js"></script>
+<script type="text/javascript" src="js/dmscreen-playerinitiativetracker.js"></script>
+<script type="text/javascript" src="js/dmscreen-moneyconverter.js"></script>
+<script type="text/javascript" src="js/history.js"></script>
 <script type="text/javascript" src="lib/list.js"></script>
-<script type="text/javascript" src="lib/bootstrap.js"></script>
+<script type="text/javascript" src="lib/bootstrap-tooltip.js"></script>
 <script type="text/javascript" src="lib/elasticlunr.js"></script>
 </body>
 

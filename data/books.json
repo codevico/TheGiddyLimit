@@ -3,6 +3,7 @@
 		{
 			"name": "Player's Handbook",
 			"id": "PHB",
+			"source": "PHB",
 			"author": "Wizards RPG Team",
 			"published": "2014-08-19",
 			"image": "assets/misc/covers/book-phb.png",
@@ -181,6 +182,7 @@
 		{
 			"name": "Monster Manual",
 			"id": "MM",
+			"source": "MM",
 			"author": "Wizards RPG Team",
 			"published": "2014-09-30",
 			"image": "assets/misc/covers/book-mm.png",
@@ -193,12 +195,31 @@
 						"Statistics",
 						"Legendary Creatures"
 					]
+				},
+				{
+					"name": "Miscellaneous Creatures",
+					"ordinal": {
+						"type": "appendix",
+						"identifier": "A"
+					}
+				},
+				{
+					"name": "Nonplayer Characters",
+					"headers": [
+						"Customizing NPCs",
+						"NPC Descriptions"
+					],
+					"ordinal": {
+						"type": "appendix",
+						"identifier": "B"
+					}
 				}
 			]
 		},
 		{
 			"name": "Dungeon Master's Guide",
 			"id": "DMG",
+			"source": "DMG",
 			"author": "Wizards RPG Team",
 			"published": "2014-12-09",
 			"image": "assets/misc/covers/book-dmg.png",
@@ -389,6 +410,7 @@
 		{
 			"name": "Sword Coast Adventurer's Guide",
 			"id": "SCAG",
+			"source": "SCAG",
 			"author": "Wizards RPG Team",
 			"published": "2015-11-03",
 			"image": "assets/misc/covers/book-scag.png",
@@ -495,6 +517,7 @@
 		{
 			"name": "Volo's Guide to Monsters",
 			"id": "VGM",
+			"source": "VGM",
 			"author": "Wizards RPG Team",
 			"published": "2016-11-15",
 			"image": "assets/misc/covers/book-vgm.png",
@@ -522,13 +545,17 @@
 					"ordinal": {
 						"type": "chapter",
 						"identifier": 2
-					}
+					},
+					"headers": [
+						"Height and Weight"
+					]
 				}
 			]
 		},
 		{
 			"name": "Xanathar's Guide to Everything",
 			"id": "XGE",
+			"source": "XGE",
 			"author": "Wizards RPG Team",
 			"published": "2017-11-21",
 			"image": "assets/misc/covers/book-xge.png",
@@ -604,6 +631,7 @@
 		{
 			"name": "Mordenkainen's Tome of Foes",
 			"id": "MTF",
+			"source": "MTF",
 			"author": "Wizards RPG Team",
 			"published": "2018-05-29",
 			"image": "assets/misc/covers/book-mtf.png",
@@ -696,6 +724,7 @@
 		{
 			"name": "Adventurers League",
 			"id": "AL",
+			"source": "AL",
 			"contents": [
 				{
 					"name": "Faction Guide",
@@ -717,9 +746,229 @@
 		{
 			"name": "Dungeon Master's Screen",
 			"id": "Screen",
+			"source": "Screen",
 			"contents": [
 				{
 					"name": "Tables"
+				}
+			]
+		},
+		{
+			"name": "Guildmasters' Guide to Ravnica",
+			"id": "GGR",
+			"source": "GGR",
+			"contents": [
+				{
+					"name": "Welcome to Ravnica",
+					"headers": [
+						"City of Guilds",
+						"History of Ravnica",
+						"Life in the Big City"
+					]
+				},
+				{
+					"name": "Character Creation",
+					"ordinal": {
+						"type": "chapter",
+						"identifier": 1
+					},
+					"headers": [
+						"Choosing a Guild",
+						"Races",
+						"Classes by Guild",
+						"Subclass Options"
+					]
+				},
+				{
+					"name": "Guilds of Ravnica",
+					"ordinal": {
+						"type": "chapter",
+						"identifier": 2
+					},
+					"headers": [
+						"Azorius Senate",
+						"Boros Legion",
+						"House Dimir",
+						"Golgari Swarm",
+						"Gruul Clans",
+						"Izzet League",
+						"Orzhov Syndicate",
+						"Cult of Rakdos",
+						"Selesnya Conclave",
+						"Simic Combine"
+					]
+				},
+				{
+					"name": "The Tenth District",
+					"ordinal": {
+						"type": "chapter",
+						"identifier": 3
+					},
+					"headers": [
+						"The Six Precincts",
+						"Major Trade Ways",
+						"Beneath the Streets",
+						"Precinct One",
+						"Precinct Two",
+						"Precinct Three",
+						"Precinct Four",
+						"Precinct Five",
+						"Precinct Six"
+					]
+				},
+				{
+					"name": "Creating Adventures",
+					"ordinal": {
+						"type": "chapter",
+						"identifier": 4
+					},
+					"headers": [
+						"Guild-Based Adventures",
+						"Choosing a Guild",
+						"Involving the Characters",
+						"Complications",
+						"Azorius Senate",
+						"Boros Legion",
+						"House Dimir",
+						"Golgari Swarm",
+						"Gruul Clans",
+						"Izzet League",
+						"Orzhov Syndicate",
+						"Cult of Rakdos",
+						"Selesnya Conclave",
+						"Simic Combine"
+					]
+				},
+				{
+					"name": "Treasures",
+					"ordinal": {
+						"type": "chapter",
+						"identifier": 5
+					},
+					"headers": [
+						"Coins in Treasure",
+						"Guild Charms",
+						"Magic Items"
+					]
+				},
+				{
+					"name": "Friends and Foes",
+					"ordinal": {
+						"type": "chapter",
+						"identifier": 6
+					},
+					"headers": [
+						"Creatures by Guild"
+					]
+				},
+				{
+					"name": "NPCs by Guild",
+					"headers": [
+						"Azorius NPCs",
+						"Boros NPCs",
+						"Dimir NPCs",
+						"Golgari NPCs",
+						"Gruul NPCs",
+						"Izzet NPCs",
+						"Orzhov NPCs",
+						"Rakdos NPCs",
+						"Selesnya NPCs",
+						"Simic NPCs"
+					]
+				}
+			]
+		},
+		{
+			"name": "Acquisitions Incorporated",
+			"id": "AI",
+			"source": "AI",
+			"contents": [
+				{
+					"name": "Acquisitions Incorporated",
+					"ordinal": {
+						"type": "chapter",
+						"identifier": 1
+					},
+					"headers": [
+						"It's Just Business",
+						"A Corporate Prospectus",
+						"Fast Franchise Generator"
+					]
+				},
+				{
+					"name": "Growing Your Franchise",
+					"ordinal": {
+						"type": "chapter",
+						"identifier": 2
+					},
+					"headers": [
+						"Franchise Advancement",
+						"Company Positions",
+						"Franchise Tasks and Downtime"
+					]
+				},
+				{
+					"name": "Player Options",
+					"ordinal": {
+						"type": "chapter",
+						"identifier": 3
+					},
+					"headers": [
+						"Backgrounds",
+						"Playing with Class",
+						"New Race: Verdan",
+						"New Spells",
+						"Factions and Rivals"
+					]
+				},
+				{
+					"name": "Acq Inc",
+					"ordinal": {
+						"type": "appendix",
+						"identifier": "A"
+					},
+					"headers": [
+						"Omin Dran",
+						"Jim Darkmagic",
+						"Viari",
+						"Môrgæn",
+						"Flabbergast",
+						"The \"C\" Team",
+						"The \"B\" Team",
+						"House Dran"
+					]
+				},
+				{
+					"name": "Monsters",
+					"ordinal": {
+						"type": "appendix",
+						"identifier": "B"
+					},
+					"headers": [
+						"Iconic Faction Features",
+						"Iconic Franchise Features"
+					]
+				},
+				{
+					"name": "Vehicles",
+					"ordinal": {
+						"type": "appendix",
+						"identifier": "C"
+					}
+				},
+				{
+					"name": "Orrery and Components",
+					"ordinal": {
+						"type": "appendix",
+						"identifier": "D"
+					}
+				},
+				{
+					"name": "Trinkets",
+					"ordinal": {
+						"type": "appendix",
+						"identifier": "E"
+					}
 				}
 			]
 		}

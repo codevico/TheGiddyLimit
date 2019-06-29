@@ -23,11 +23,12 @@
 					"items": [
 						"Style tags; {@bold some text to be bolded} (alternative {@b shorthand}), {@italic some text to be italicised} (alternative {@i shorthand}), {@strike some text to strike-through}, (alternative {@s shorthand})",
 						"Additionally, {@note note tags}, used for adding errata or Twitter \"designer footnotes.\"",
-						"Dice roller tags; {@dice 1d2-2+2d3+5} for regular dice rolls, with extended {@dice 1d20+2|display text} and {@dice 1d20+2|display text|rolled by name}, and a special 'hit' version which assumes a d20 is to be rolled {@hit +7} (and rolls advantage on shift-click). There's also {@damage 1d12+3} which will roll critical hits on shift-click, and {@d20 -4} which will roll advantage on shift-click, although @hit tags are preferred where appropriate. Spells can have scaling-dice tags, (damage of 2d6 or 3d6 at level 1, add an extra {@scaledice 2d6;3d6|2-9|1d6} for each level beyond 2nd), for when a spell effect scales at higher levels.",
+						"Dice roller tags; {@dice 1d2-2+2d3+5} for regular dice rolls ({@dice 1d6;2d6} for multiple options; {@dice 1d6 + #$prompt_number:min=1,title=Enter a Number!,default=123$#} for input prompts), with extended {@dice 1d20+2|display text} and {@dice 1d20+2|display text|rolled by name}, and a special 'hit' version which assumes a d20 is to be rolled {@hit +7} (and rolls advantage on shift-click). There's also {@damage 1d12+3} which will roll critical hits on shift-click, and {@d20 -4} which will roll advantage on shift-click, although @hit tags are preferred where appropriate. Spells can have scaling-dice tags, (damage of 2d6 or 3d6 at level 1, add an extra {@scaledice 2d6;3d6|2-9|1d6} for each level beyond 2nd), for when a spell effect scales at higher levels.",
 						"Chance tags; similar to dice roller tags, but output success/failure. Similar syntax as dice tags: {@chance 50}, {@chance 50|display text}, and {@chance 50|display text|rolled by name}.",
 						"Recharge tags; output success/failure for ability recharge. {@recharge} in an ability title for '(Recharge 6)', {@recharge 4} for '(Recharge 4-6)'.",
-						"Skill and action tags; {@skill Athletics}/{@skill Perception} and {@action Dash}/{@action Hide} (case-sensitive) which provide tooltips on hover.",
-						"The homebrew tag; Can show {@homebrew changes|modifications}, {@homebrew additions} or {@homebrew |removals}.",
+						"Skill, action, and sense tags; {@skill Athletics}/{@skill Perception} (case sensitive), {@action Dash}/{@action Hide} (case sensitive), and {@sense Truesight}/{@sense darkvision} (case insensitive) which provide tooltips on hover.",
+						"Footnote tags; allows a footnote to be embedded {@footnote directly in text|This is primarily for homebrew purposes, as the official texts (so far) avoid using footnotes}, with {@footnote optional reference information|This is the footnote. References are free text.|Footnote 1, page 20}.",
+						"The homebrew tag; can show {@homebrew changes|modifications}, {@homebrew additions} or {@homebrew |removals}.",
 						"Content tags:",
 						{
 							"type": "list",
@@ -51,6 +52,7 @@
 								"Hazards: {@hazard brown mold} assumes DMG by default, {@hazard russet mold|vgm} can have sources added with a pipe, {@hazard russet mold|vgm|and optional link text added with another pipe}.",
 								"Deities: {@deity Gond} assumes PHB Forgotten Realms pantheon by default, {@deity Gruumsh|nonhuman} can have pantheons added with a pipe, {@deity Ioun|dawn war|dmg} can have sources added with another pipe, {@deity Ioun|dawn war|dmg|and optional link text added with another pipe}.",
 								"Variant rules: {@variantrule Diagonals} assumes DMG by default, {@variantrule Multiclassing|phb} can have sources added with a pipe, {@variantrule Multiclassing|phb|and optional link text added with another pipe}.",
+								"Ships: {@ship Galley} assumes GoS by default, {@ship Galley|UAOfShipsAndSea} can have sources added with a pipe, {@ship Galley|GoS|and optional link text added with another pipe}.",
 								"Tables: {@table 25 gp Art Objects} assumes DMG by default, {@table Adventuring Gear|phb} can have sources added with a pipe, {@table Adventuring Gear|phb|and optional link text added with another pipe}."
 							]
 						},
@@ -58,23 +60,25 @@
 							"type": "inset",
 							"name": "Filter Tag",
 							"entries": [
-								"Another tag that appears occasionally in the data is the @filter tag. This tag can be tricky to use, and generally relies on knowledge of the internals of each page. As such, use with caution, and if you're not sure about something, don't be afraid to drop by our {@link Discord|https://discord.gg/v3AXzcW} and ask questions.",
+								"Another tag that appears occasionally in the data is the @filter tag. This tag can be tricky to use, and generally relies on knowledge of the internals of each page. As such, use with caution, and if you're not sure about something, don't be afraid to drop by our {@link Discord|https://discord.gg/nGvRCDs} and ask questions.",
 								"The syntax for the @filter tag is as follows:",
 								"(open curly brace)@filter display text|page_without_file_extension|filter_name_1=filter_1_value_1;filter_1_value_2;...filter_1_value_n|...|filter_name_m=filter_m_value_1;filter_m_value_2;...(close curly brace)",
-								"The purpose of this tag is to open the given page, pre-filtered with the specified filtering options. There's one major caveat that makes this tricky to use for aspiring JSONtranauts \u2014 the filter values use the {@i internal} version, as you'd find in the data. So, for example, ...|school=D|... would filter spells to Divination school spells, as 'D' is the Divination identifier in the data. Trying to do e.g. ...|school=Divination|... will not work.",
+								"The purpose of this tag is to open the given page, pre-filtered with the specified filtering options. There's one major caveat that makes this tricky to use for aspiring JSONtranauts\u2014the filter values use the {@i internal} version, as you'd find in the data. So, for example, ..|school=D|.. would filter spells to Divination school spells, as 'D' is the Divination identifier in the data. Trying to do e.g. ..|school=Divination|.. will not work.",
 								"The 'filter_name_X' here matches the literal text name of the filter, as displayed in the dropdown.",
 								"Some examples of the tag in action:",
 								"{@filter Races that have a bonus to Intelligence|races|Ability Bonus (Including Subrace)=Intelligence +2;Intelligence +1}",
 								"{@filter Bard cantrips and first-level spells|spells|level=0;1|class=bard}",
-								"{@filter Beast with challenge rating 1 or lower|bestiary|cr=0;1/8;1/4;1/2;1|type=beast}",
-								"{@filter Creatures with a Strength score of 18 or more|bestiary|strength=min18}",
+								"{@filter Beast with challenge rating 1 or lower|bestiary|challenge rating=[&0;&1]|type=beast}",
+								"{@filter Creatures with a Strength score of 18 or more|bestiary|strength=[18;]}",
 								"{@filter Divination and Evocation spells|spells|school=D;V}",
 								"{@filter All uncommon magic items|items|source=null|type=null|rarity=uncommon|miscellaneous=Magic}",
+								"{@filter Simple melee weapons|items|source=phb|category=basic|type=simple weapon;melee weapon=&}",
+								"Meta-options can be set; inline for individual filters, and using 'fbmt' for filtering meta-options {@filter filter meta example|spells|level=1;2=b1~sor~sand|fbmt=sor|fbmh=source}",
 								{
 									"type": "entries",
 									"name": "Note",
 									"entries": [
-										"Setting a filter to null, i.e. ...|school=null|... is equivalent to 'clear the filter,' resetting it to all-white.",
+										"Setting a filter to null, i.e. ..|school=null|.. is equivalent to 'clear the filter,' resetting it to all-white.",
 										"The pages that support this functionality are those with the 'magnet' button; the link this button exports will give clues as to what one could do with the filter tag."
 									]
 								}
@@ -103,7 +107,7 @@
 									"type": "list",
 									"items": [
 										"Internal links: {@5etools This Is Your Life|lifegen.html}",
-										"External links: {@link https://discord.gg/v3AXzcW} or {@link Discord|https://discord.gg/v3AXzcW}"
+										"External links: {@link https://discord.gg/nGvRCDs} or {@link Discord|https://discord.gg/nGvRCDs}"
 									]
 								},
 								"Page specific/other tags:",
@@ -112,7 +116,8 @@
 									"items": [
 										"Bestiary 'attack' tags: {@atk m}, {@atk r}, {@atk m,r}, {@atk mw}, {@atk rw}, {@atk ms}, {@atk rs}; (homebrew only) {@atk a}, {@atk aw}. Commas separate or'd attack types; the general form is: '@atk &lt;m|r|a&gt;[&lt;w|s&gt;][,&lt;m|r|a&gt;[&lt;w|s&gt;][,...]]'"
 									]
-								}
+								},
+								"Homebrew loading tags: {@loader Tome of Beasts|creature/Kobold Press; Tome of Beasts.json}. The URL after the pipe is assumed to be from the root of the homebrew repository, unless it starts with a \"...://\" prefix (i.e., any link should work, but there's a shorthand for homebrew repository links)."
 							]
 						}
 					]
@@ -161,7 +166,7 @@
 				{
 					"type": "inline",
 					"entries": [
-						"Entries can be inlined, useful for e.g. links outwith the tags listed above, ",
+						"Entries can be inlined, useful for e.g. links beyond the tags listed above, ",
 						{
 							"type": "link",
 							"href": {
@@ -212,21 +217,30 @@
 					"caption": "Optional Caption",
 					"colLabels": [
 						"Col 1",
-						"Column the Second"
+						"Column the Second",
+						"Third Col"
 					],
 					"colStyles": [
-						"col-xs-6 text-align-center",
-						"col-xs-5",
-						"col-xs-1 text-align-right bold"
+						"col-6 text-center",
+						"col-4-5 text-right ",
+						"col-1-5"
+					],
+					"intro": [
+						"Optional outro entries."
+					],
+					"outro": [
+						"Optional outro entries."
 					],
 					"rows": [
 						[
 							"This is a table row",
-							"The number of entries should match the number of columns, naturally*"
+							"The number of entries should match the number of columns, naturally*",
+							""
 						],
 						[
 							"The 'colStyles' list is literally used as CSS classes",
-							"And since we use bootstrap, that means col-xs-whatever. See the bootstrap docs for more info; we use bootstrap 3."
+							"Column widths can be specified in 12ths, as `col-[1 to 12]` (e.g. col-12 is 100% width, and col-6 is 50% width)",
+							"**"
 						],
 						[
 							{
@@ -236,19 +250,22 @@
 									"Although why you would put a list in a table is beyond me."
 								]
 							},
-							"{@spell bless|phb|Spells, on the other hand, make sense.}"
+							"{@spell bless|phb|Spells, on the other hand, make sense.}",
+							""
 						],
 						{
 							"type": "row",
 							"style": "row-indent-first",
 							"row": [
 								"Rows may also be defined",
-								"As objects with additional properties"
+								"As objects with additional properties",
+								""
 							]
 						}
 					],
 					"footnotes": [
-						"* Optional footer entries"
+						"* Optional footer entries",
+						"** As an extension to Bootstrap's 1-to-12 system, 1/10th subdivisions can be used, e.g. col-1-5 for 1.5/12. The total column widths should still sum to exactly 12; enjoy doing the math."
 					]
 				},
 				"Rollable tables can be made like so (note the 'pad' to format single digit numbers e.g. '01' for tables with >10 rows):",
@@ -260,8 +277,8 @@
 						"Item"
 					],
 					"colStyles": [
-						"col-xs-1 text-align-center",
-						"col-xs-11"
+						"col-1 text-center",
+						"col-11"
 					],
 					"rows": [
 						[
@@ -382,6 +399,14 @@
 								"What on earth did I just write"
 							]
 						}
+					]
+				},
+				{
+					"type": "list",
+					"style": "list-decimal",
+					"items": [
+						"A decimal-numbered list. Alternatively, 'list-lower-roman' can be used for lowercase Roman numerals.",
+						"So far only seen in homebrew."
 					]
 				},
 				"The 'bonus' type just sticks a + in front of things",
@@ -561,15 +586,22 @@
 							"paralyzed",
 							"poisoned"
 						],
-						"senses": "darkvision 60 ft.",
+						"senses": [
+							"darkvision 60 ft."
+						],
 						"passive": 13,
-						"languages": "Celestial, Elvish, Sylvan, telepathy 60 ft.",
+						"languages": [
+							"Celestial",
+							"Elvish",
+							"Sylvan",
+							"telepathy 60 ft."
+						],
 						"cr": "5",
 						"trait": [
 							{
 								"name": "Charge",
 								"entries": [
-									"If the unicorn moves at least 20 ft. straight toward a target and then hits it with a horn attack on the same turn, the target takes an extra 9 ({@dice 2d8}) piercing damage. If the target is a creature, it must succeed on a DC 15 Strength saving throw or be knocked prone."
+									"If the unicorn moves at least 20 ft. straight toward a target and then hits it with a horn attack on the same turn, the target takes an extra 9 ({@dice 2d8}) piercing damage. If the target is a creature, it must succeed on a {@dc 15} Strength saving throw or be knocked prone."
 								]
 							},
 							{
@@ -617,7 +649,10 @@
 								]
 							}
 						],
-						"legendaryGroup": "Unicorn",
+						"legendaryGroup": {
+							"name": "Unicorn",
+							"source": "MM"
+						},
 						"legendary": [
 							{
 								"name": "Hooves",
@@ -643,7 +678,7 @@
 							{
 								"name": "Innate Spellcasting",
 								"headerEntries": [
-									"The unicorn's innate spellcasting ability is Charisma (spell save DC 14). The unicorn can innately cast the following spells, requiring no components:"
+									"The unicorn's innate spellcasting ability is Charisma (spell save {@dc 14}). The unicorn can innately cast the following spells, requiring no components:"
 								],
 								"will": [
 									"{@spell detect evil and good}",
@@ -672,6 +707,107 @@
 						"actionTags": [
 							"Multiattack"
 						]
+					}
+				},
+				"Spells; as above:",
+				{
+					"type": "dataSpell",
+					"dataSpell": {
+						"name": "Fireball",
+						"level": 3,
+						"school": "V",
+						"time": [
+							{
+								"number": 1,
+								"unit": "action"
+							}
+						],
+						"range": {
+							"type": "point",
+							"distance": {
+								"type": "feet",
+								"amount": 150
+							}
+						},
+						"components": {
+							"v": true,
+							"s": true,
+							"m": "a tiny ball of bat guano and sulfur"
+						},
+						"duration": [
+							{
+								"type": "instant"
+							}
+						],
+						"classes": {
+							"fromClassList": [
+								{
+									"name": "Sorcerer",
+									"source": "PHB"
+								},
+								{
+									"name": "Wizard",
+									"source": "PHB"
+								}
+							],
+							"fromSubclass": [
+								{
+									"class": {
+										"name": "Cleric",
+										"source": "PHB"
+									},
+									"subclass": {
+										"name": "Light",
+										"source": "PHB"
+									}
+								},
+								{
+									"class": {
+										"name": "Warlock",
+										"source": "PHB"
+									},
+									"subclass": {
+										"name": "Fiend",
+										"source": "PHB"
+									}
+								},
+								{
+									"class": {
+										"name": "Cleric",
+										"source": "PHB"
+									},
+									"subclass": {
+										"name": "Zeal (PSA)",
+										"source": "PSA"
+									}
+								},
+								{
+									"class": {
+										"name": "Cleric",
+										"source": "PHB"
+									},
+									"subclass": {
+										"name": "Destruction (Stream)",
+										"source": "Twitter"
+									}
+								}
+							]
+						},
+						"source": "PHB",
+						"entries": [
+							"A bright streak flashes from your pointing finger to a point you choose within range and then blossoms with a low roar into an explosion of flame. Each creature in a 20-foot-radius sphere centered on that point must make a Dexterity saving throw. A target takes {@dice 8d6} fire damage on a failed save, or half as much damage on a successful one.",
+							"The fire spreads around corners. It ignites flammable objects in the area that aren't being worn or carried."
+						],
+						"entriesHigherLevel": [
+							{
+								"type": "entries",
+								"name": "At Higher Levels",
+								"entries": [
+									"When you cast this spell using a spell slot of 4th level or higher, the damage increases by {@scaledice 8d6|3-9|1d6} for each slot level above 3rd."
+								]
+							}
+						],
+						"page": 241
 					}
 				},
 				"There exist a few homebrew features (generally) for use in custom copies of the site:",

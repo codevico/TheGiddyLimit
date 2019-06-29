@@ -27,7 +27,7 @@ module.exports = {
 		"dot-location": ["error", "property"],
 		"eqeqeq": ["error", "always", {"null": "ignore"}],
 		"func-call-spacing": ["error", "never"],
-		"generator-star-spacing": ["error", {"before": true, "after": true}],
+		"generator-star-spacing": ["error", {"before": false, "after": true}],
 		"handle-callback-err": ["error", "^(err|error)$"],
 		"indent": [
 			"error",
@@ -134,7 +134,7 @@ module.exports = {
 		"no-with": "error",
 		"object-property-newline": ["error", {"allowMultiplePropertiesPerLine": true}],
 		"one-var": ["error", {"initialized": "never"}],
-		"operator-linebreak": ["error", "after", {"overrides": {"?": "before", ":": "before"}}],
+		"operator-linebreak": ["error", "after", {"overrides": {"?": "before", ":": "before", "+": "before", "-": "before", "*": "before", "/": "before"}}],
 		"padded-blocks": ["error", {"blocks": "never", "switches": "never", "classes": "never"}],
 		"prefer-promise-reject-errors": "error",
 		"rest-spread-spacing": ["error", "never"],

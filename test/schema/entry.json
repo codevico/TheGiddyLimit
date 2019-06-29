@@ -1,13 +1,19 @@
 {
-	"$schema": "http://json-schema.org/draft-06/schema#",
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"$id": "entry.json",
 
 	"title": "Entry",
-	"id": "/Entry",
 	"description": "A recursively renderable object.",
-	"type": ["string", "integer", "object"],
-	"version": "1.2.4",
+	"version": "1.2.15",
 
 	"definitions" : {
+		"_arrayOfString": {
+			"type": "array",
+			"uniqueItems": true,
+			"items": {
+				"type": "string"
+			}
+		},
 		"entry": {
 			"properties": {
 				"name": {
@@ -21,6 +27,9 @@
 				},
 				"data": {
 					"type": "object"
+				},
+				"page": {
+					"type": "integer"
 				}
 			},
 			"required": [
@@ -46,12 +55,18 @@
 						"entries": {
 							"type": "array",
 							"items": {
-								"$ref": "/Entry"
+								"$ref": "#"
 							}
 						},
 						"data": {
 							"description": "A generic object for storing special data for external use-cases.",
 							"type": "object"
+						},
+						"page": {
+							"type": "integer"
+						},
+						"source": {
+							"type": "string"
 						}
 					},
 					"required": ["entries"],
@@ -77,11 +92,17 @@
 						"entries": {
 							"type": "array",
 							"items": {
-								"$ref": "/Entry"
+								"$ref": "#"
 							}
 						},
 						"data": {
 							"type": "object"
+						},
+						"page": {
+							"type": "integer"
+						},
+						"source": {
+							"type": "string"
 						}
 					},
 					"required": ["entries"],
@@ -101,16 +122,16 @@
 						"entries": {
 							"type": "array",
 							"items": {
-								"$ref": "/Entry"
+								"$ref": "#"
 							}
 						},
 						"movedTo": {
-							"$ref": "/Entry"
+							"$ref": "#"
 						},
 						"oldEntries": {
 							"type": "array",
 							"items": {
-								"$ref": "/Entry"
+								"$ref": "#"
 							}
 						},
 						"data": {
@@ -130,7 +151,7 @@
 						"entries": {
 							"type": "array",
 							"items": {
-								"$ref": "/Entry"
+								"$ref": "#"
 							}
 						},
 						"by": {
@@ -154,7 +175,7 @@
 						"entries": {
 							"type": "array",
 							"items": {
-								"$ref": "/Entry"
+								"$ref": "#"
 							}
 						}
 					},
@@ -172,7 +193,7 @@
 						"entries": {
 							"type": "array",
 							"items": {
-								"$ref": "/Entry"
+								"$ref": "#"
 							}
 						}
 					},
@@ -193,7 +214,7 @@
 						"entries": {
 							"type": "array",
 							"items": {
-								"$ref": "/Entry"
+								"$ref": "#"
 							}
 						}
 					},
@@ -209,6 +230,21 @@
 					"properties": {
 						"type": {"const": "table"},
 						"caption": {"type" : "string"},
+						"intro": {
+							"description": "Primarily for homebrew use.",
+							"type": "array",
+							"items": {
+								"$ref": "#"
+							}
+						},
+						"outro": {
+							"description": "Primarily for homebrew use.",
+							"type": "array",
+							"items": {
+								"$ref": "#"
+							}
+						},
+						"isStriped": {"type": "boolean"},
 						"style": {"type" : "string"},
 						"colLabels": {
 							"type": "array",
@@ -224,16 +260,16 @@
 						},
 						"rowStyles": {
 							"type": "array",
-							"items": {"type" : "string"}
+							"items": {"type": "string"}
 						},
 						"rows": {
 							"type": "array",
 							"items": {
-								"oneOf" : [
+								"anyOf": [
 									{
 										"type": "array",
 										"items": {
-											"$ref": "/Entry"
+											"$ref": "entry.json"
 										}
 									},
 									{
@@ -245,7 +281,7 @@
 						"footnotes": {
 							"type": "array",
 							"items": {
-								"$ref": "/Entry"
+								"$ref": "#"
 							}
 						},
 						"data": {
@@ -295,11 +331,12 @@
 						"row": {
 							"type": "array",
 							"items": {
-								"$ref": "/Entry"
+								"$ref": "#"
 							}
 						}
 					},
 					"required": [
+						"type",
 						"row"
 					],
 					"additionalProperties": false
@@ -319,24 +356,13 @@
 						},
 						"roll": {
 							"type": "object",
+							"oneOf": [
+								{"required": ["min", "max"]},
+								{"required": ["exact"]}
+							],
 							"properties": {
-								"oneOf": [
-									{
-										"min": {
-											"type": "integer"
-										},
-										"max": {
-											"type": "integer"
-										}
-									},
-									{
-										"exact": {
-											"type": "integer"
-										}
-									}
-								],
 								"entry": {
-									"$ref": "/Entry"
+									"$ref": "#"
 								},
 								"pad": {
 									"type": "boolean"
@@ -344,7 +370,7 @@
 							}
 						},
 						"entry": {
-							"$ref": "/Entry"
+							"$ref": "#"
 						}
 					},
 					"additionalProperties": false
@@ -357,6 +383,10 @@
 				{
 					"properties": {
 						"type": {"const": "list"},
+						"columns": {
+							"description": "Number of columns the content should be split into. Note that the full value is only displayed on wide screens, and screens below certain widths will see an appropriately reduced number of columns.",
+							"type": "integer"
+						},
 						"style": {
 							"type": "string"
 						},
@@ -366,7 +396,7 @@
 						"items": {
 							"type": "array",
 							"items": {
-								"$ref": "/Entry"
+								"$ref": "#"
 							}
 						}
 					},
@@ -537,37 +567,43 @@
 										"subhashes": {
 											"type": "array",
 											"items": {
-												"type": "object",
-												"properties": {
-													"key": {
-														"type": "string"
-													},
-													"oneOf": [
-														{
-															"properties": {
-																"value": {
+												"oneOf": [
+													{
+														"type": "object",
+														"properties": {
+															"key": {
+																"type": "string"
+															},
+															"values": {
+																"type": "array",
+																"items": {
 																	"type": "string"
 																}
 															},
-															"required": ["value"],
-															"additionalProperties": false
+															"preEncoded": {
+																"type": "boolean"
+															}
 														},
-														{
-															"properties": {
-																"values": {
-																	"type": "array",
-																	"items": {
-																		"type": "string"
-																	}
-																}
+														"required": ["key", "values"],
+														"additionalProperties": false
+													},
+													{
+														"type": "object",
+														"properties": {
+															"key": {
+																"type": "string"
 															},
-															"required": ["values"],
-															"additionalProperties": false
-														}
-													]
-												},
-												"required": ["key"],
-												"additionalProperties": false
+															"value": {
+																"type": "string"
+															},
+															"preEncoded": {
+																"type": "boolean"
+															}
+														},
+														"required": ["key", "value"],
+														"additionalProperties": false
+													}
+												]
 											}
 										},
 										"hover": {
@@ -649,11 +685,17 @@
 						"entries": {
 							"type": "array",
 							"items": {
-								"$ref": "/Entry"
+								"$ref": "#"
 							}
 						},
 						"data": {
 							"type": "object"
+						},
+						"page": {
+							"type": "integer"
+						},
+						"source": {
+							"type": "string"
 						}
 					},
 					"required": ["entries"],
@@ -670,8 +712,14 @@
 						"entries": {
 							"type": "array",
 							"items": {
-								"$ref": "/Entry"
+								"$ref": "#"
 							}
+						},
+						"page": {
+							"type": "integer"
+						},
+						"source": {
+							"type": "string"
 						}
 					},
 					"required": ["entries"]
@@ -690,7 +738,7 @@
 						"entries": {
 							"type": "array",
 							"items": {
-								"$ref": "/Entry"
+								"$ref": "#"
 							}
 						},
 						"variantSource": {
@@ -723,7 +771,7 @@
 						"entries": {
 							"type": "array",
 							"items": {
-								"$ref": "/Entry"
+								"$ref": "#"
 							}
 						}
 					},
@@ -744,7 +792,7 @@
 									"type": "string"
 								},
 								"entry": {
-									"$ref": "/Entry"
+									"$ref": "#"
 								}
 							},
 							"required": ["name", "entry"],
@@ -759,7 +807,7 @@
 								"entries": {
 									"type": "array",
 									"items": {
-										"$ref": "/Entry"
+										"$ref": "#"
 									}
 								}
 							},
@@ -780,7 +828,7 @@
 							"type": "string"
 						},
 						"entry": {
-							"$ref": "/Entry"
+							"$ref": "#"
 						}
 					},
 					"required": ["name", "entry"],
@@ -798,7 +846,7 @@
 							"type": "string"
 						},
 						"entry": {
-							"$ref": "/Entry"
+							"$ref": "#"
 						}
 					},
 					"required": ["name", "entry"],
@@ -839,11 +887,25 @@
 						"title": {
 							"type": "string"
 						},
+						"altText": {
+							"description": "For accessibility purposes",
+							"type": "string"
+						},
 						"imageType": {
 							"type": "string",
 							"enum": [
 								"map"
 							]
+						},
+						"width": {
+							"type": "integer"
+						},
+						"height": {
+							"type": "integer"
+						},
+						"maxWidth": {
+							"description": "Specify the max desired display width of the images, as opposed to \"width\" which should only be used for the _real_ width.",
+							"type": "integer"
 						}
 					},
 					"required": ["href"],
@@ -880,7 +942,7 @@
 						"entries": {
 							"type": "array",
 							"items": {
-								"$ref": "/Entry"
+								"$ref": "#"
 							}
 						}
 					},
@@ -902,13 +964,13 @@
 						"attackEntries": {
 							"type": "array",
 							"items": {
-								"$ref": "/Entry"
+								"$ref": "#"
 							}
 						},
 						"hitEntries": {
 							"type": "array",
 							"items": {
-								"$ref": "/Entry"
+								"$ref": "#"
 							}
 						}
 					},
@@ -926,12 +988,341 @@
 			"properties": {
 				"type": {"const": "dataCreature"},
 				"dataCreature": {
-					"$ref" : "/Bestiary#/definitions/creature"
+					"$ref" : "bestiary.json#/definitions/creature"
 				}
 			},
 			"required": [
 				"type",
 				"dataCreature"
+			]
+		},
+		"entryDataSpell": {
+			"properties": {
+				"type": {"const": "dataSpell"},
+				"dateSpell": {
+					"$ref" : "spells.json#/definitions/spell"
+				}
+			},
+			"required": [
+				"type",
+				"dataSpell"
+			]
+		},
+		"entryHr": {
+			"properties": {
+				"type": {"const": "hr"}
+			},
+			"required": [
+				"type"
+			]
+		},
+		"entrySpellcasting": {
+			"allOf" : [
+				{"$ref" : "#/definitions/entry"},
+				{
+					"type": "object",
+					"properties": {
+						"type": {"const": "spellcasting"},
+						"name": {
+							"type": "string"
+						},
+						"headerEntries": {
+							"type": "array",
+							"items": {
+								"$ref": "#"
+							}
+						},
+						"constant": {
+							"$ref": "#/definitions/_arrayOfString"
+						},
+						"will": {
+							"$ref": "#/definitions/_arrayOfString"
+						},
+						"rest": {
+							"$ref": "#/definitions/entrySpellcasting_frequency"
+						},
+						"daily": {
+							"$ref": "#/definitions/entrySpellcasting_frequency"
+						},
+						"weekly": {
+							"$ref": "#/definitions/entrySpellcasting_frequency"
+						},
+						"spells": {
+							"type": "object",
+							"properties": {
+								"0": {
+									"type": "object",
+									"properties": {
+										"spells": {
+											"type": "array",
+											"uniqueItems": true,
+											"items": {
+												"type": "string"
+											}
+										}
+									},
+									"required": [
+										"spells"
+									],
+									"additionalProperties": false
+								},
+								"1": {
+									"$ref": "#/definitions/entrySpellcasting_level1to9"
+								},
+								"2": {
+									"$ref": "#/definitions/entrySpellcasting_level1to9"
+								},
+								"3": {
+									"$ref": "#/definitions/entrySpellcasting_level1to9"
+								},
+								"4": {
+									"$ref": "#/definitions/entrySpellcasting_level1to9"
+								},
+								"5": {
+									"$ref": "#/definitions/entrySpellcasting_level1to9"
+								},
+								"6": {
+									"$ref": "#/definitions/entrySpellcasting_level1to9"
+								},
+								"7": {
+									"$ref": "#/definitions/entrySpellcasting_level1to9"
+								},
+								"8": {
+									"$ref": "#/definitions/entrySpellcasting_level1to9"
+								},
+								"9": {
+									"$ref": "#/definitions/entrySpellcasting_level1to9"
+								}
+							},
+							"additionalProperties": false
+						},
+						"hidden": {
+							"description": "Allows the above properties to be specified, but not rendered. Useful if e.g. a creature can only cast one spell, and this is rendered in the header line.",
+							"type": "array",
+							"items": {
+								"type": "string",
+								"enum": [
+									"constant",
+									"will",
+									"rest",
+									"daily",
+									"weekly",
+									"spells"
+								]
+							}
+						},
+						"footerEntries": {
+							"type": "array",
+							"items": {
+								"$ref": "#"
+							}
+						},
+						"ability": {
+							"type": "string",
+							"enum": ["str", "dex", "con", "int", "wis", "cha"]
+						}
+					},
+					"required": [
+						"name"
+					],
+					"additionalProperties": false
+				}
+			]
+		},
+		"entrySpellcasting_level1to9": {
+			"type": "object",
+			"properties": {
+				"lower": {
+					"type": "number"
+				},
+				"slots": {
+					"type": "number"
+				},
+				"spells": {
+					"type": "array",
+					"uniqueItems": true,
+					"items": {
+						"type": "string"
+					}
+				}
+			},
+			"required": [
+				"spells"
+			],
+			"additionalProperties": false
+		},
+		"entrySpellcasting_frequency": {
+			"type": "object",
+			"properties": {
+				"9e": {
+					"$ref": "#/definitions/_arrayOfString"
+				},
+				"9": {
+					"$ref": "#/definitions/_arrayOfString"
+				},
+				"8e": {
+					"$ref": "#/definitions/_arrayOfString"
+				},
+				"8": {
+					"$ref": "#/definitions/_arrayOfString"
+				},
+				"7e": {
+					"$ref": "#/definitions/_arrayOfString"
+				},
+				"7": {
+					"$ref": "#/definitions/_arrayOfString"
+				},
+				"6e": {
+					"$ref": "#/definitions/_arrayOfString"
+				},
+				"6": {
+					"$ref": "#/definitions/_arrayOfString"
+				},
+				"5e": {
+					"$ref": "#/definitions/_arrayOfString"
+				},
+				"5": {
+					"$ref": "#/definitions/_arrayOfString"
+				},
+				"4e": {
+					"$ref": "#/definitions/_arrayOfString"
+				},
+				"4": {
+					"$ref": "#/definitions/_arrayOfString"
+				},
+				"3e": {
+					"$ref": "#/definitions/_arrayOfString"
+				},
+				"3": {
+					"$ref": "#/definitions/_arrayOfString"
+				},
+				"2e": {
+					"$ref": "#/definitions/_arrayOfString"
+				},
+				"2": {
+					"$ref": "#/definitions/_arrayOfString"
+				},
+				"1e": {
+					"$ref": "#/definitions/_arrayOfString"
+				},
+				"1": {
+					"$ref": "#/definitions/_arrayOfString"
+				}
+			},
+			"additionalProperties": false
+		},
+
+
+		"dataDamImmune": {
+			"oneOf": [
+				{
+					"$ref": "#/definitions/dataDmgType"
+				},
+				{
+					"type": "object",
+					"properties": {
+						"special": {
+							"type": "string"
+						}
+					},
+					"additionalProperties": false,
+					"required": ["special"]
+				},
+				{
+					"type": "object",
+					"properties": {
+						"preNote": {
+							"type": "string"
+						},
+						"immune": {
+							"type": "array",
+							"items": {
+								"$ref": "#/definitions/dataDamImmune"
+							}
+						},
+						"note": {
+							"type": "string"
+						}
+					},
+					"additionalProperties": false,
+					"required": ["immune"]
+				}
+			]
+		},
+		"dataCondImmune": {
+			"oneOf": [
+				{
+					"$ref": "#/definitions/dataConditions"
+				},
+				{
+					"type": "object",
+					"properties": {
+						"special": {
+							"type": "string"
+						}
+					},
+					"additionalProperties": false,
+					"required": ["special"]
+				},
+				{
+					"type": "object",
+					"properties": {
+						"preNote": {
+							"type": "string"
+						},
+						"conditionImmune": {
+							"type": "array",
+							"items": {
+								"$ref": "#/definitions/dataConditions"
+							}
+						},
+						"note": {
+							"type": "string"
+						}
+					},
+					"additionalProperties": false,
+					"required": ["conditionImmune"]
+				}
+			]
+		},
+		"dataConditions": {
+			"type": "string",
+			"enum": [
+				"blinded",
+				"charmed",
+				"deafened",
+				"exhaustion",
+				"frightened",
+				"grappled",
+				"incapacitated",
+				"invisible",
+				"paralyzed",
+				"petrified",
+				"poisoned",
+				"prone",
+				"restrained",
+				"stunned",
+				"unconscious",
+
+				"disease"
+			]
+		},
+		"dataDmgType": {
+			"type": "string",
+			"enum": [
+				"acid",
+				"bludgeoning",
+				"cold",
+				"fire",
+				"force",
+				"lightning",
+				"necrotic",
+				"piercing",
+				"poison",
+				"psychic",
+				"radiant",
+				"slashing",
+				"thunder"
 			]
 		}
 	},
@@ -971,6 +1362,9 @@
 		{"$ref": "#/definitions/entryAttack"},
 		{"$ref": "#/definitions/entryAttack"},
 		{"$ref": "#/definitions/entryDataCreature"},
+		{"$ref": "#/definitions/entryDataSpell"},
+		{"$ref": "#/definitions/entryHr"},
+		{"$ref": "#/definitions/entrySpellcasting"},
 		{"type": "string"},
 		{"type": "integer"}
 	]

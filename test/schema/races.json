@@ -1,6 +1,6 @@
 {
-	"$schema": "http://json-schema.org/draft-06/schema#",
-	"version": "1.1.0",
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"version": "1.1.2",
 	"type": "object",
 
 	"definitions": {
@@ -29,9 +29,7 @@
 					"type": "integer"
 				},
 				{
-					"type": {
-						"const": "Varies"
-					}
+					"const": "Varies"
 				}
 			]
 		},
@@ -52,6 +50,7 @@
 				"Spellcasting",
 				"Tool Proficiency",
 				"Unarmed Strike",
+				"Uncommon Race",
 				"Weapon Proficiency"
 			]
 		},
@@ -146,6 +145,24 @@
 										}
 									}
 								}
+							},
+							"weighted": {
+								"type": "object",
+								"properties": {
+									"from": {
+										"type": "array",
+										"items": {
+											"enum": ["str", "dex", "con", "int", "wis", "cha"]
+										},
+										"uniqueItems": true
+									},
+									"weights": {
+										"type": "array",
+										"items": {
+											"type": "integer"
+										}
+									}
+								}
 							}
 						}
 					}
@@ -201,7 +218,7 @@
 					"entries": {
 						"type": "array",
 						"items": {
-							"$ref": "/Entry"
+							"$ref": "entry.json"
 						}
 					},
 					"soundClip": {
@@ -249,7 +266,7 @@
 								"entries": {
 									"type": "array",
 									"items": {
-										"$ref": "/Entry"
+										"$ref": "entry.json"
 									}
 								},
 								"darkvision": {

@@ -155,7 +155,7 @@
 				}
 			],
 			"entries": [
-				"You can now inscribe magical rituals in your Book of Shadows. Choose two {@filter 1st-level spells that have the ritual tag from any class's spell list|spells|tag=ritual|level=1}. The spells needn't be from the same spell list. The spells appear in the book and don't count against the number of spells you know. With your Book of Shadows in hand, you can cast the chosen spells as rituals. You can't cast the spells except as rituals, unless you've learned them by some other means. You can also cast a warlock spell you know as a ritual if it has the ritual tag.",
+				"You can now inscribe magical rituals in your Book of Shadows. Choose two {@filter 1st-level spells that have the ritual tag from any class's spell list|spells|Components & Miscellaneous=ritual|level=1}. The spells needn't be from the same spell list. The spells appear in the book and don't count against the number of spells you know. With your Book of Shadows in hand, you can cast the chosen spells as rituals. You can't cast the spells except as rituals, unless you've learned them by some other means. You can also cast a warlock spell you know as a ritual if it has the ritual tag.",
 				"On your adventures, you can add other ritual spells to your Book of Shadows. When you find such a spell, you can add it to the book if the spell's level is equal to or less than half your warlock level (rounded up) and if you can spare the time to transcribe the spell. For each level of the spell, the transcription process takes 2 hours and costs 50 gp for the rare inks needed to inscribe it."
 			],
 			"source": "PHB",
@@ -1330,7 +1330,7 @@
 			"featureType": "EI"
 		},
 		{
-			"name": "Signs of Ill Omen",
+			"name": "Sign of Ill Omen",
 			"prerequisite": [
 				{
 					"type": "prereqLevel",
@@ -1661,7 +1661,8 @@
 		{
 			"name": "Twinned Spell",
 			"entries": [
-				"When you cast a spell that doesn't have a range of self and is incapable of targeting more than one creature at the spell's current level, you can spend a number of sorcery points equal to the spell's level to target a second creature in range with the same spell (1 sorcery point if the spell is a cantrip)."
+				"When you cast a spell that doesn't have a range of self and is incapable of targeting more than one creature at the spell's current level, you can spend a number of sorcery points equal to the spell's level to target a second creature in range with the same spell (1 sorcery point if the spell is a cantrip).",
+				"To be eligible, a spell must be incapable of targeting more than one creature at the spell's current level. For example, magic missile and scorching ray aren't eligible, but ray of frost and chromatic orb are."
 			],
 			"source": "PHB",
 			"page": 102,
@@ -2270,6 +2271,1036 @@
 			"featureType": "AS",
 			"page": 30,
 			"source": "XGE"
+		},
+		{
+			"name": "Pact of the Chain",
+			"entries": [
+				"You learn the {@spell find familiar} spell and can cast it as a ritual. The spell doesn't count against your number of spells known.",
+				"When you cast the spell, you can choose one of the normal forms for your familiar or one of the following special forms: {@creature imp}, {@creature pseudodragon}, {@creature quasit}, or {@creature sprite}.",
+				"Additionally, when you take the {@action Attack} action, you can forgo one of your own attacks to allow your familiar to use its reaction to make one attack of its own."
+			],
+			"featureType": "PB",
+			"page": 107,
+			"source": "PHB"
+		},
+		{
+			"name": "Pact of the Blade",
+			"entries": [
+				"You can use your action to create a pact weapon in your empty hand. You can choose the form that this melee weapon takes each time you create it (see chapter 5 for weapon options). You are proficient with it while you wield it. This weapon counts as magical for the purpose of overcoming resistance and immunity to nonmagical attacks and damage.",
+				"Your pact weapon disappears if it is more than 5 feet away from you for 1 minute or more. It also disappears if you use this feature again, if you dismiss the weapon (no action required), or if you die.",
+				"You can transform one magic weapon into your pact weapon by performing a special ritual while you hold the weapon. You perform the ritual over the course of 1 hour, which can be done during a short rest. You can then dismiss the weapon, shunting it into an extradimensional space, and it appears whenever you create your pact weapon thereafter. You can't affect an artifact or a sentient weapon in this way. The weapon ceases being your pact weapon if you die, if you perform the 1-hour ritual on a different weapon, or if you use a 1-hour ritual to break your bond to it. The weapon appears at your feet if it is in the extradimensional space when the bond breaks."
+			],
+			"featureType": "PB",
+			"page": 107,
+			"source": "PHB"
+		},
+		{
+			"name": "Pact of the Tome",
+			"entries": [
+				"Your patron gives you a grimoire called a Book of Shadows. When you gain this feature, choose three {@filter cantrips|spells|level=0} from any class's spell list. The cantrips do not need to be from the same spell list. While the book is on your person, you can cast those cantrips at will. They don't count against your number of cantrips known. Any cantrip you cast with this feature is considered a warlock cantrip for you. If you lose your Book of Shadows, you can perform a 1-hour ceremony to receive a replacement from your patron. This ceremony can be performed during a short or long rest, and it destroys the previous book. The book turns to ash when you die."
+			],
+			"featureType": "PB",
+			"page": 108,
+			"source": "PHB"
+		},
+		{
+			"name": "Pact of the Star Chain",
+			"entries": [
+				"At 3rd level, a character dedicated to the {@class Warlock|phb|Seeker|the Seeker (UA)|UATheFaithful} can select this option instead of one of the warlock's existing Pact Boon options.",
+				"The Seeker grants you a chain forged from starlight, decorated with seven gleaming motes of brightness. While the chain is on your person, you know the {@spell augury} spell and can cast it as a ritual. The spell doesn't count against your number of spells known.",
+				"Additionally, you can invoke the Seeker's power to gain advantage on an Intelligence check while you carry this item. Once you use this ability, you cannot use it again until you complete a short or long rest.",
+				"If you lose your Star Chain, you can perform a 1-­hour ceremony to receive a replacement from the Seeker. The ceremony can be performed during a short or long rest, and it destroys the previous chain. The chain disappears in a flash of light when you die.",
+				"The exact form of this item might be different depending on your patron. The Star Chain is inspired by the Greyhawk deity Celestian."
+			],
+			"featureType": "PB",
+			"page": 1,
+			"source": "UATheFaithful"
+		},
+		{
+			"featureType": "ED",
+			"name": "Breath of Winter",
+			"prerequisite": [
+				{
+					"type": "prereqLevel",
+					"level": 17,
+					"class": {
+						"name": "Monk"
+					},
+					"subclass": {
+						"name": "Four Elements"
+					}
+				}
+			],
+			"entries": [
+				"You can spend 6 ki points to cast {@spell cone of cold}."
+			],
+			"page": 81,
+			"source": "PHB"
+		},
+		{
+			"featureType": "ED",
+			"name": "Clench of the North Wind",
+			"prerequisite": [
+				{
+					"type": "prereqLevel",
+					"level": 6,
+					"class": {
+						"name": "Monk"
+					},
+					"subclass": {
+						"name": "Four Elements"
+					}
+				}
+			],
+			"entries": [
+				"You can spend 3 ki points to cast {@spell hold person}."
+			],
+			"page": 81,
+			"source": "PHB"
+		},
+		{
+			"featureType": "ED",
+			"name": "Elemental Attunement",
+			"entries": [
+				"You can use your action to briefly control elemental forces within 30 feet of you, causing one of the following effects of your choice:",
+				{
+					"type": "list",
+					"items": [
+						"Create a harmless, instantaneous sensory effect related to air, earth, fire, or water, such as a shower of sparks, a puff of wind, a spray of light mist, orc a gentle rumbling of stone.",
+						"Instantaneously light or snuff out a candle, a torch, or a small campfire.",
+						"Chill or warm up to 1 pound of nonliving material for up to 1 hour.",
+						"Cause earth, fire, water, or mist that can fit within a 1-foot cube to shape itself into a crude form you designate for 1 minute."
+					]
+				}
+			],
+			"page": 81,
+			"source": "PHB"
+		},
+		{
+			"featureType": "ED",
+			"name": "Eternal Mountain Defense",
+			"prerequisite": [
+				{
+					"type": "prereqLevel",
+					"level": 17,
+					"class": {
+						"name": "Monk"
+					},
+					"subclass": {
+						"name": "Four Elements"
+					}
+				}
+			],
+			"entries": [
+				"You can spend 5 ki points to cast {@spell stoneskin}, targeting yourself."
+			],
+			"page": 81,
+			"source": "PHB"
+		},
+		{
+			"featureType": "ED",
+			"name": "Fangs of the Fire Snake",
+			"entries": [
+				"When you use the {@action Attack} action on your turn, you can spend 1 ki point to cause tendrils of flame to stretch out from your fists and feet. Your reach with your unarmed strikes increases by 10 feet for that action, as well as the rest of the turn. A hit with such an attack deals fire damage instead of bludgeoning damage, and if you spend 1 ki point when the attack hits, it also deals an extra {@dice 1d10} fire damage."
+			],
+			"page": 81,
+			"source": "PHB"
+		},
+		{
+			"featureType": "ED",
+			"name": "Fist of Four Thunders",
+			"entries": [
+				"You can spend 2 ki points to cast {@spell thunderwave}."
+			],
+			"page": 81,
+			"source": "PHB"
+		},
+		{
+			"featureType": "ED",
+			"name": "Unbroken Air",
+			"entries": [
+				"You can create a blast of compressed air that strikes like a mighty fist. As an action, you can spend 2 ki points and choose a creature within 30 feet of you. That creature must make a Strength saving throw. On a failed save, the creature takes {@dice 3d10} bludgeoning damage, plus an extra {@dice 1d10} bludgeoning damage for each additional ki point you spend, and you can push the creature up to 20 feet away from you and knock it {@condition prone}. On a successful save, the creature takes half as much damage, and you don't push it or knock it {@condition prone}."
+			],
+			"page": 81,
+			"source": "PHB"
+		},
+		{
+			"featureType": "ED",
+			"name": "Flames of the Phoenix",
+			"prerequisite": [
+				{
+					"type": "prereqLevel",
+					"level": 11,
+					"class": {
+						"name": "Monk"
+					},
+					"subclass": {
+						"name": "Four Elements"
+					}
+				}
+			],
+			"entries": [
+				"You can spend 4 ki points to cast {@spell fireball}."
+			],
+			"page": 81,
+			"source": "PHB"
+		},
+		{
+			"featureType": "ED",
+			"name": "Gong of the Summit",
+			"prerequisite": [
+				{
+					"type": "prereqLevel",
+					"level": 6,
+					"class": {
+						"name": "Monk"
+					},
+					"subclass": {
+						"name": "Four Elements"
+					}
+				}
+			],
+			"entries": [
+				"You can spend 3 ki points to cast {@spell shatter}."
+			],
+			"page": 81,
+			"source": "PHB"
+		},
+		{
+			"featureType": "ED",
+			"name": "Mist Stance",
+			"prerequisite": [
+				{
+					"type": "prereqLevel",
+					"level": 11,
+					"class": {
+						"name": "Monk"
+					},
+					"subclass": {
+						"name": "Four Elements"
+					}
+				}
+			],
+			"entries": [
+				"You can spend 4 ki points to cast {@spell gaseous form}, targeting yourself."
+			],
+			"page": 81,
+			"source": "PHB"
+		},
+		{
+			"featureType": "ED",
+			"name": "Ride the Wind",
+			"prerequisite": [
+				{
+					"type": "prereqLevel",
+					"level": 11,
+					"class": {
+						"name": "Monk"
+					},
+					"subclass": {
+						"name": "Four Elements"
+					}
+				}
+			],
+			"entries": [
+				"You can spend 4 ki points to cast {@spell fly}, targeting yourself."
+			],
+			"page": 81,
+			"source": "PHB"
+		},
+		{
+			"featureType": "ED",
+			"name": "River of Hungry Flame",
+			"prerequisite": [
+				{
+					"type": "prereqLevel",
+					"level": 17,
+					"class": {
+						"name": "Monk"
+					},
+					"subclass": {
+						"name": "Four Elements"
+					}
+				}
+			],
+			"entries": [
+				"You can spend 5 ki points to cast {@spell wall of fire}."
+			],
+			"page": 81,
+			"source": "PHB"
+		},
+		{
+			"featureType": "ED",
+			"name": "Rush of the Gale Spirits",
+			"entries": [
+				"You can spend 2 ki points to cast {@spell gust of wind}."
+			],
+			"page": 81,
+			"source": "PHB"
+		},
+		{
+			"featureType": "ED",
+			"name": "Shape the Flowing River",
+			"entries": [
+				"As an action, you can spend 1 ki point to choose an area of ice or water no larger than 30 feet on a side within 120 feet of you. You can change water to ice within the area and vice versa, and you can reshape ice in the area in any manner you choose. You can raise or lower the ice's elevation, create or fill in a trench, erect or flatten a wall, or form a pillar. The extent of any such changes can't exceed half the area's largest dimension. For example, if you affect a 30-foot square, you can create a pillar up to 15 feet high. raise or lower the square's elevation by up to 15 feet, dig a trench up to 15 feet deep, and so on. You can't shape the ice to trap or injure a creature in the area."
+			],
+			"page": 81,
+			"source": "PHB"
+		},
+		{
+			"featureType": "ED",
+			"name": "Sweeping Cinder Strike",
+			"entries": [
+				"You can spend 2 ki points to cast {@spell burning hands}."
+			],
+			"page": 81,
+			"source": "PHB"
+		},
+		{
+			"featureType": "ED",
+			"name": "Water Whip",
+			"entries": [
+				"You can spend 2 ki points as an action to create a whip of water that shoves and pulls a creature to unbalance it. A creature that you can see that is within 30 feet of you must make a Dexterity saving throw. On a failed save, the creature takes {@dice 3d10} bludgeoning damage, plus an extra {@dice 1d10} bludgeoning damage for each additional ki point you spend, and you can either knock it {@condition prone} or pull it up to 25 feet closer to you. On a successful save, the creature takes half as much damage, and you don't pull it or knock it {@condition prone}."
+			],
+			"page": 81,
+			"source": "PHB"
+		},
+		{
+			"featureType": "ED",
+			"name": "Wave of Rolling Earth",
+			"prerequisite": [
+				{
+					"type": "prereqLevel",
+					"level": 17,
+					"class": {
+						"name": "Monk"
+					},
+					"subclass": {
+						"name": "Four Elements"
+					}
+				}
+			],
+			"entries": [
+				"You can spend 6 ki points to cast {@spell wall of stone}."
+			],
+			"page": 81,
+			"source": "PHB"
+		},
+		{
+			"name": "Boots of the Winding Path",
+			"prerequisite": [
+				{
+					"type": "prereqLevel",
+					"level": 4,
+					"class": {
+						"name": "Artificer (Revisited)"
+					}
+				},
+				{
+					"type": "prereqItem",
+					"entries": [
+						"A pair of boots (requires attunement)"
+					]
+				}
+			],
+			"entries": [
+				"While wearing these boots, a creature can teleport up to 15 feet as a bonus action to an unoccupied space the creature can see. The creature must have occupied that space at some point during the current turn."
+			],
+			"source": "UAArtificerRevisited",
+			"page": 12,
+			"featureType": "AI"
+		},
+		{
+			"name": "Enhanced Defense",
+			"prerequisite": [
+				{
+					"type": "prereqItem",
+					"entries": [
+						"A suit of armor or a shield"
+					]
+				}
+			],
+			"entries": [
+				"A creature gains a +1 bonus to Armor Class while wearing (armor) or wielding (shield) the infused item.",
+				"The bonus increases to +2 when you reach 12th level in this class."
+			],
+			"source": "UAArtificerRevisited",
+			"page": 12,
+			"featureType": "AI"
+		},
+		{
+			"name": "Enhanced Wand",
+			"prerequisite": [
+				{
+					"type": "prereqItem",
+					"entries": [
+						"A wand (requires attunement)"
+					]
+				}
+			],
+			"entries": [
+				"While holding this wand, a creature gains a +1 bonus to spell attack rolls. In addition, the creature ignores half cover when making a spell attack.",
+				"The bonus increases to +2 when you reach 12th level in this class."
+			],
+			"source": "UAArtificerRevisited",
+			"page": 12,
+			"featureType": "AI"
+		},
+		{
+			"name": "Enhanced Weapon",
+			"prerequisite": [
+				{
+					"type": "prereqItem",
+					"entries": [
+						"A simple or martial weapon"
+					]
+				}
+			],
+			"entries": [
+				"This magic weapon grants a +1 bonus to attack and damage rolls made with it.",
+				"The bonus increases to +2 when you reach 12th level in this class."
+			],
+			"source": "UAArtificerRevisited",
+			"page": 12,
+			"featureType": "AI"
+		},
+		{
+			"name": "Many-Handed Pouch",
+			"prerequisite": [
+				{
+					"type": "prereqLevel",
+					"level": 4,
+					"class": {
+						"name": "Artificer (Revisited)"
+					}
+				},
+				{
+					"type": "prereqItem",
+					"entries": [
+						"2\u20135 pouches"
+					]
+				}
+			],
+			"entries": [
+				"The infused pouches all share one interdimensional space of the same capacity as a single pouch. Thus, reaching into any of the pouches allows access to the same storage space. A pouch operates as long as it is within 100 miles of another one of the pouches; the pouch is otherwise empty and won't accept any contents.",
+				"If this infusion ends, the items stored in the shared space move into one of the pouches, determined at random. The rest of the pouches become empty."
+			],
+			"source": "UAArtificerRevisited",
+			"page": 13,
+			"featureType": "AI"
+		},
+		{
+			"name": "Radiant Weapon",
+			"prerequisite": [
+				{
+					"type": "prereqLevel",
+					"level": 8,
+					"class": {
+						"name": "Artificer (Revisited)"
+					}
+				},
+				{
+					"type": "prereqItem",
+					"entries": [
+						"A simple or martial weapon (requires attunement)"
+					]
+				}
+			],
+			"entries": [
+				"This magic weapon grants a +1 bonus to attack and damage rolls made with it. While holding it, the wielder can take a bonus action to cause it to shed bright light in a 30-foot radius and dim light for an additional 30 feet. The wielder can extinguish the light as a bonus action.",
+				"As a reaction immediately after being hit by a melee attack, the wielder can cause the attacker to be blinded until the end of the attacker's next turn, unless the attacker succeeds on a Constitution saving throw against your spell save DC. Once used, this reaction can't be used again until the wielder finishes a short or long rest."
+			],
+			"source": "UAArtificerRevisited",
+			"page": 13,
+			"featureType": "AI"
+		},
+		{
+			"name": "Repeating Shot",
+			"prerequisite": [
+				{
+					"type": "prereqItem",
+					"entries": [
+						"A simple or martial weapon with the ammunition property (requires attunement)"
+					]
+				}
+			],
+			"entries": [
+				"This magic weapon grants a +1 bonus to attack and damage rolls made with it when it's used to make a ranged attack, and it ignores the loading property if it has it.",
+				"The weapon requires no ammunition; it magically produces one piece of ammunition each time you make a ranged attack with it, unless you manually load it. The ammunition produced by the weapon vanishes the instant after the it hits or misses a target."
+			],
+			"source": "UAArtificerRevisited",
+			"page": 13,
+			"featureType": "AI"
+		},
+		{
+			"name": "Replicate Magic Item",
+			"prerequisite": [
+				{
+					"type": "prereqSpecial",
+					"entry": "See below",
+					"entrySummary": "See text"
+				}
+			],
+			"entries": [
+				"Using this infusion, you replicate a particular magic item. You can learn this infusion multiple times; each time you do so, choose a different magic item that you can make with it, picking from the Replicable Magic Items tables below. If a table has a level in its title, you must be of at least that level in this class to choose an item from the table.",
+				"In the tables, an item's entry tells you whether the item requires attunement. See the item's description in the Dungeon Master's Guide for more information about it, including the type of object required for its making.",
+				{
+					"type": "table",
+					"caption": "Replicable Magic Items",
+					"colLabels": [
+						"Magic Item",
+						"Attunement"
+					],
+					"colStyles": [
+						"col-10",
+						"col-2 text-center"
+					],
+					"rows": [
+						[
+							"{@item Alchemy jug}",
+							"No"
+						],
+						[
+							"{@item Bag of holding}",
+							"No"
+						],
+						[
+							"{@item Cap of water breathing}",
+							"No"
+						],
+						[
+							"{@item Cloak of the manta ray}",
+							"No"
+						],
+						[
+							"{@item Goggles of night}",
+							"No"
+						],
+						[
+							"{@item Lantern of revealing}",
+							"No"
+						],
+						[
+							"{@item Rope of climbing}",
+							"No"
+						],
+						[
+							"{@item Sending stones}",
+							"No"
+						],
+						[
+							"{@item Wand of magic detection}",
+							"No"
+						],
+						[
+							"{@item Wand of secrets}",
+							"No"
+						]
+					]
+				},
+				{
+					"type": "table",
+					"caption": "Replicable Magic Items (12th-Level Artificer)",
+					"colLabels": [
+						"Magic Item",
+						"Attunement"
+					],
+					"colStyles": [
+						"col-10",
+						"col-2 text-center"
+					],
+					"rows": [
+						[
+							"{@item Boots of elvenkind}",
+							"No"
+						],
+						[
+							"{@item Boots of striding and springing}",
+							"Yes"
+						],
+						[
+							"{@item Boots of the winterlands}",
+							"Yes"
+						],
+						[
+							"{@item Bracers of archery}",
+							"Yes"
+						],
+						[
+							"{@item Brooch of shielding}",
+							"Yes"
+						],
+						[
+							"{@item Cloak of elvenkind}",
+							"Yes"
+						],
+						[
+							"{@item Cloak of protection}",
+							"Yes"
+						],
+						[
+							"{@item Eyes of charming}",
+							"Yes"
+						],
+						[
+							"{@item Eyes of the eagle}",
+							"Yes"
+						],
+						[
+							"{@item Gauntlets of ogre power}",
+							"Yes"
+						],
+						[
+							"{@item Gloves of missile snaring}",
+							"Yes"
+						],
+						[
+							"{@item Gloves of swimming and climbing}",
+							"Yes"
+						],
+						[
+							"{@item Gloves of thievery}",
+							"No"
+						],
+						[
+							"{@item Hat of disguise}",
+							"Yes"
+						],
+						[
+							"{@item Headband of intellect}",
+							"Yes"
+						],
+						[
+							"{@item Helm of telepathy}",
+							"Yes"
+						],
+						[
+							"{@item Medallion of thoughts}",
+							"Yes"
+						],
+						[
+							"{@item Periapt of wound closure}",
+							"Yes"
+						],
+						[
+							"{@item Pipes of haunting}",
+							"No"
+						],
+						[
+							"{@item Pipes of the sewers}",
+							"Yes"
+						],
+						[
+							"{@item Quiver of Ehlonna}",
+							"No"
+						],
+						[
+							"{@item Ring of jumping}",
+							"Yes"
+						],
+						[
+							"{@item Ring of mind shielding}",
+							"Yes"
+						],
+						[
+							"{@item Ring of water walking}",
+							"No"
+						],
+						[
+							"{@item Slippers of spider climbing}",
+							"Yes"
+						],
+						[
+							"{@item Winged boots}",
+							"Yes"
+						]
+					]
+				},
+				{
+					"type": "table",
+					"caption": "Replicable Magic Items (16th-Level Artificer)",
+					"colLabels": [
+						"Magic Item",
+						"Attunement"
+					],
+					"colStyles": [
+						"col-10",
+						"col-2 text-center"
+					],
+					"rows": [
+						[
+							"{@item Amulet of health}",
+							"Yes"
+						],
+						[
+							"{@item Belt of hill giant strength}",
+							"Yes"
+						],
+						[
+							"{@item Boots of levitation}",
+							"Yes"
+						],
+						[
+							"{@item Boots of speed}",
+							"Yes"
+						],
+						[
+							"{@item Bracers of defense}",
+							"Yes"
+						],
+						[
+							"{@item Cloak of the bat}",
+							"Yes"
+						],
+						[
+							"{@item Dimensional shackles}",
+							"No"
+						],
+						[
+							"{@item Gem of seeing}",
+							"Yes"
+						],
+						[
+							"{@item Horn of blasting}",
+							"No"
+						],
+						[
+							"{@item Ring of free action}",
+							"Yes"
+						],
+						[
+							"{@item Ring of protection}",
+							"Yes"
+						],
+						[
+							"{@item Ring of the ram}",
+							"Yes"
+						]
+					]
+				}
+			],
+			"source": "UAArtificerRevisited",
+			"page": 9,
+			"featureType": "AI"
+		},
+		{
+			"name": "Repulsion Shield",
+			"prerequisite": [
+				{
+					"type": "prereqLevel",
+					"level": 8,
+					"class": {
+						"name": "Artificer (Revisited)"
+					}
+				},
+				{
+					"type": "prereqItem",
+					"entries": [
+						"A shield (requires attunement)"
+					]
+				}
+			],
+			"entries": [
+				"A creature gains a +1 bonus to Armor Class while wielding this shield. While holding it, the wielder can use a reaction immediately after being hit by a melee attack to push the attacker up to 15 feet away. Once used, this reaction can't be used again until the wielder finishes a short or long rest."
+			],
+			"source": "UAArtificerRevisited",
+			"page": 14,
+			"featureType": "AI"
+		},
+		{
+			"name": "Resistant Armor",
+			"prerequisite": [
+				{
+					"type": "prereqLevel",
+					"level": 8,
+					"class": {
+						"name": "Artificer (Revisited)"
+					}
+				},
+				{
+					"type": "prereqItem",
+					"entries": [
+						"A suit of armor (requires attunement)"
+					]
+				}
+			],
+			"entries": [
+				"While wearing this armor, a creature has resistance to one of the following damage types, which you choose when you infuse the item: acid, cold, fire, force, lightning, necrotic, poison, psychic, radiant, or thunder."
+			],
+			"source": "UAArtificerRevisited",
+			"page": 14,
+			"featureType": "AI"
+		},
+		{
+			"name": "Returning Weapon",
+			"prerequisite": [
+				{
+					"type": "prereqItem",
+					"entries": [
+						"A simple or martial weapon with the thrown property"
+					]
+				}
+			],
+			"entries": [
+				"This magic weapon grants a +1 bonus to attack and damage rolls made with it, and it returns to the wielder's hand immediately after it is used to make a ranged attack."
+			],
+			"source": "UAArtificerRevisited",
+			"page": 10,
+			"featureType": "AI"
+		},
+		{
+			"name": "Churning Hull",
+			"entries": [
+				"A tempest rages within these rune-etched, iron chains. Raiders and pirates who operate under the blessings of a storm god sometimes make use of this upgrade.",
+				"By draping the chains over a ship's hull, the storm's fury thrashes into the water around it. The water within 210 feet of the ship is difficult terrain for everything other than this ship."
+			],
+			"source": "GoS",
+			"featureType": "SHP:H",
+			"page": 196
+		},
+		{
+			"name": "Death Vessel",
+			"entries": [
+				"Crafted with materials harvested from the Shadowfell, this upgrade grants a ship an aura of dread. As an action, the ship can create a pulse of horrific energy. Every creature that is an enemy of the ship who is on board or within 210 feet of it must make DC 14 Wisdom saving throw. On a failed save, a creature is {@condition frightened} of the ship for 1 minute. On a successful save, the creature is immune to this ability for 24 hours. Once this ability is used, it can't be used again until {@dice 1d4} hours have passed."
+			],
+			"source": "GoS",
+			"featureType": "SHP:H",
+			"page": 196
+		},
+		{
+			"name": "Frost-Locked Hull",
+			"entries": [
+				"This upgrade replaces a ship's hull with supernatural ice drawn from the elemental planes. The hull and the other components of the ship are immune to cold damage but vulnerable to fire damage. The ship can also move at its normal speed over ice of any thickness, floating on the ice at the same depth as it would in water."
+			],
+			"source": "GoS",
+			"featureType": "SHP:H",
+			"page": 196
+		},
+		{
+			"name": "Living Vessel",
+			"entries": [
+				"This vessel's hull was crafted in the Feywild under the direction of master eladrin shipwrights. It is a living plant, drawing sustenance from water and sunlight. Vines covered in thick leaves hang over its side, and the wood runs with fresh sap when damaged. The ship gains a +2 bonus to all Constitution checks or saving throws. As long as the ship has at least 1 hit point, it regains 10 hit points every minute."
+			],
+			"source": "GoS",
+			"featureType": "SHP:H",
+			"page": 196
+		},
+		{
+			"name": "Reinforced Hull",
+			"entries": [
+				"A master shipwright can use superior materials and clever design to make a ship's hull more resilient. Such reinforcement doubles the hull's hit point maximum."
+			],
+			"source": "GoS",
+			"featureType": "SHP:H",
+			"page": 197
+		},
+		{
+			"name": "Vigilant Watch",
+			"entries": [
+				"A row of crystal orbs, each filled with viscous liquid and a beholder's eyeball, is mounted along this ship's hull. {@condition Invisible} creatures are visible while on the ship or within 120 feet of it."
+			],
+			"source": "GoS",
+			"featureType": "SHP:H",
+			"page": 197
+		},
+		{
+			"name": "Clockwork Oars",
+			"entries": [
+				"Using a combination of magic and clockwork, the oars on this ship require only one crew member to use them, pushing the button or lever that activates them."
+			],
+			"source": "GoS",
+			"featureType": "SHP:M",
+			"page": 197
+		},
+		{
+			"name": "Ever-Full Sails",
+			"entries": [
+				"These billowing sails are woven from cloud-stuff drawn from the Elemental Plane of Air. Wind whips and whistles around them, allowing a ship to move with a speed of 60 feet regardless of direction relative to the wind."
+			],
+			"source": "GoS",
+			"featureType": "SHP:M",
+			"page": 197
+		},
+		{
+			"name": "Defiant Sails",
+			"entries": [
+				"These sails glitter with a fine coat of mithral treated with abjuration magic. While the sails are unfurled, ranged weapon attacks made against the ship and anyone aboard it are made with disadvantage, as a result of the sails' protective magic. This drawback doesn't apply if the attacker is aboard the ship."
+			],
+			"source": "GoS",
+			"featureType": "SHP:M",
+			"page": 197
+		},
+		{
+			"name": "Dragon Sails",
+			"entries": [
+				"Dragon scales woven into these sails make them more resistant to damage. The sails gain a +3 bonus to AC, and they have resistance to a damage type based on the type of scales used to craft them, as shown on the Dragon Sails table.",
+				{
+					"type": "table",
+					"caption": "Dragon Sails",
+					"colStyles": [
+						"col-6 text-center",
+						"col-6 text-center"
+					],
+					"colLabels": [
+						"Dragon Type",
+						"Damage Type"
+					],
+					"rows": [
+						[
+							"Black",
+							"Acid"
+						],
+						[
+							"Blue",
+							"Lightning"
+						],
+						[
+							"Brass",
+							"Fire"
+						],
+						[
+							"Bronze",
+							"Lightning"
+						],
+						[
+							"Copper",
+							"Acid"
+						],
+						[
+							"Gold",
+							"Fire"
+						],
+						[
+							"Green",
+							"Acid"
+						],
+						[
+							"Red",
+							"Fire"
+						],
+						[
+							"Silver",
+							"Cold"
+						],
+						[
+							"White",
+							"Cold"
+						]
+					]
+				}
+			],
+			"source": "GoS",
+			"featureType": "SHP:M",
+			"page": 197
+		},
+		{
+			"name": "Screaming Sails",
+			"entries": [
+				"Woven from the energy of captured wraiths and bound with the spirit of a banshee, these sails groan mournfully when they catch the wind. As an action, while within 5 feet of the sails, the ship's captain can cause the sails to unleash a howl. Every creature hostile to the ship who is on board or within 300 feet of it must succeed on a DC 14 Wisdom saving throw, or the creature takes {@dice 4d6} psychic damage and is then {@condition frightened} for 1 minute. Once this ability has been used, it can't be used again until {@dice 2d6} hours have passed."
+			],
+			"source": "GoS",
+			"featureType": "SHP:M",
+			"page": 197
+		},
+		{
+			"name": "Scything Oars",
+			"entries": [
+				"Sharpened, magically reinforced oars make a vessel dangerous to approach. When the ship takes an action that moves it with these oars, any creature or object in the water within 10 feet of it at any point of the move must make a DC 10 Dexterity saving throw, taking {@dice 2d6} slashing damage on a failed save or half as much damage on a successful one."
+			],
+			"source": "GoS",
+			"featureType": "SHP:M",
+			"page": 197
+		},
+		{
+			"name": "Arcane Artillery",
+			"entries": [
+				"Using methods similar to those used to produce magic weapons, a skilled spellcaster imbues a ship's weapon with destructive energy. This weapon gains a +2 bonus to its attack and damage rolls, and its attacks count as magical."
+			],
+			"source": "GoS",
+			"featureType": "SHP:W",
+			"page": 197
+		},
+		{
+			"name": "Concussive Rounds",
+			"entries": [
+				"Enhanced by abjuration magic, this weapon's attacks burst with raucous noise capable of momentarily distracting and disorienting enemy crews. If this weapon hits a vehicle's hull, that vehicle's speed decreases by {@dice 2d10} feet until the start of the attacker's next turn."
+			],
+			"source": "GoS",
+			"featureType": "SHP:W",
+			"page": 197
+		},
+		{
+			"name": "Explosive Rounds",
+			"entries": [
+				"Drawing on powerful evocation magic, this weapon's attacks are imbued with unstable energy that explodes in a fiery blast. When this weapon hits, it deals an extra {@dice 2d6} fire damage."
+			],
+			"source": "GoS",
+			"featureType": "SHP:W",
+			"page": 197
+		},
+		{
+			"name": "Grasping Rounds",
+			"entries": [
+				"This weapon creates spectral chains that trail after its shots, restraining enemy vessels in their grasp. When this weapon hits a ship, that vehicle must succeed on a DC 14 Strength saving throw or it can't move away from the attacker. As an action, the attacking ship can end this effect, and the target can end it by taking an action and succeeding on a DC 14 Strength check."
+			],
+			"source": "GoS",
+			"featureType": "SHP:W",
+			"page": 197
+		},
+		{
+			"name": "Guardian Figurehead",
+			"entries": [
+				"This figurehead depicts an armored knight. As an action, the ship can activate this item, causing it to animate as an {@creature iron golem}. The golem acts on the ship's turn when the captain uses one of the ship's actions. The golem remains animated for 1 minute. At the end of that time, it teleports back to its position as a figurehead. Once a ship uses this action, it can't use it again for 24 hours."
+			],
+			"source": "GoS",
+			"featureType": "SHP:F",
+			"page": 198
+		},
+		{
+			"name": "Red Dragon Figurehead",
+			"entries": [
+				"This figurehead depicts a red dragon rearing to strike, its mouth open. As an action, the ship can activate this item to create a 60-foot cone of flame that originates from the figurehead. Each creature and object in the cone must make a DC 12 Dexterity saving throw, taking 21 ({@dice 6d6}) fire damage on a failed save, or half as much damage on a successful one. Once a ship uses this action, it can't use it again for 1 minute."
+			],
+			"source": "GoS",
+			"featureType": "SHP:F",
+			"page": 198
+		},
+		{
+			"name": "Storm Giant Figurehead",
+			"entries": [
+				"This figurehead depicts a storm giant clutching a thunderbolt. As an action, the ship can activate this item to create a 60-foot cone that originates from the figurehead. Each creature in the cone must make DC 12 Constitution saving throw, taking 14 ({@dice 4d6}) thunder damage on a failed save, or half as much damage on a successful one. A creature that fails its saving throw is also pushed 10 feet away from the figurehead. Once a ship uses this action, it can't use it again for 1 minute."
+			],
+			"source": "GoS",
+			"featureType": "SHP:F",
+			"page": 198
+		},
+		{
+			"name": "Bones of Endless Toil",
+			"entries": [
+				"The bones of ancient, mysterious creatures festoon the ship. Potent runes crawl across these remains, emitting a sickly green radiance. When a humanoid dies aboard the ship, that creature must make a DC 12 Wisdom saving throw. On a successful save, it dies as normal. If it fails, it immediately rises as a {@creature zombie} obedient to the ship's captain. The zombie gains a working knowledge of the ship, allowing it to serve as a member of the crew. A number of creatures equal to the ship's creature capacity can be animated in this manner at any given time."
+			],
+			"source": "GoS",
+			"featureType": "SHP:O",
+			"page": 198
+		},
+		{
+			"name": "Smuggler's Banner",
+			"entries": [
+				"This flag is meant to be flown from a ship's mast. Its powerful magic causes it to appear as a flag or banner displaying the symbol of a group, captain, or realm friendly to the viewer. Multiple viewers might see different flags or crests.",
+				"The banner's true power is its ability to aid a ship in making rapid escapes. As an action, the ship and all friendly creatures aboard it teleport up to 3 miles to a known destination of the captain's choice. Hostile creatures aboard the ship don't move with the ship and fall into the water it once occupied. Once this item is used to teleport, it can't teleport in this way again for {@dice 2d6} days."
+			],
+			"source": "GoS",
+			"featureType": "SHP:O",
+			"page": 198
+		},
+		{
+			"name": "Taskmaster's Drums",
+			"entries": [
+				"This 4-foot-tall bronze drum comes with a pair of iron mallets. A creature can activate the drums as an action, causing the hammers to float above the drum and strike it to produce a thundering rhythm. For the next minute, the ship gains one additional action, as long as it has at least one action. Once this item is used, it can't be activated again for {@dice 2d10} hours."
+			],
+			"source": "GoS",
+			"featureType": "SHP:O",
+			"page": 198
 		}
 	]
 }

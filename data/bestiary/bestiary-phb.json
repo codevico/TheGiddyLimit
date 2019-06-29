@@ -25,18 +25,21 @@
 			},
 			"str": 18,
 			"dex": 6,
-			"con": 6,
+			"con": 10,
 			"int": 3,
 			"wis": 3,
-			"cha": 3,
+			"cha": 1,
 			"passive": 6,
 			"cr": "Unknown",
-			"senses": "blindsight 30 ft. (blind beyond this radius)",
+			"senses": [
+				"blindsight 30 ft. (blind beyond this radius)"
+			],
 			"trait": [
 				{
-					"name": "Variable Speed and Damage",
+					"name": "Animated",
 					"entries": [
 						"If the object lacks legs or other appendages it can use for locomotion, it instead has a flying speed of 30 feet and can hover. If the object is securely attached to a surface or larger object, such as a chain bolted to a wall, its speed is 0.",
+						"When the animated object drops to 0 hit points, it reverts to its original object form, and any remaining damage carries over to its original object form.",
 						"The DM might rule that a specific objects slam attack inflicts slashing or piercing damage based on its form."
 					]
 				}
@@ -45,13 +48,19 @@
 				{
 					"name": "Slam",
 					"entries": [
-						"{@atk mw} {@hit 8} to hit, reach 5 ft., one target. Hit: 16 ({@damage 2d12 + 4}) bludgeoning damage."
+						"{@atk mw} {@hit 8} to hit, reach 5 ft., one target. {@h}16 ({@damage 2d12 + 4}) bludgeoning damage."
 					]
 				}
 			],
 			"page": 213,
 			"senseTags": [
 				"B"
+			],
+			"damageTags": [
+				"B"
+			],
+			"miscTags": [
+				"MW"
 			]
 		},
 		{
@@ -82,15 +91,18 @@
 			"con": 10,
 			"int": 3,
 			"wis": 3,
-			"cha": 3,
+			"cha": 1,
 			"passive": 6,
 			"cr": "Unknown",
-			"senses": "blindsight 30 ft. (blind beyond this radius)",
+			"senses": [
+				"blindsight 30 ft. (blind beyond this radius)"
+			],
 			"trait": [
 				{
-					"name": "Variable Speed and Damage",
+					"name": "Animated",
 					"entries": [
 						"If the object lacks legs or other appendages it can use for locomotion, it instead has a flying speed of 30 feet and can hover. If the object is securely attached to a surface or larger object, such as a chain bolted to a wall, its speed is 0.",
+						"When the animated object drops to 0 hit points, it reverts to its original object form, and any remaining damage carries over to its original object form.",
 						"The DM might rule that a specific objects slam attack inflicts slashing or piercing damage based on its form."
 					]
 				}
@@ -99,13 +111,19 @@
 				{
 					"name": "Slam",
 					"entries": [
-						"{@atk mw} {@hit 6} to hit, reach 5 ft., one target. Hit: 12 ({@damage 2d10 + 2}) bludgeoning damage."
+						"{@atk mw} {@hit 6} to hit, reach 5 ft., one target. {@h}12 ({@damage 2d10 + 2}) bludgeoning damage."
 					]
 				}
 			],
 			"page": 213,
 			"senseTags": [
 				"B"
+			],
+			"damageTags": [
+				"B"
+			],
+			"miscTags": [
+				"MW"
 			]
 		},
 		{
@@ -136,15 +154,18 @@
 			"con": 10,
 			"int": 3,
 			"wis": 3,
-			"cha": 3,
+			"cha": 1,
 			"passive": 6,
 			"cr": "Unknown",
-			"senses": "blindsight 30 ft. (blind beyond this radius)",
+			"senses": [
+				"blindsight 30 ft. (blind beyond this radius)"
+			],
 			"trait": [
 				{
-					"name": "Variable Speed and Damage",
+					"name": "Animated",
 					"entries": [
 						"If the object lacks legs or other appendages it can use for locomotion, it instead has a flying speed of 30 feet and can hover. If the object is securely attached to a surface or larger object, such as a chain bolted to a wall, its speed is 0.",
+						"When the animated object drops to 0 hit points, it reverts to its original object form, and any remaining damage carries over to its original object form.",
 						"The DM might rule that a specific objects slam attack inflicts slashing or piercing damage based on its form."
 					]
 				}
@@ -153,13 +174,19 @@
 				{
 					"name": "Slam",
 					"entries": [
-						"{@atk mw} {@hit 5} to hit, reach 5 ft., one target. Hit: 7 ({@damage 2d6 + 1}) bludgeoning damage."
+						"{@atk mw} {@hit 5} to hit, reach 5 ft., one target. {@h}7 ({@damage 2d6 + 1}) bludgeoning damage."
 					]
 				}
 			],
 			"page": 213,
 			"senseTags": [
 				"B"
+			],
+			"damageTags": [
+				"B"
+			],
+			"miscTags": [
+				"MW"
 			]
 		},
 		{
@@ -190,15 +217,18 @@
 			"con": 10,
 			"int": 3,
 			"wis": 3,
-			"cha": 3,
+			"cha": 1,
 			"passive": 6,
 			"cr": "Unknown",
-			"senses": "blindsight 30 ft. (blind beyond this radius)",
+			"senses": [
+				"blindsight 30 ft. (blind beyond this radius)"
+			],
 			"trait": [
 				{
-					"name": "Variable Speed and Damage",
+					"name": "Animated",
 					"entries": [
 						"If the object lacks legs or other appendages it can use for locomotion, it instead has a flying speed of 30 feet and can hover. If the object is securely attached to a surface or larger object, such as a chain bolted to a wall, its speed is 0.",
+						"When the animated object drops to 0 hit points, it reverts to its original object form, and any remaining damage carries over to its original object form.",
 						"The DM might rule that a specific objects slam attack inflicts slashing or piercing damage based on its form."
 					]
 				}
@@ -207,13 +237,19 @@
 				{
 					"name": "Slam",
 					"entries": [
-						"{@atk mw} {@hit 6} to hit, reach 5 ft., one target. Hit: 6 ({@damage 1d8 + 2}) bludgeoning damage."
+						"{@atk mw} {@hit 6} to hit, reach 5 ft., one target. {@h}6 ({@damage 1d8 + 2}) bludgeoning damage."
 					]
 				}
 			],
 			"page": 213,
 			"senseTags": [
 				"B"
+			],
+			"damageTags": [
+				"B"
+			],
+			"miscTags": [
+				"MW"
 			]
 		},
 		{
@@ -244,15 +280,18 @@
 			"con": 10,
 			"int": 3,
 			"wis": 3,
-			"cha": 3,
+			"cha": 1,
 			"passive": 6,
 			"cr": "Unknown",
-			"senses": "blindsight 30 ft. (blind beyond this radius)",
+			"senses": [
+				"blindsight 30 ft. (blind beyond this radius)"
+			],
 			"trait": [
 				{
-					"name": "Variable Speed and Damage",
+					"name": "Animated",
 					"entries": [
 						"If the object lacks legs or other appendages it can use for locomotion, it instead has a flying speed of 30 feet and can hover. If the object is securely attached to a surface or larger object, such as a chain bolted to a wall, its speed is 0.",
+						"When the animated object drops to 0 hit points, it reverts to its original object form, and any remaining damage carries over to its original object form.",
 						"The DM might rule that a specific objects slam attack inflicts slashing or piercing damage based on its form."
 					]
 				}
@@ -261,13 +300,19 @@
 				{
 					"name": "Slam",
 					"entries": [
-						"{@atk mw} {@hit 8} to hit, reach 5 ft., one target. Hit: 6 ({@damage 1d4 + 4}) bludgeoning damage."
+						"{@atk mw} {@hit 8} to hit, reach 5 ft., one target. {@h}6 ({@damage 1d4 + 4}) bludgeoning damage."
 					]
 				}
 			],
 			"page": 213,
 			"senseTags": [
 				"B"
+			],
+			"damageTags": [
+				"B"
+			],
+			"miscTags": [
+				"MW"
 			]
 		}
 	]

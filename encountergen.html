@@ -16,7 +16,6 @@
 	<link rel="stylesheet" href="css/style.css">
 	<link rel="icon" href="favicon.png">
 
-	<script type="text/javascript" src="lib/js-cookie.js"></script>
 	<script type="text/javascript" src="js/styleswitch.js"></script>
 	<script type="text/javascript" src="js/navigation.js"></script>
 	<style>
@@ -87,22 +86,24 @@
 
 <body>
 <div class="viewport-wrapper">
-	<header class="hidden-xs hidden-sm">
+	<header class="hidden-xs hidden-sm page__header">
 		<div class="container">
-			<h1>Encounter Gen</h1>
-			<p>Choose a setting and level range, then roll the d100!</p>
+			<h1 class="page__title">Encounter Generator</h1>
+			<p class="page__subtitle">Choose a setting and level range, then roll the d100!</p>
 		</div>
 	</header>
-	<nav class="container" id="navigation">
-		<ul class="nav nav-pills" id="navbar">
+	<nav class="container page__nav" id="navigation">
+		<ul class="nav page__nav-inner" id="navbar">
 		</ul>
 	</nav>
 
+	<div class="cancer__wrp-leaderboard"><!--5ETOOLS_AD_LEADERBOARD--></div>
+	<div class="cancer__wrp-sidebar-rhs cancer__wrp-sidebar-rhs--single"><!--5ETOOLS_AD_RIGHT_1--></div>
 
 	<div class="container view-col-wrapper">
 		<div class="view-col" id="listcontainer">
 			<div class="input-group search-box">
-				<input type="search" id="search" class="search form-control" placeholder="Find location...">
+				<input type="search" id="search" autocomplete="off" autocapitalize="off" spellcheck="false" class="search form-control" placeholder="Find location...">
 				<span class="input-group-btn">
 						<button class="btn btn-default reset" id="reset" type="button">Reset</button>
 					</span>
@@ -115,7 +116,7 @@
 
 		<div class="view-col" id="tablecontainer">
 			<div class="rolltable" id="contentwrapper">
-				<table id="pagecontent" class="stats stats-book">
+				<table id="pagecontent" class="stats stats-book stats-book--large">
 					<!-- populate with JS -->
 				</table>
 			</div>
@@ -123,9 +124,11 @@
 	</div>
 </div>    <!--5ETOOLS_SCRIPT_ANCHOR-->
 <script type="text/javascript" src="js/utils.js"></script>
+<script type="text/javascript" src="js/utils-ui.js"></script>
+<script type="text/javascript" src="lib/localforage.js"></script>
 <script type="text/javascript" src="js/omnidexer.js"></script>
 <script type="text/javascript" src="js/omnisearch.js"></script>
-<script type="text/javascript" src="js/entryrender.js"></script>
+<script type="text/javascript" src="js/render.js"></script>
 <script type="text/javascript" src="js/scalecreature.js"></script>
 <script type="text/javascript" src="js/history.js"></script>
 <script type="text/javascript" src="js/encountergen.js"></script>
@@ -133,7 +136,6 @@
 <script type="text/javascript" src="lib/jquery.js"></script>
 <script type="text/javascript" src="lib/jquery-ui.js"></script>
 <script type="text/javascript" src="lib/jquery-ui-slider-pip.js"></script>
-<script type="text/javascript" src="lib/bootstrap.js"></script>
 <script type="text/javascript" src="lib/elasticlunr.js"></script>
 </body>
 

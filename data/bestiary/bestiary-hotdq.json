@@ -1,5 +1,36 @@
 {
+	"_meta": {
+		"dependencies": {
+			"monster": [
+				"MM",
+				"VGM"
+			]
+		},
+		"otherSources": {
+			"monster": {
+				"MM": "HotDQ"
+			}
+		}
+	},
 	"monster": [
+		{
+			"name": "Sandesyl Morgia",
+			"_copy": {
+				"name": "Vampire",
+				"source": "MM",
+				"_mod": {
+					"*": {
+						"mode": "replaceTxt",
+						"replace": "the vampire",
+						"with": "Sandesyl",
+						"flags": "i"
+					}
+				}
+			},
+			"isNpc": true,
+			"source": "HotDQ",
+			"page": 81
+		},
 		{
 			"name": "Ambush Drake",
 			"size": "M",
@@ -36,9 +67,13 @@
 			"resist": [
 				"poison"
 			],
-			"senses": "darkvision 60 ft.",
+			"senses": [
+				"darkvision 60 ft."
+			],
 			"passive": 14,
-			"languages": "understands Draconic but can't speak it",
+			"languages": [
+				"understands Draconic but can't speak it"
+			],
 			"cr": "1/2",
 			"trait": [
 				{
@@ -58,7 +93,7 @@
 				{
 					"name": "Bite",
 					"entries": [
-						"{@atk mw} {@hit 4} to hit, reach 5 ft., one target. Hit: 4 ({@damage 1d6 + 1}) piercing damage."
+						"{@atk mw} {@hit 4} to hit, reach 5 ft., one target. {@h}4 ({@damage 1d6 + 1}) piercing damage."
 					]
 				}
 			],
@@ -67,15 +102,22 @@
 				"Pack Tactics"
 			],
 			"languageTags": [
+				"CS",
 				"DR"
 			],
 			"senseTags": [
 				"D"
+			],
+			"damageTags": [
+				"P"
+			],
+			"miscTags": [
+				"MW"
 			]
 		},
 		{
 			"name": "Azbara Jos",
-			"isNPC": true,
+			"isNpc": true,
 			"size": "M",
 			"type": {
 				"type": "humanoid",
@@ -120,13 +162,19 @@
 				"stealth": "+5"
 			},
 			"passive": 11,
-			"languages": "Common, Draconic, Infernal, Primordial, Thayan",
+			"languages": [
+				"Common",
+				"Draconic",
+				"Infernal",
+				"Primordial",
+				"Thayan"
+			],
 			"cr": "4",
 			"spellcasting": [
 				{
 					"name": "Spellcasting",
 					"headerEntries": [
-						"Azbara is a 6th-level spellcaster that uses Intelligence as his spellcasting ability (spell save DC 13, {@hit 5} to hit with spell attacks). Azbara has the following spells prepared from the wizard spell list:"
+						"Azbara is a 6th-level spellcaster that uses Intelligence as his spellcasting ability (spell save {@dc 13}, {@hit 5} to hit with spell attacks). Azbara has the following spells prepared from the wizard spell list:"
 					],
 					"spells": {
 						"0": {
@@ -190,7 +238,7 @@
 				{
 					"name": "Dagger",
 					"entries": [
-						"{@atk mw,rw} {@hit 5} to hit, reach 5 ft. or ranged 20/60 ft., one target. Hit: 5 ({@damage 1d4 + 3}) piercing damage."
+						"{@atk mw,rw} {@hit 5} to hit, reach 5 ft. or ranged 20/60 ft., one target. {@h}5 ({@damage 1d4 + 3}) piercing damage."
 					]
 				}
 			],
@@ -201,11 +249,22 @@
 				"I",
 				"P",
 				"OTH"
+			],
+			"spellcastingTags": [
+				"CW"
+			],
+			"damageTags": [
+				"P"
+			],
+			"miscTags": [
+				"RW",
+				"MW",
+				"THW"
 			]
 		},
 		{
 			"name": "Blagothkus",
-			"isNPC": true,
+			"isNpc": true,
 			"size": "H",
 			"type": {
 				"type": "giant",
@@ -251,13 +310,17 @@
 				"perception": "+6"
 			},
 			"passive": 16,
-			"languages": "Common, Draconic, Giant",
+			"languages": [
+				"Common",
+				"Draconic",
+				"Giant"
+			],
 			"cr": "9",
 			"spellcasting": [
 				{
 					"name": "Innate Spellcasting",
 					"headerEntries": [
-						"Blagothkus can innately cast the following spells (spell save DC 15), requiring no material components:"
+						"Blagothkus can innately cast the following spells (spell save {@dc 15}), requiring no material components:"
 					],
 					"daily": {
 						"3e": [
@@ -269,7 +332,7 @@
 				{
 					"name": "Spellcasting",
 					"headerEntries": [
-						"Blagothkus is a 5th-level spellcaster that uses Intelligence as his spellcasting ability (spell save DC 15, {@hit 7} to hit with spell attacks). Blagothkus has the following spells prepared from the wizard spell list:"
+						"Blagothkus is a 5th-level spellcaster that uses Intelligence as his spellcasting ability (spell save {@dc 15}, {@hit 7} to hit with spell attacks). Blagothkus has the following spells prepared from the wizard spell list:"
 					],
 					"spells": {
 						"0": {
@@ -325,7 +388,7 @@
 				{
 					"name": "Morningstar",
 					"entries": [
-						"{@atk mw} {@hit 10} to hit, reach 10 ft., one target. Hit: 21 ({@damage 3d8 + 8}) piercing damage."
+						"{@atk mw} {@hit 10} to hit, reach 10 ft., one target. {@h}21 ({@damage 3d8 + 8}) piercing damage."
 					]
 				}
 			],
@@ -340,11 +403,22 @@
 				"C",
 				"DR",
 				"GI"
+			],
+			"spellcastingTags": [
+				"I",
+				"CW"
+			],
+			"damageTags": [
+				"P"
+			],
+			"miscTags": [
+				"MW",
+				"RCH"
 			]
 		},
 		{
 			"name": "Captain Othelstan",
-			"isNPC": true,
+			"isNpc": true,
 			"size": "M",
 			"type": {
 				"type": "humanoid",
@@ -390,7 +464,11 @@
 				"religion": "+4"
 			},
 			"passive": 15,
-			"languages": "Common, Draconic, Giant",
+			"languages": [
+				"Common",
+				"Draconic",
+				"Giant"
+			],
 			"cr": "5",
 			"trait": [
 				{
@@ -416,13 +494,13 @@
 				{
 					"name": "Flail",
 					"entries": [
-						"{@atk mw} {@hit 7} to hit, reach 5 ft., one target. Hit: 8 ({@damage 1d8 + 4}) bludgeoning damage."
+						"{@atk mw} {@hit 7} to hit, reach 5 ft., one target. {@h}8 ({@damage 1d8 + 4}) bludgeoning damage."
 					]
 				},
 				{
 					"name": "Spear",
 					"entries": [
-						"{@atk mw,rw} {@hit 7} to hit, reach 5 ft. or ranged 20/60 ft., one target. Hit: 7 ({@damage 1d6 + 4}) piercing damage."
+						"{@atk mw,rw} {@hit 7} to hit, reach 5 ft. or ranged 20/60 ft., one target. {@h}7 ({@damage 1d6 + 4}) piercing damage."
 					]
 				}
 			],
@@ -434,11 +512,20 @@
 				"C",
 				"DR",
 				"GI"
+			],
+			"damageTags": [
+				"B",
+				"P"
+			],
+			"miscTags": [
+				"MW",
+				"RW",
+				"THW"
 			]
 		},
 		{
 			"name": "Dralmorrer Borngray",
-			"isNPC": true,
+			"isNpc": true,
 			"size": "M",
 			"type": {
 				"type": "humanoid",
@@ -484,15 +571,24 @@
 				"perception": "+2",
 				"religion": "+5"
 			},
-			"senses": "darkvision 60 ft.",
+			"senses": [
+				"darkvision 60 ft."
+			],
 			"passive": 12,
-			"languages": "Common, Bullywug, Draconic, Elvish, Goblin, Sylvan",
+			"languages": [
+				"Common",
+				"Bullywug",
+				"Draconic",
+				"Elvish",
+				"Goblin",
+				"Sylvan"
+			],
 			"cr": "3",
 			"spellcasting": [
 				{
 					"name": "Spellcasting",
 					"headerEntries": [
-						"Dralmorrer is a 7th-level spellcaster that uses Intelligence as his spellcasting ability (spell save DC 13, {@hit 5} to hit with spell attacks). Dralmorrer has the following spells prepared from the wizard spell list:"
+						"Dralmorrer is a 7th-level spellcaster that uses Intelligence as his spellcasting ability (spell save {@dc 13}, {@hit 5} to hit with spell attacks). Dralmorrer has the following spells prepared from the wizard spell list:"
 					],
 					"spells": {
 						"0": {
@@ -552,13 +648,13 @@
 				{
 					"name": "Longsword",
 					"entries": [
-						"{@atk mw} {@hit 6} to hit, reach 5 ft., one target. Hit: 8 ({@damage 1d8 + 4}) slashing damage."
+						"{@atk mw} {@hit 6} to hit, reach 5 ft., one target. {@h}8 ({@damage 1d8 + 4}) slashing damage."
 					]
 				},
 				{
 					"name": "Dagger",
 					"entries": [
-						"{@atk mw,rw} {@hit 6} to hit, reach 5 ft. or ranged 20/60 ft., one target. Hit: 6 ({@damage 1d4 + 4}) piercing damage."
+						"{@atk mw,rw} {@hit 6} to hit, reach 5 ft. or ranged 20/60 ft., one target. {@h}6 ({@damage 1d4 + 4}) piercing damage."
 					]
 				}
 			],
@@ -579,11 +675,23 @@
 			],
 			"senseTags": [
 				"D"
+			],
+			"spellcastingTags": [
+				"CW"
+			],
+			"damageTags": [
+				"S",
+				"P"
+			],
+			"miscTags": [
+				"MW",
+				"RW",
+				"THW"
 			]
 		},
 		{
 			"name": "Frulam Mondath",
-			"isNPC": true,
+			"isNpc": true,
 			"size": "M",
 			"type": {
 				"type": "humanoid",
@@ -627,13 +735,17 @@
 				"religion": "+2"
 			},
 			"passive": 14,
-			"languages": "Common, Draconic, Infernal",
+			"languages": [
+				"Common",
+				"Draconic",
+				"Infernal"
+			],
 			"cr": "2",
 			"spellcasting": [
 				{
 					"name": "Spellcasting",
 					"headerEntries": [
-						"Frulam is a 5th-level spellcaster that uses Wisdom as her spellcasting ability (spell save DC 14, {@hit 6} to hit with spell attacks). Frulam has the following spells prepared from the cleric spell list:"
+						"Frulam is a 5th-level spellcaster that uses Wisdom as her spellcasting ability (spell save {@dc 14}, {@hit 6} to hit with spell attacks). Frulam has the following spells prepared from the cleric spell list:"
 					],
 					"spells": {
 						"0": {
@@ -681,7 +793,7 @@
 				{
 					"name": "Halberd",
 					"entries": [
-						"{@atk mw} {@hit 5} to hit, reach 10 ft., one target. Hit: 7 ({@damage 1d10 + 2}) bludgeoning damage."
+						"{@atk mw} {@hit 5} to hit, reach 10 ft., one target. {@h}7 ({@damage 1d10 + 2}) bludgeoning damage."
 					]
 				}
 			],
@@ -693,11 +805,21 @@
 				"C",
 				"DR",
 				"I"
+			],
+			"spellcastingTags": [
+				"CC"
+			],
+			"damageTags": [
+				"B"
+			],
+			"miscTags": [
+				"MW",
+				"RCH"
 			]
 		},
 		{
 			"name": "Jamna Gleamsilver",
-			"isNPC": true,
+			"isNpc": true,
 			"size": "S",
 			"type": {
 				"type": "humanoid",
@@ -742,15 +864,22 @@
 				"persuasion": "+3",
 				"stealth": "+7"
 			},
-			"senses": "darkvision 60 ft.",
+			"senses": [
+				"darkvision 60 ft."
+			],
 			"passive": 14,
-			"languages": "Common, Gnomish, Goblin, Sylvan",
+			"languages": [
+				"Common",
+				"Gnomish",
+				"Goblin",
+				"Sylvan"
+			],
 			"cr": "1",
 			"spellcasting": [
 				{
 					"name": "Spellcasting",
 					"headerEntries": [
-						"Jamna is a 4th-level spellcaster that uses Intelligence as her spellcasting ability (spell save DC 12, {@hit 4} to hit with spell attacks). Jamna has the following spells prepared from the wizard spell list."
+						"Jamna is a 4th-level spellcaster that uses Intelligence as her spellcasting ability (spell save {@dc 12}, {@hit 4} to hit with spell attacks). Jamna has the following spells prepared from the wizard spell list."
 					],
 					"spells": {
 						"0": {
@@ -798,7 +927,7 @@
 				{
 					"name": "Shortsword",
 					"entries": [
-						"{@atk mw} {@hit 5} to hit, reach 5 ft., one target. Hit: 6 ({@damage 1d6 + 3}) piercing damage, or 9 ({@dice 1d6 + 3}) plus ({@dice 1d6}) piercing damage if the target is Medium or larger."
+						"{@atk mw} {@hit 5} to hit, reach 5 ft., one target. {@h}6 ({@damage 1d6 + 3}) piercing damage, or 9 ({@dice 1d6 + 3}) plus ({@dice 1d6}) piercing damage if the target is Medium or larger."
 					]
 				}
 			],
@@ -814,11 +943,20 @@
 			],
 			"senseTags": [
 				"D"
+			],
+			"spellcastingTags": [
+				"CW"
+			],
+			"damageTags": [
+				"P"
+			],
+			"miscTags": [
+				"MW"
 			]
 		},
 		{
 			"name": "Langdedrosa Cyanwrath",
-			"isNPC": true,
+			"isNpc": true,
 			"size": "M",
 			"type": {
 				"type": "humanoid",
@@ -864,9 +1002,15 @@
 			"resist": [
 				"lightning"
 			],
-			"senses": "blindsight 10 ft., darkvision 60 ft.",
+			"senses": [
+				"blindsight 10 ft.",
+				"darkvision 60 ft."
+			],
 			"passive": 14,
-			"languages": "Common, Draconic",
+			"languages": [
+				"Common",
+				"Draconic"
+			],
 			"cr": "4",
 			"trait": [
 				{
@@ -892,19 +1036,19 @@
 				{
 					"name": "Greatsword",
 					"entries": [
-						"{@atk mw} {@hit 6} to hit, reach 5 ft., one target. Hit: 11 ({@damage 2d6 + 4}) slashing damage."
+						"{@atk mw} {@hit 6} to hit, reach 5 ft., one target. {@h}11 ({@damage 2d6 + 4}) slashing damage."
 					]
 				},
 				{
 					"name": "Spear",
 					"entries": [
-						"{@atk mw,rw} {@hit 6} to hit, reach 5 ft. or ranged 20/60 ft., one target. Hit: 7 ({@damage 1d6 + 4}) piercing damage."
+						"{@atk mw,rw} {@hit 6} to hit, reach 5 ft. or ranged 20/60 ft., one target. {@h}7 ({@damage 1d6 + 4}) piercing damage."
 					]
 				},
 				{
 					"name": "Lightning Breath {@recharge 5}",
 					"entries": [
-						"Langdedrosa breathes lightning in a 30-foot line that is 5 feet wide. Each creature in the line must make a DC 13 Dexterity saving throw, taking 22 ({@damage 4d10}) lightning damage on a failed save, or half as much damage on a successful one."
+						"Langdedrosa breathes lightning in a 30-foot line that is 5 feet wide. Each creature in the line must make a {@dc 13} Dexterity saving throw, taking 22 ({@damage 4d10}) lightning damage on a failed save, or half as much damage on a successful one."
 					]
 				}
 			],
@@ -919,11 +1063,22 @@
 			"senseTags": [
 				"B",
 				"D"
+			],
+			"damageTags": [
+				"S",
+				"P",
+				"L"
+			],
+			"miscTags": [
+				"MW",
+				"RW",
+				"THW",
+				"AOE"
 			]
 		},
 		{
 			"name": "Pharblex Spattergoo",
-			"isNPC": true,
+			"isNpc": true,
 			"size": "M",
 			"type": {
 				"type": "humanoid",
@@ -969,13 +1124,16 @@
 				"stealth": "+3"
 			},
 			"passive": 15,
-			"languages": "Common, Bullywug",
+			"languages": [
+				"Common",
+				"Bullywug"
+			],
 			"cr": "3",
 			"spellcasting": [
 				{
 					"name": "Spellcasting",
 					"headerEntries": [
-						"Pharblex is a 6th-level spellcaster that uses Wisdom as his spellcasting ability (spell save DC 13, {@hit 5} to hit with spell attacks). Pharblex has the following spells prepared from the druid spell list:"
+						"Pharblex is a 6th-level spellcaster that uses Wisdom as his spellcasting ability (spell save {@dc 13}, {@hit 5} to hit with spell attacks). Pharblex has the following spells prepared from the druid spell list:"
 					],
 					"spells": {
 						"0": {
@@ -1049,13 +1207,13 @@
 				{
 					"name": "Bite",
 					"entries": [
-						"{@atk mw} {@hit 5} to hit, reach 5 ft., one target. Hit: 4 ({@damage 1d4 + 2}) piercing damage."
+						"{@atk mw} {@hit 5} to hit, reach 5 ft., one target. {@h}4 ({@damage 1d4 + 2}) piercing damage."
 					]
 				},
 				{
 					"name": "Spear",
 					"entries": [
-						"{@atk mw,rw} {@hit 5} to hit. reach 5 ft. or ranged 20/60 ft., one target. Hit: 5 ({@damage 1d6 + 2}) piercing damage."
+						"{@atk mw,rw} {@hit 5} to hit. reach 5 ft. or ranged 20/60 ft., one target. {@h}5 ({@damage 1d6 + 2}) piercing damage."
 					]
 				}
 			],
@@ -1069,6 +1227,185 @@
 			"languageTags": [
 				"C",
 				"OTH"
+			],
+			"spellcastingTags": [
+				"CD"
+			],
+			"damageTags": [
+				"P",
+				"I"
+			],
+			"miscTags": [
+				"MW",
+				"RW",
+				"THW"
+			]
+		},
+		{
+			"name": "Rath Modar",
+			"isNpc": true,
+			"size": "M",
+			"type": {
+				"type": "humanoid",
+				"tags": [
+					"human"
+				]
+			},
+			"source": "HotDQ",
+			"otherSources": [
+				{
+					"source": "RoT",
+					"page": 91
+				}
+			],
+			"alignment": [
+				"L",
+				"E"
+			],
+			"ac": [
+				13,
+				{
+					"ac": 16,
+					"condition": "with {@spell mage armor}",
+					"braces": true
+				}
+			],
+			"hp": {
+				"average": 71,
+				"formula": "11d8 + 22"
+			},
+			"speed": {
+				"walk": 30
+			},
+			"str": 11,
+			"dex": 16,
+			"con": 14,
+			"int": 18,
+			"wis": 14,
+			"cha": 10,
+			"save": {
+				"int": "+7",
+				"wis": "+5"
+			},
+			"skill": {
+				"arcana": "+7",
+				"deception": "+3",
+				"insight": "+5",
+				"stealth": "+6"
+			},
+			"passive": 12,
+			"languages": [
+				"Common",
+				"Draconic",
+				"Infernal",
+				"Primordial",
+				"Thayan"
+			],
+			"cr": "6",
+			"spellcasting": [
+				{
+					"name": "Spellcasting",
+					"headerEntries": [
+						"Rath is an 11th-level spellcaster who uses Intelligence as his spellcasting ability (spell save {@dc 15}, {@hit 7} to hit with spell attacks). Rath has the following spells prepared from the wizard spell list:"
+					],
+					"spells": {
+						"0": {
+							"spells": [
+								"{@spell fire bolt}",
+								"{@spell minor illusion}",
+								"{@spell prestidigitation}",
+								"{@spell shocking grasp}"
+							]
+						},
+						"1": {
+							"slots": 4,
+							"spells": [
+								"{@spell chromatic orb}",
+								"{@spell color spray}",
+								"{@spell mage armor}",
+								"{@spell magic missile}"
+							]
+						},
+						"2": {
+							"slots": 3,
+							"spells": [
+								"{@spell detect thoughts}",
+								"{@spell mirror image}",
+								"{@spell phantasmal force}"
+							]
+						},
+						"3": {
+							"slots": 3,
+							"spells": [
+								"{@spell counterspell}",
+								"{@spell fireball}",
+								"{@spell major image}"
+							]
+						},
+						"4": {
+							"slots": 3,
+							"spells": [
+								"{@spell confusion}",
+								"{@spell greater invisibility}"
+							]
+						},
+						"5": {
+							"slots": 2,
+							"spells": [
+								"{@spell mislead}",
+								"{@spell seeming}"
+							]
+						},
+						"6": {
+							"slots": 1,
+							"spells": [
+								"{@spell globe of invulnerability}"
+							]
+						}
+					},
+					"ability": "int"
+				}
+			],
+			"trait": [
+				{
+					"name": "Special Equipment",
+					"entries": [
+						"Rath has a {@item staff of fire}, and scrolls of {@spell dimension door}, {@spell feather fall}, and {@spell fireball}."
+					]
+				}
+			],
+			"action": [
+				{
+					"name": "Quarterstaff",
+					"entries": [
+						"{@atk mw} {@hit 4} to hit, reach 5 ft., one target. {@h}4 ({@damage 1d8}) bludgeoning damage."
+					]
+				}
+			],
+			"reaction": [
+				{
+					"name": "Illusory Self (Recharges on a Short or Long Rest)",
+					"entries": [
+						"When a creature Rath can see makes an attack roll against him, he can interpose an illusory duplicate between the attacker and him. The attack automatically misses Rath, then the illusion dissipates."
+					]
+				}
+			],
+			"page": 92,
+			"languageTags": [
+				"C",
+				"DR",
+				"I",
+				"P",
+				"OTH"
+			],
+			"spellcastingTags": [
+				"CW"
+			],
+			"damageTags": [
+				"B"
+			],
+			"miscTags": [
+				"MW"
 			]
 		},
 		{
@@ -1081,6 +1418,11 @@
 				]
 			},
 			"source": "HotDQ",
+			"otherSources": [
+				{
+					"source": "RoT"
+				}
+			],
 			"alignment": [
 				"N",
 				"E"
@@ -1121,9 +1463,18 @@
 				"charmed",
 				"frightened"
 			],
-			"senses": "blindsight 10 ft., darkvision 120 ft.",
+			"senses": [
+				"blindsight 10 ft.",
+				"darkvision 120 ft."
+			],
 			"passive": 11,
-			"languages": "Common, Draconic, Infernal, Giant, Netherese",
+			"languages": [
+				"Common",
+				"Draconic",
+				"Infernal",
+				"Giant",
+				"Netherese"
+			],
 			"cr": "7",
 			"trait": [
 				{
@@ -1167,19 +1518,19 @@
 				{
 					"name": "Greatsword (Hazirawn)",
 					"entries": [
-						"{@atk mw} {@hit 9} to hit, reach 5 ft., one target. Hit: 13 ({@damage 2d6 + 6}) slashing damage plus 7 ({@damage 2d6}) necrotic damage. If the target is a creature, it can't regain hit points for 1 minute. The target can make a DC 15 Constitution saving throw at the end of each of its turns, ending this effect early on a success."
+						"{@atk mw} {@hit 9} to hit, reach 5 ft., one target. {@h}13 ({@damage 2d6 + 6}) slashing damage plus 7 ({@damage 2d6}) necrotic damage. If the target is a creature, it can't regain hit points for 1 minute. The target can make a {@dc 15} Constitution saving throw at the end of each of its turns, ending this effect early on a success."
 					]
 				},
 				{
 					"name": "Caustic Bolt",
 					"entries": [
-						"{@atk rs} {@hit 8} to hit, range 90 ft., one target. Hit: 18 ({@damage 4d8}) acid damage."
+						"{@atk rs} {@hit 8} to hit, range 90 ft., one target. {@h}18 ({@damage 4d8}) acid damage."
 					]
 				},
 				{
 					"name": "Acid Breath {@recharge 5}",
 					"entries": [
-						"Rezmir breathes acid in a 30-foot line that is 5 feet wide. Each creature in the line must make a DC 14 Dexterity saving throw, taking 22 ({@damage 5d8}) acid damage on a failed save, or half as much damage on a successful one."
+						"Rezmir breathes acid in a 30-foot line that is 5 feet wide. Each creature in the line must make a {@dc 14} Dexterity saving throw, taking 22 ({@damage 5d8}) acid damage on a failed save, or half as much damage on a successful one."
 					]
 				}
 			],
@@ -1206,7 +1557,7 @@
 			],
 			"page": 93,
 			"isNamedCreature": true,
-			"isNPC": true,
+			"isNpc": true,
 			"traitTags": [
 				"Amphibious",
 				"Legendary Resistances"
@@ -1221,11 +1572,20 @@
 			"senseTags": [
 				"B",
 				"SD"
+			],
+			"damageTags": [
+				"S",
+				"N",
+				"A"
+			],
+			"miscTags": [
+				"MW",
+				"AOE"
 			]
 		},
 		{
 			"name": "Talis the White",
-			"isNPC": true,
+			"isNpc": true,
 			"size": "M",
 			"type": {
 				"type": "humanoid",
@@ -1270,15 +1630,22 @@
 				"perception": "+6",
 				"persuasion": "+6"
 			},
-			"senses": "darkvision 60 ft.",
+			"senses": [
+				"darkvision 60 ft."
+			],
 			"passive": 16,
-			"languages": "Common, Draconic, Elvish, Infernal",
+			"languages": [
+				"Common",
+				"Draconic",
+				"Elvish",
+				"Infernal"
+			],
 			"cr": "5",
 			"spellcasting": [
 				{
 					"name": "Spellcasting",
 					"headerEntries": [
-						"Talis is a 9th-level spellcaster that uses Wisdom as her spellcasting ability (spell save DC 14, {@hit 6} to hit with spell attacks). Talis has the following spells prepared from the cleric spell list:"
+						"Talis is a 9th-level spellcaster that uses Wisdom as her spellcasting ability (spell save {@dc 14}, {@hit 6} to hit with spell attacks). Talis has the following spells prepared from the cleric spell list:"
 					],
 					"spells": {
 						"0": {
@@ -1354,7 +1721,7 @@
 				{
 					"name": "Spear",
 					"entries": [
-						"{@atk mw,rw} {@hit 5} to hit, reach 5 ft. or ranged 20/60 ft., one target. Hit: 6 ({@damage 1d6 + 2}) piercing damage."
+						"{@atk mw,rw} {@hit 5} to hit, reach 5 ft. or ranged 20/60 ft., one target. {@h}6 ({@damage 1d6 + 2}) piercing damage."
 					]
 				}
 			],
@@ -1370,11 +1737,23 @@
 			],
 			"senseTags": [
 				"D"
+			],
+			"spellcastingTags": [
+				"CC"
+			],
+			"damageTags": [
+				"P",
+				"C"
+			],
+			"miscTags": [
+				"RW",
+				"MW",
+				"THW"
 			]
 		},
 		{
 			"name": "Trepsin",
-			"isNPC": true,
+			"isNpc": true,
 			"size": "L",
 			"type": "giant",
 			"source": "HotDQ",
@@ -1406,9 +1785,13 @@
 			"skill": {
 				"perception": "+1"
 			},
-			"senses": "darkvision 60 ft.",
+			"senses": [
+				"darkvision 60 ft."
+			],
 			"passive": 11,
-			"languages": "Giant",
+			"languages": [
+				"Giant"
+			],
 			"cr": "6",
 			"trait": [
 				{
@@ -1434,13 +1817,13 @@
 				{
 					"name": "Bite",
 					"entries": [
-						"{@atk mw} {@hit +7} to hit, reach 5 ft., one target. Hit: 7 ({@damage 1d6 + 4}) piercing damage."
+						"{@atk mw} {@hit +7} to hit, reach 5 ft., one target. {@h}7 ({@damage 1d6 + 4}) piercing damage."
 					]
 				},
 				{
 					"name": "Claw",
 					"entries": [
-						"{@atk mw} {@hit +7} to hit, reach 5 ft., one target. Hit: 11 ({@damage 2d6 + 4}) slashing damage."
+						"{@atk mw} {@hit +7} to hit, reach 5 ft., one target. {@h}11 ({@damage 2d6 + 4}) slashing damage."
 					]
 				}
 			],
@@ -1457,7 +1840,414 @@
 			],
 			"senseTags": [
 				"D"
+			],
+			"damageTags": [
+				"P",
+				"S"
+			],
+			"miscTags": [
+				"MW"
 			]
+		},
+		{
+			"name": "Dragonclaw",
+			"size": "M",
+			"type": {
+				"type": "humanoid",
+				"tags": [
+					"human"
+				]
+			},
+			"source": "HotDQ",
+			"alignment": [
+				"L",
+				"E"
+			],
+			"ac": [
+				{
+					"ac": 14,
+					"from": [
+						"{@item leather armor|phb}"
+					]
+				}
+			],
+			"hp": {
+				"average": 16,
+				"formula": "3d8 + 3"
+			},
+			"speed": {
+				"walk": 30
+			},
+			"str": 9,
+			"dex": 16,
+			"con": 13,
+			"int": 11,
+			"wis": 10,
+			"cha": 12,
+			"save": {
+				"wis": "+2"
+			},
+			"skill": {
+				"deception": "+3",
+				"stealth": "+5"
+			},
+			"passive": 10,
+			"languages": [
+				"Common",
+				"Draconic"
+			],
+			"cr": "1",
+			"trait": [
+				{
+					"name": "Dragon Fanatic",
+					"entries": [
+						"The dragonclaw has advantage on saving throws against being {@condition charmed} or {@condition frightened}. While the dragonclaw can see a dragon or higher-ranking Cult of the Dragon cultist friendly to it, the dragonclaw ignores the effects of being {@condition charmed} or {@condition frightened}."
+					]
+				},
+				{
+					"name": "Fanatic Advantage",
+					"entries": [
+						"Once per turn, if the dragonclaw makes a weapon attack with advantage on the attack roll and hits, it deals an extra 7 ({@dice 2d6}) damage."
+					]
+				},
+				{
+					"name": "Pack Tactics",
+					"entries": [
+						"The dragonclaw has advantage on an attack roll against a creature if at least one of the dragonclaw's allies is within 5 feet of the creature and the ally isn't {@condition incapacitated}."
+					]
+				}
+			],
+			"action": [
+				{
+					"name": "Multiattack",
+					"entries": [
+						"The dragonclaw attacks twice with its scimitar."
+					]
+				},
+				{
+					"name": "Scimitar",
+					"entries": [
+						"{@atk mw} {@hit 5} to hit, reach 5 ft., one target. {@h}6 ({@damage 1d6 + 3}) slashing damage."
+					]
+				}
+			],
+			"page": 89,
+			"otherSources": [
+				{
+					"source": "RoT",
+					"page": 89
+				}
+			],
+			"traitTags": [
+				"Pack Tactics"
+			],
+			"actionTags": [
+				"Multiattack"
+			],
+			"languageTags": [
+				"C",
+				"DR"
+			],
+			"damageTags": [
+				"S"
+			],
+			"miscTags": [
+				"MW"
+			]
+		},
+		{
+			"name": "Dragonwing",
+			"size": "M",
+			"type": {
+				"type": "humanoid",
+				"tags": [
+					"human"
+				]
+			},
+			"source": "HotDQ",
+			"alignment": [
+				"L",
+				"E"
+			],
+			"ac": [
+				{
+					"ac": 14,
+					"from": [
+						"{@item leather armor|phb}"
+					]
+				}
+			],
+			"hp": {
+				"average": 33,
+				"formula": "6d8 + 6"
+			},
+			"speed": {
+				"walk": 30
+			},
+			"str": 11,
+			"dex": 16,
+			"con": 13,
+			"int": 11,
+			"wis": 11,
+			"cha": 13,
+			"save": {
+				"wis": "+2"
+			},
+			"skill": {
+				"deception": "+3",
+				"stealth": "+5"
+			},
+			"resist": [
+				{
+					"resist": [
+						"acid",
+						"cold",
+						"fire",
+						"lightning",
+						"poison"
+					],
+					"preNote": "one of the following:"
+				}
+			],
+			"passive": 10,
+			"languages": [
+				"Common",
+				"Draconic"
+			],
+			"cr": "2",
+			"trait": [
+				{
+					"name": "Dragon Fanatic",
+					"entries": [
+						"The dragonwing has advantage on saving throws against being {@condition charmed} or {@condition frightened}. While the dragonwing can see a dragon or higher-ranking Cult of the Dragon cultist friendly to it, the dragonwing ignores the effects of being {@condition charmed} or {@condition frightened}."
+					]
+				},
+				{
+					"name": "Fanatic Advantage",
+					"entries": [
+						"Once per turn, if the dragonwing makes a weapon attack with advantage on the attack roll and hits, the target takes an extra 7 ({@dice 2d6}) damage."
+					]
+				},
+				{
+					"name": "Limited Flight",
+					"entries": [
+						"The dragonwing can use a bonus action to gain a flying speed of 30 feet until the end of its turn."
+					]
+				},
+				{
+					"name": "Pack Tactics",
+					"entries": [
+						"The dragonwing has advantage on an attack roll against a creature if at least one of the dragonwing's allies is within 5 feet of the creature and the ally isn't {@condition incapacitated}."
+					]
+				}
+			],
+			"action": [
+				{
+					"name": "Multiattack",
+					"entries": [
+						"The dragonwing attacks twice with its scimitar."
+					]
+				},
+				{
+					"name": "Scimitar",
+					"entries": [
+						"{@atk mw} {@hit 5} to hit, reach 5 ft., one target. {@h}6 ({@damage 1d6 + 3}) slashing damage plus 3 ({@dice 1d6}) damage of the type to which the cultist has resistance."
+					]
+				}
+			],
+			"page": 90,
+			"otherSources": [
+				{
+					"source": "RoT",
+					"page": 89
+				}
+			],
+			"traitTags": [
+				"Pack Tactics"
+			],
+			"actionTags": [
+				"Multiattack"
+			],
+			"languageTags": [
+				"C",
+				"DR"
+			],
+			"damageTags": [
+				"S"
+			],
+			"miscTags": [
+				"MW"
+			]
+		},
+		{
+			"name": "Golden Stag",
+			"source": "HotDQ",
+			"_copy": {
+				"name": "Elk",
+				"source": "MM"
+			},
+			"page": 35
+		},
+		{
+			"name": "Guard Drake",
+			"size": "M",
+			"type": "dragon",
+			"source": "HotDQ",
+			"alignment": [
+				"U"
+			],
+			"ac": [
+				{
+					"ac": 14,
+					"from": [
+						"natural armor"
+					]
+				}
+			],
+			"hp": {
+				"average": 52,
+				"formula": "7d8 + 21"
+			},
+			"speed": {
+				"walk": 30
+			},
+			"str": 16,
+			"dex": 11,
+			"con": 16,
+			"int": 4,
+			"wis": 10,
+			"cha": 7,
+			"skill": {
+				"perception": "+2"
+			},
+			"resist": [
+				"lightning"
+			],
+			"senses": [
+				"darkvision 60 ft."
+			],
+			"passive": 12,
+			"languages": [
+				"understands Draconic but can't speak it"
+			],
+			"cr": "2",
+			"action": [
+				{
+					"name": "Multiattack",
+					"entries": [
+						"The drake attacks twice, once with its bite and once with its tail."
+					]
+				},
+				{
+					"name": "Bite",
+					"entries": [
+						"{@atk mw} {@hit 5} to hit, reach 5 ft., one target. {@h}7 ({@damage 1d8 + 3}) piercing damage."
+					]
+				},
+				{
+					"name": "Tail",
+					"entries": [
+						"{@atk mw} {@hit 5} to hit, reach 5 ft., one target. {@h}6 ({@damage 1d6 + 3}) bludgeoning damage."
+					]
+				}
+			],
+			"page": 91,
+			"otherSources": [
+				{
+					"source": "RoT",
+					"page": 90
+				}
+			],
+			"soundClip": "https://media-waterdeep.cursecdn.com/file-attachments/0/254/guard-drake.mp3",
+			"actionTags": [
+				"Multiattack"
+			],
+			"languageTags": [
+				"CS",
+				"DR"
+			],
+			"senseTags": [
+				"D"
+			],
+			"damageTags": [
+				"P",
+				"B"
+			],
+			"miscTags": [
+				"MW"
+			]
+		},
+		{
+			"name": "Leosin Erlanthar",
+			"isNpc": true,
+			"source": "HotDQ",
+			"_copy": {
+				"name": "Martial Arts Adept",
+				"source": "VGM",
+				"_mod": {
+					"trait": {
+						"mode": "prependArr",
+						"items": {
+							"name": "5etools Note",
+							"entries": [
+								"Leosin Erlanthar is presented in {@adventure Hoard of the Dragon Queen|HotDQ} as a half-elf monk. The {@creature martial arts adept|vgm} statblock from {@book Volo's Guide to Monsters|VGM} has been provided here for ease of use."
+							]
+						}
+					}
+				}
+			},
+			"page": 87
+		},
+		{
+			"name": "Linan Swift",
+			"isNpc": true,
+			"source": "HotDQ",
+			"_copy": {
+				"name": "Commoner",
+				"source": "MM"
+			},
+			"hp": {
+				"average": 8,
+				"formula": "1d8"
+			},
+			"action": [
+				{
+					"name": "Spear",
+					"entries": [
+						"{@atk mw} {@hit 2} to hit, reach 5 ft., one target. {@h}3 ({@damage 1d6}) piercing damage."
+					]
+				}
+			],
+			"miscTags": [
+				"THW",
+				"MW",
+				"RCH"
+			],
+			"damageTags": [
+				"P"
+			],
+			"page": 8
+		},
+		{
+			"name": "Ontharr Frume",
+			"isNpc": true,
+			"source": "HotDQ",
+			"_copy": {
+				"name": "War Priest",
+				"source": "VGM",
+				"_mod": {
+					"trait": {
+						"mode": "prependArr",
+						"items": {
+							"name": "5etools Note",
+							"entries": [
+								"Ontharr Frume is presented in {@adventure Hoard of the Dragon Queen|HotDQ} and The {@adventure Rise of Tiamat|RoT} as a lawful good, human paladin of Torm. The {@creature war priest|vgm} statblock from {@book Volo's Guide to Monsters|VGM} has been provided here for ease of use."
+							]
+						}
+					}
+				}
+			},
+			"page": 28
 		}
 	]
 }

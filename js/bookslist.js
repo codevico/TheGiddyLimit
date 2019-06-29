@@ -1,3 +1,5 @@
+"use strict";
+
 class BooksList {
 	constructor (options) {
 		this.contentsUrl = options.contentsUrl;
@@ -13,6 +15,7 @@ class BooksList {
 	}
 
 	onPageLoad () {
+		ExcludeUtil.pInitialise(); // don't await, as this is only used for search
 		SortUtil.initHandleFilterButtonClicks();
 		DataUtil.loadJSON(this.contentsUrl).then(this.onJsonLoad.bind(this));
 	}
@@ -20,12 +23,13 @@ class BooksList {
 	onJsonLoad (data) {
 		const sortFunction = (a, b, o) => self.sortFn(self.dataList, a, b, o);
 		this.list = new List("listcontainer", {
+			valueNames: ["name", "uniqueid"],
 			listClass: "books",
 			sortFunction
 		});
 
 		const self = this;
-		$("#filtertools").find("button.sort").on(EVNT_CLICK, function () {
+		$("#filtertools").find("button.sort").click(function () {
 			const $this = $(this);
 			$('#filtertools').find('.caret').removeClass('caret--reverse caret');
 
@@ -56,8 +60,9 @@ class BooksList {
 		this.addData(data);
 		BrewUtil.pAddBrewData()
 			.then(handleBrew)
-			.then(BrewUtil.pAddLocalBrewData)
-			.catch(BrewUtil.purgeBrew)
+			.then(() => BrewUtil.bind({list: this.list}))
+			.then(() => BrewUtil.pAddLocalBrewData())
+			.catch(BrewUtil.pPurgeBrew)
 			.then(() => BrewUtil.makeBrewButton("manage-brew"));
 	}
 
@@ -74,12 +79,13 @@ class BooksList {
 
 			tempString +=
 				`<li ${FLTR_ID}="${this.dataIx}">
-				<a href="${this.rootPage}#${it.id}" title="${it.name}" class="book-name">
+				<a href="${this.rootPage}#${UrlUtil.encodeForHash(it.id)}" title="${it.name}" class="book-name">
 					<span class="full-width">
 						${this.rowBuilderFn(it)}
 					</span>
 					<span class="showhide" onclick="BookUtil.indexListToggle(event, this)" data-hidden="true">[+]</span>
 					<span class="source" style="display: none">${it.id}</span>
+					<span class="uniqueid" style="display: none">${it.uniqueId}</span>
 				</a>
 				${BookUtil.makeContentsBlock({book: it, addPrefix: this.rootPage, defaultHidden: true})}
 			</li>`;
